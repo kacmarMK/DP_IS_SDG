@@ -28,7 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n'],
+    boot: ['i18n', 'ofetch', 'toastify'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -213,6 +213,15 @@ module.exports = configure(function (/* ctx */) {
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
+    },
+    devServer: {
+      proxy: {
+        // proxy all requests starting with /api to jsonplaceholder
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+        },
+      },
     },
   };
 });
