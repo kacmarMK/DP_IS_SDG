@@ -1,44 +1,64 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="lHh LpR lfr">
+    <q-header class="bg-white text-secondary shadow">
       <q-toolbar>
         <q-btn
           flat
           dense
           round
-          icon="menu"
+          icon="mdi-menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      bordered
+      content-class="bg-white shadow"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+      <div class="column q-px-lg full-height">
+        <router-link class="q-my-lg q-mx-auto full-width" to="/">
+          <q-img
+            src="../assets/logo.png"
+            height="3.7rem"
+            fit="contain"
+            no-spinner
+            no-transition
+          />
+        </router-link>
+        <div class="links">
+          <side-menu-button to="/" :exact="true" label="Home" icon="mdi-home" />
+          <side-menu-button
+            to="/company"
+            label="Team"
+            icon="mdi-account-group"
+          />
+          <side-menu-button
+            to="/collections"
+            label="Collections"
+            icon="mdi-source-fork"
+          />
+          <side-menu-button
+            to="/notifications"
+            label="Notifications"
+            icon="mdi-bell"
+          />
+          <side-menu-button
+            to="/recipes"
+            label="Recipes"
+            icon="mdi-book-multiple"
+          />
+          <side-menu-button to="/jobs" label="Jobs" icon="mdi-list-status" />
+          <side-menu-button
+            to="/commands"
+            label="Commands"
+            icon="mdi-code-tags"
+          />
+        </div>
+      </div>
     </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -47,56 +67,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
-
-const essentialLinks: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-const leftDrawerOpen = ref(false)
+import SideMenuButton from 'src/components/SideMenuButton.vue';
+const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
