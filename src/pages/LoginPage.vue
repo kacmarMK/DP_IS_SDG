@@ -6,16 +6,19 @@
         <q-form>
           <q-input
             v-model="userLogin.name"
+            ref="nameRef"
             label="Username"
             type="text"
             lazy-rules
-            :rules="[(val) => !!val || 'Please enter your username']"
+            :rules="nameRules"
           />
           <q-input
             v-model="userLogin.password"
+            ref="passwordRef"
             label="Password"
             :type="isPwd ? 'password' : 'text'"
             lazy-rules
+            :rules="passwordRules"
           >
             <template v-slot:append>
               <q-icon
@@ -55,6 +58,7 @@ import authService from '../services/AuthService';
 import { UserLogin } from '../models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
+import { QInput } from 'quasar';
 
 const router = useRouter();
 
@@ -65,7 +69,39 @@ const userLogin = ref<UserLogin>({
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
+//Form validation
+const nameRef = ref<QInput>();
+const passwordRef = ref<QInput>();
+
+const nameRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your username',
+];
+
+const passwordRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your password',
+];
+
+function isFormInvalid(): boolean {
+  const inputRefs = [nameRef, passwordRef];
+  let hasError = false;
+
+  for (const ref of inputRefs) {
+    const input = ref.value;
+    if (input) {
+      input.validate();
+      if (input.hasError) {
+        hasError = true;
+      }
+    }
+  }
+  return hasError;
+}
+
 async function login() {
+  if (isFormInvalid()) {
+    return;
+  }
+
   try {
     isSubmitting.value = true;
     await authService.login(userLogin.value);

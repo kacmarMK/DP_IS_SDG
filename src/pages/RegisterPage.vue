@@ -6,23 +6,27 @@
         <q-form>
           <q-input
             v-model="userRegister.name"
+            ref="nameRef"
             label="Username"
             type="text"
             lazy-rules
-            :rules="[(val) => !!val || 'Please enter your username']"
+            :rules="nameRules"
           />
           <q-input
             v-model="userRegister.mail"
+            ref="mailRef"
             label="Email"
             type="email"
             lazy-rules
-            :rules="[(val) => !!val || 'Please enter your email']"
+            :rules="mailRules"
           />
           <q-input
             v-model="userRegister.password"
+            ref="passwordRef"
             label="Password"
             :type="isPwd ? 'password' : 'text'"
             lazy-rules
+            :rules="passwordRules"
           >
             <template v-slot:append>
               <q-icon
@@ -61,6 +65,7 @@ import authService from '../services/AuthService';
 import { UserRegister } from '../models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
+import { QInput } from 'quasar';
 
 const router = useRouter();
 
@@ -72,7 +77,46 @@ const userRegister = ref<UserRegister>({
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
+//Form validation
+const nameRef = ref<QInput>();
+const mailRef = ref<QInput>();
+const passwordRef = ref<QInput>();
+
+const nameRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your username',
+];
+const mailRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your email',
+  (val: string) => {
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return emailRegex.test(val) || 'Please enter a valid email address';
+  },
+];
+const passwordRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your password',
+];
+
+function isFormInvalid(): boolean {
+  const inputRefs = [nameRef, passwordRef, mailRef];
+  let hasError = false;
+
+  for (const ref of inputRefs) {
+    const input = ref.value;
+    if (input) {
+      input.validate();
+      if (input.hasError) {
+        hasError = true;
+      }
+    }
+  }
+  return hasError;
+}
+
 async function register() {
+  if (isFormInvalid()) {
+    return;
+  }
+
   try {
     isSubmitting.value = true;
     await authService.register(userRegister.value);
