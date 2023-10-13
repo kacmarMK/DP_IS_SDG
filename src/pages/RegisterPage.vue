@@ -1,18 +1,25 @@
 <template>
   <div class="auth-bg fullscreen">
     <div class="auth-container shadow">
-      <h1>Login</h1>
+      <h1>Register</h1>
       <div>
         <q-form>
           <q-input
-            v-model="userLogin.name"
+            v-model="userRegister.name"
             label="Username"
             type="text"
             lazy-rules
             :rules="[(val) => !!val || 'Please enter your username']"
           />
           <q-input
-            v-model="userLogin.password"
+            v-model="userRegister.mail"
+            label="Email"
+            type="email"
+            lazy-rules
+            :rules="[(val) => !!val || 'Please enter your email']"
+          />
+          <q-input
+            v-model="userRegister.password"
             label="Password"
             :type="isPwd ? 'password' : 'text'"
             lazy-rules
@@ -28,21 +35,20 @@
           <q-btn
             class="q-my-md full-width"
             color="primary"
-            label="Login"
+            label="Register"
             type="submit"
             size="1rem"
             no-caps
             unelevated
-            @click.prevent="login"
+            @click.prevent="register"
             :loading="isSubmitting"
           />
         </q-form>
         <div class="column items-center q-my-lg links">
           <div class="q-mb-md">
-            <span>Don't have an account?</span>
-            <router-link to="/register" class="q-ml-sm">Sign Up</router-link>
+            <span>Already have an account?</span>
+            <router-link to="/login" class="q-ml-sm">Log in</router-link>
           </div>
-          <router-link to="/password/reset">Forgot password?</router-link>
         </div>
       </div>
     </div>
@@ -52,28 +58,29 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import authService from '../services/AuthService';
-import { UserLogin } from '../models/User';
+import { UserRegister } from '../models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 
 const router = useRouter();
 
-const userLogin = ref<UserLogin>({
+const userRegister = ref<UserRegister>({
   name: '',
+  mail: '',
   password: '',
 });
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
-async function login() {
+async function register() {
   try {
     isSubmitting.value = true;
-    await authService.login(userLogin.value);
-    toast.success('Login successful!');
+    await authService.register(userRegister.value);
+    toast.success('Registration successful!');
     router.push('/');
   } catch (error) {
     console.log(error);
-    toast.error('Login failed!');
+    toast.error('Registration failed!');
   } finally {
     isSubmitting.value = false;
   }

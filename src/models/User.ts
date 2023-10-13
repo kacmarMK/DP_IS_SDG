@@ -10,4 +10,10 @@ interface UserLogin {
   password: string;
 }
 
-export type { User, UserLogin };
+interface UserRegister {
+  name: string;
+  mail: string;
+  password: string;
+}
+
+export type { User, UserLogin, UserRegister };
