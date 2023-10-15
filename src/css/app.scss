@@ -21,3 +21,31 @@ a:link {
 .shadow {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.03), 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
+
+.main-padding {
+  body.screen--xs & {
+    padding: 1rem 1rem;
+  }
+  body.screen--sm & {
+    padding: 1.5rem 2rem;
+  }
+  body.screen--md & {
+    padding: 2rem 4rem;
+  }
+  padding: 4rem 8rem;
+}
+
+.main-text {
+  font-size: 1.8em;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  color: $secondary;
+}
+
+.text-grey-color {
+  color: #7585a4;
+}
+.bg-grey-color {
+  background: #7585a4;
+}

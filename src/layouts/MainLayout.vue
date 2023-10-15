@@ -36,9 +36,9 @@
             icon="mdi-account-group"
           />
           <side-menu-button
-            to="/collections"
-            label="Collections"
-            icon="mdi-source-fork"
+            to="/devices"
+            label="Devices"
+            icon="mdi-cellphone-link"
           />
           <side-menu-button
             to="/notifications"

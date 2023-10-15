@@ -39,7 +39,7 @@ export default {
   }
 }
 
-.router-link-active {
+.router-link-exact-active {
   .q-btn {
     background-color: #edf1fc;
     color: $primary;
