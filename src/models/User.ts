@@ -1,22 +1,17 @@
 interface User {
   uid?: string;
-  nickname?: string;
   name?: string;
-  surname?: string;
   mail?: string;
   password?: string;
 }
 
 interface UserLogin {
-  nickname: string;
+  name: string;
   password: string;
-  remember: boolean;
 }
 
 interface UserRegister {
-  nickname: string;
-  name?: string;
-  surname?: string;
+  name: string;
   mail: string;
   password: string;
 }

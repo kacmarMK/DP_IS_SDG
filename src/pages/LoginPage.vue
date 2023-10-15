@@ -2,75 +2,65 @@
   <q-layout>
     <q-page-container class="bg-img">
       <q-page class="flex flex-center">
-        <q-card
-          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '40%' }"
-        >
-          <div class="auth-bg">
-            <div class="auth-container shadow">
-              <q-card-section>
-                <div class="text-center q-pt-lg">
-                  <div class="col text-h6 ellipsis">Login</div>
+        <div class="auth-bg fullscreen">
+          <div class="auth-container shadow">
+            <h1 class="text-center q-my-md">Login</h1>
+            <div>
+              <q-form>
+                <q-input
+                  v-model="userLogin.name"
+                  ref="nameRef"
+                  label="Username"
+                  type="text"
+                  lazy-rules
+                  :rules="nameRules"
+                />
+                <q-input
+                  v-model="userLogin.password"
+                  ref="passwordRef"
+                  label="Password"
+                  :type="isPwd ? 'password' : 'text'"
+                  lazy-rules
+                  :rules="passwordRules"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      :name="isPwd ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="isPwd = !isPwd"
+                    />
+                  </template>
+                </q-input>
+                <q-checkbox
+                  v-model="rememberMe"
+                  class="q-mb-md"
+                  dense
+                  label="Remember me"
+                />
+                <q-btn
+                  class="q-my-md full-width"
+                  color="primary"
+                  label="Login"
+                  type="submit"
+                  size="1rem"
+                  no-caps
+                  unelevated
+                  @click.prevent="login"
+                  :loading="isSubmitting"
+                />
+              </q-form>
+              <div class="column items-center q-my-lg links">
+                <div class="q-mb-md">
+                  <span>Don't have an account?</span>
+                  <router-link to="/register" class="q-ml-sm"
+                    >Sign Up</router-link
+                  >
                 </div>
-              </q-card-section>
-              <div>
-                <q-card-section>
-                  <q-form>
-                    <q-input
-                      v-model="userLogin.nickname"
-                      ref="nameRef"
-                      label="Nickname"
-                      type="text"
-                      lazy-rules
-                      :rules="nameRules"
-                    />
-                    <q-input
-                      v-model="userLogin.password"
-                      ref="passwordRef"
-                      label="Password"
-                      :type="isPwd ? 'password' : 'text'"
-                      lazy-rules
-                      :rules="passwordRules"
-                    >
-                      <template v-slot:append>
-                        <q-icon
-                          :name="isPwd ? 'visibility_off' : 'visibility'"
-                          class="cursor-pointer"
-                          @click="isPwd = !isPwd"
-                        />
-                      </template>
-                    </q-input>
-                    <q-checkbox
-                      v-model="userLogin.remember"
-                      label="Remember login?"
-                    />
-                    <q-btn
-                      class="q-my-md full-width"
-                      color="primary"
-                      label="Login"
-                      type="submit"
-                      size="1rem"
-                      no-caps
-                      unelevated
-                      @click.prevent="login"
-                      :loading="isSubmitting"
-                    />
-                  </q-form>
-                  <div class="column items-center q-my-lg links">
-                    <div class="q-mb-md">
-                      <span>Don't have an account?</span>
-                      <router-link to="/register" class="q-ml-sm"
-                        >Sign Up</router-link
-                      >
-                    </div>
-                    <router-link to="/password/reset"
-                      >Forgot password?</router-link
-                    >
-                  </div>
-                </q-card-section>
+                <router-link to="/password/reset">Forgot password?</router-link>
               </div>
             </div>
           </div>
-        </q-card>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -87,10 +77,10 @@ import { QInput } from 'quasar';
 const router = useRouter();
 
 const userLogin = ref<UserLogin>({
-  nickname: '',
+  name: '',
   password: '',
-  remember: false,
 });
+const rememberMe = ref(false);
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
