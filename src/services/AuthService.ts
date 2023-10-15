@@ -4,7 +4,7 @@ import { api } from 'src/boot/ofetch';
 class AuthService {
   async login(userLogin: UserLogin): Promise<User> {
     const user: User = await api<User>(
-      `user/loginUser/${userLogin.nickname}/${userLogin.password}`,
+      `user/loginUser/${userLogin.name}/${userLogin.password}`,
       {
         method: 'POST',
       }
