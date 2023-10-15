@@ -1,62 +1,96 @@
 <template>
-  <div class="auth-bg fullscreen">
-    <div class="auth-container shadow">
-      <h1>Register</h1>
-      <div>
-        <q-form>
-          <q-input
-            v-model="userRegister.name"
-            ref="nameRef"
-            label="Username"
-            type="text"
-            lazy-rules
-            :rules="nameRules"
-          />
-          <q-input
-            v-model="userRegister.mail"
-            ref="mailRef"
-            label="Email"
-            type="email"
-            lazy-rules
-            :rules="mailRules"
-          />
-          <q-input
-            v-model="userRegister.password"
-            ref="passwordRef"
-            label="Password"
-            :type="isPwd ? 'password' : 'text'"
-            lazy-rules
-            :rules="passwordRules"
-          >
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
-          </q-input>
-          <q-btn
-            class="q-my-md full-width"
-            color="primary"
-            label="Register"
-            type="submit"
-            size="1rem"
-            no-caps
-            unelevated
-            @click.prevent="register"
-            :loading="isSubmitting"
-          />
-        </q-form>
-        <div class="column items-center q-my-lg links">
-          <div class="q-mb-md">
-            <span>Already have an account?</span>
-            <router-link to="/login" class="q-ml-sm">Log in</router-link>
+  <q-layout>
+    <q-page-container class="bg-img">
+      <q-page class="flex flex-center">
+        <q-card
+          v-bind:style="$q.screen.lt.sm ? { width: '80%' } : { width: '40%' }"
+        >
+          <div class="auth-bg">
+            <div class="auth-container shadow">
+              <q-card-section>
+                <div class="text-center q-pt-lg">
+                  <div class="col text-h6 ellipsis">Register</div>
+                </div>
+              </q-card-section>
+              <div>
+                <q-card-section>
+                  <q-form>
+                    <q-input
+                      v-model="userRegister.nickname"
+                      ref="nicknameRef"
+                      label="Nickname"
+                      type="text"
+                      lazy-rules
+                      :rules="nicknameRules"
+                    />
+                    <q-input
+                      v-model="userRegister.name"
+                      ref="nameRef"
+                      label="Name"
+                      type="text"
+                      lazy-rules
+                      :rules="nameRules"
+                    />
+                    <q-input
+                      v-model="userRegister.surname"
+                      ref="surnameRef"
+                      label="Surname"
+                      type="text"
+                      lazy-rules
+                      :rules="surnameRules"
+                    />
+                    <q-input
+                      v-model="userRegister.mail"
+                      ref="mailRef"
+                      label="Email"
+                      type="email"
+                      lazy-rules
+                      :rules="mailRules"
+                    />
+                    <q-input
+                      v-model="userRegister.password"
+                      ref="passwordRef"
+                      label="Password"
+                      :type="isPwd ? 'password' : 'text'"
+                      lazy-rules
+                      :rules="passwordRules"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
+                    <q-btn
+                      class="q-my-md full-width"
+                      color="primary"
+                      label="Register"
+                      type="submit"
+                      size="1rem"
+                      no-caps
+                      unelevated
+                      @click.prevent="register"
+                      :loading="isSubmitting"
+                    />
+                  </q-form>
+                  <div class="column items-center q-my-lg links">
+                    <div class="q-mb-md">
+                      <span>Already have an account?</span>
+                      <router-link to="/login" class="q-ml-sm"
+                        >Log in</router-link
+                      >
+                    </div>
+                  </div>
+                </q-card-section>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        </q-card>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script setup lang="ts">
@@ -70,7 +104,9 @@ import { QInput } from 'quasar';
 const router = useRouter();
 
 const userRegister = ref<UserRegister>({
+  nickname: '',
   name: '',
+  surname: '',
   mail: '',
   password: '',
 });
@@ -78,12 +114,18 @@ const isPwd = ref(true);
 const isSubmitting = ref(false);
 
 //Form validation
-const nameRef = ref<QInput>();
+const nicknameRef = ref<QInput>();
 const mailRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
-const nameRules = [
+const nicknameRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your username',
+];
+const nameRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your name',
+];
+const surnameRules = [
+  (val: string) => (val && val.length > 0) || 'Please enter your surname',
 ];
 const mailRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your email',
@@ -97,7 +139,7 @@ const passwordRules = [
 ];
 
 function isFormInvalid(): boolean {
-  const inputRefs = [nameRef, passwordRef, mailRef];
+  const inputRefs = [nicknameRef, passwordRef, mailRef];
   let hasError = false;
 
   for (const ref of inputRefs) {
