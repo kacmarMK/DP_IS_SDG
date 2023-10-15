@@ -1,4 +1,10 @@
 // app global css in SCSS form
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/Inter-VariableFont.ttf') format('truetype');
+  font-display: swap;
+}
+
 html {
   background-color: #f3f6fa;
 }
