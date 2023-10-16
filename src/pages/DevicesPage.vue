@@ -31,9 +31,25 @@
           </div>
         </template>
 
+        <template v-slot:body-cell-name="props">
+          <q-td :props="props">
+            <router-link
+              :to="`/devices/${props.row.uid}`"
+              class="text-primary text-weight-medium"
+            >
+              {{ props.row.name }}
+            </router-link>
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn icon="mdi-open-in-app" color="grey-color" flat round
+            <q-btn
+              icon="mdi-open-in-app"
+              color="grey-color"
+              flat
+              round
+              :to="`/devices/${props.row.uid}`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Open
               </q-tooltip></q-btn
@@ -153,6 +169,13 @@ const columns: QTableProps['columns'] = [
     name: 'name',
     label: 'Name',
     field: 'name',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'mac',
+    label: 'Mac Address',
+    field: 'mac',
     sortable: true,
     align: 'left',
   },

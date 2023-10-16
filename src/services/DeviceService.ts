@@ -3,16 +3,18 @@ import { api } from 'src/boot/ofetch';
 
 class DeviceService {
   async getDevices(): Promise<Device[]> {
-    const devices: Device[] = await api<Device[]>('device');
-    return devices;
+    return await api<Device[]>('device');
+  }
+
+  async getDevice(uid: string): Promise<Device> {
+    return await api<Device>(`device/getDeviceById/${uid}`);
   }
 
   async createDevice(deviceCreate: DeviceCreate): Promise<Device> {
-    const device: Device = await api<Device>('device/create', {
+    return await api<Device>('device/create', {
       method: 'POST',
       body: deviceCreate,
     });
-    return device;
   }
 
   async deleteDevice(uid: string): Promise<void> {
