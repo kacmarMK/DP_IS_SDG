@@ -3,41 +3,41 @@
     <div>
       <div class="q-mb-md row">
         <router-link
-          class="main-text text-accent text-weight-medium"
+          class="main-text text-accent text-weight-medium z-fab"
           to="/devices"
           >Devices ></router-link
         >
-        <p class="main-text">&nbsp;{{ device?.name }}</p>
+        <p class="main-text">&nbsp;{{ store.device?.name }}</p>
         <q-space></q-space>
       </div>
+      <div
+        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
+        v-if="store.device"
+      >
+        <div class="col-md-12 col-lg-4 col-xl-3">
+          <device-info-container></device-info-container>
+        </div>
+        <div class="col-md-12 col-lg-8 col-xl-9">
+          <div class="shadow container q-pa-lg full-height">...</div>
+        </div>
+        <div class="col-md-12">
+          <device-chart class="bg-white shadow q-pa-lg"></device-chart>
+        </div>
+      </div>
+      <div></div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { Device } from '../models/Device';
-import deviceService from 'src/services/DeviceService';
 import { useRoute } from 'vue-router';
-import { toast } from 'vue3-toastify';
+import { useDevicesStore } from '../stores/devices-store';
+import DeviceInfoContainer from '../components/DeviceInfoContainer.vue';
+import DeviceChart from 'src/components/DeviceChart.vue';
 
 const route = useRoute();
-
-// Get device
-const device = ref<Device | null>(null);
-const isLoadingDevice = ref(false);
-async function getDevice() {
-  try {
-    isLoadingDevice.value = true;
-    device.value = await deviceService.getDevice(route.params.id.toString());
-  } catch (error) {
-    console.log(error);
-    toast.error('Loading device failed!');
-  } finally {
-    isLoadingDevice.value = false;
-  }
-}
-getDevice();
+const store = useDevicesStore();
+store.getDevice(route.params.id.toString());
 </script>
 
 <style lang="scss" scoped></style>

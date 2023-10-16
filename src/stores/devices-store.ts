@@ -71,6 +71,25 @@ export const useDevicesStore = defineStore('devices', () => {
     }
   }
 
+  // Device info
+  const device = ref<Device | null>(null);
+  const isLoadingDevice = ref(false);
+  async function getDevice(uid: string) {
+    try {
+      isLoadingDevice.value = true;
+      if (device.value?.uid != uid) {
+        device.value = null;
+      }
+
+      device.value = await deviceService.getDevice(uid); // route.params.id.toString()
+    } catch (error) {
+      console.log(error);
+      toast.error('Loading device failed!');
+    } finally {
+      isLoadingDevice.value = false;
+    }
+  }
+
   return {
     devices,
     isLoadingDevices,
@@ -83,5 +102,8 @@ export const useDevicesStore = defineStore('devices', () => {
     deleteInProgress,
     deletingDevice,
     deleteDevice,
+    device,
+    isLoadingDevice,
+    getDevice,
   };
 });

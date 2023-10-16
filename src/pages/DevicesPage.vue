@@ -82,7 +82,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { QTableProps } from 'quasar';
 import { useDevicesStore } from '../stores/devices-store';
 import CreateDeviceDialog from '../components/CreateDeviceDialog.vue';
@@ -138,3 +137,4 @@ const columns: QTableProps['columns'] = [
 </script>
 
 <style lang="scss" scoped></style>
+../stores/device-store

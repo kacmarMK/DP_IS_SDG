@@ -50,3 +50,4 @@ store.getDevices();
 </script>
 
 <style lang="scss" scoped></style>
+../stores/device-store
