@@ -11,13 +11,13 @@
           no-caps
           size="15px"
           label="Create Device"
-          @click="createDialog = true"
+          @click="store.createDialog = true"
         />
       </div>
       <q-table
-        :rows="devices"
+        :rows="store.devices"
         :columns="columns"
-        :loading="isLoadingDevices"
+        :loading="store.isLoadingDevices"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -61,8 +61,8 @@
             >
             <q-btn
               @click.stop="
-                deleteDialog = true;
-                deletingDeviceId = props.row.uid;
+                store.deleteDialog = true;
+                store.deletingDevice = props.row;
               "
               icon="mdi-trash-can-outline"
               color="grey-color"
@@ -76,94 +76,21 @@
         </template>
       </q-table>
     </div>
-    <q-dialog v-model="createDialog">
-      <q-card style="min-width: 350px" class="q-pa-">
-        <q-card-section>
-          <div class="text-h6">Create new device</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none column q-gutter-md">
-          <q-input label="Name" v-model="deviceCreate.name" />
-          <q-input label="Mac" v-model="deviceCreate.mac" />
-          <q-select
-            label="Type"
-            v-model="deviceCreate.type"
-            :options="Object.values(DeviceTypeEnum)"
-          >
-          </q-select>
-          <q-input label="Version" v-model="deviceCreate.version" />
-          <q-input label="Firmware" v-model="deviceCreate.firmware" />
-          <q-input label="Init Api Key" v-model="deviceCreate.initApiKey" />
-          <q-checkbox
-            class="q-mt-lg"
-            v-model="deviceCreate.deactivated"
-            dense
-            label="Deactivated"
-            color="primary"
-          />
-        </q-card-section>
-
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup no-caps />
-          <q-btn
-            unelevated
-            color="primary"
-            label="Create device"
-            no-caps
-            @click="createDevice"
-            :loading="isCreatingDevice"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="deleteDialog">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Delete Device</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          Are you sure you want to delete this device?
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat color="grey-9" label="Cancel" v-close-popup no-caps />
-          <q-btn
-            unelevated
-            label="Delete"
-            color="red"
-            :loading="deleteInProgress"
-            no-caps
-            @click="deleteDevice()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <create-device-dialog />
+    <delete-device-dialog />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { DeviceCreate, Device } from '../models/Device';
-import DeviceTypeEnum from 'src/models/DeviceType';
-import { toast } from 'vue3-toastify';
-import deviceService from 'src/services/DeviceService';
 import { QTableProps } from 'quasar';
+import { useDevicesStore } from '../stores/devices-store';
+import CreateDeviceDialog from '../components/CreateDeviceDialog.vue';
+import DeleteDeviceDialog from '../components/DeleteDeviceDialog.vue';
 
-// Get devices
-const devices = ref<Device[]>([]);
-const isLoadingDevices = ref(false);
-async function getDevices() {
-  try {
-    isLoadingDevices.value = true;
-    devices.value = await deviceService.getDevices();
-  } catch (error) {
-    console.log(error);
-    toast.error('Loading devices failed!');
-  } finally {
-    isLoadingDevices.value = false;
-  }
-}
+const store = useDevicesStore();
+store.getDevices();
+
 const columns: QTableProps['columns'] = [
   {
     name: 'name',
@@ -208,55 +135,6 @@ const columns: QTableProps['columns'] = [
     sortable: false,
   },
 ];
-getDevices();
-
-//Create device
-const createDialog = ref(false);
-const deviceCreate = ref<DeviceCreate>({
-  name: '',
-  mac: '',
-  type: undefined,
-  version: '',
-  firmware: '',
-  initApiKey: '',
-  deactivated: false,
-});
-const isCreatingDevice = ref(false);
-async function createDevice() {
-  try {
-    isCreatingDevice.value = true;
-    await deviceService.createDevice(deviceCreate.value);
-    toast.success('Device created!');
-    getDevices();
-    createDialog.value = false;
-  } catch (error) {
-    console.log(error);
-    toast.error('Creating device failed!');
-  } finally {
-    isCreatingDevice.value = false;
-  }
-}
-
-//Delete device dialog
-const deleteDialog = ref(false);
-const deleteInProgress = ref(false);
-const deletingDeviceId = ref<string | undefined>(undefined);
-async function deleteDevice() {
-  if (deletingDeviceId.value === undefined) return;
-
-  try {
-    deleteInProgress.value = true;
-    await deviceService.deleteDevice(deletingDeviceId.value);
-    toast.success('Device deleted!');
-    getDevices();
-    deleteDialog.value = false;
-  } catch (error) {
-    console.log(error);
-    toast.error('Deleting device failed!');
-  } finally {
-    deleteInProgress.value = false;
-  }
-}
 </script>
 
 <style lang="scss" scoped></style>
