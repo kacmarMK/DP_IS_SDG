@@ -19,6 +19,7 @@
         :columns="columns"
         :loading="isLoadingDevices"
         flat
+        :rows-per-page-options="[10, 20, 50]"
         class="shadow"
         no-data-label="No Devices Yet"
         loading-label="Loading Devices..."
@@ -32,12 +33,25 @@
 
         <template v-slot:body-cell-actions="props">
           <q-td auto-width :props="props">
+            <q-btn icon="mdi-open-in-app" color="grey-color" flat round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Open
+              </q-tooltip></q-btn
+            >
             <q-btn icon="mdi-pencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
               </q-tooltip></q-btn
             >
-            <q-btn icon="mdi-trash-can-outline" color="grey-color" flat round
+            <q-btn
+              @click.stop="
+                deleteDialog = true;
+                deletingDeviceId = props.row.uid;
+              "
+              icon="mdi-trash-can-outline"
+              color="grey-color"
+              flat
+              round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Delete
               </q-tooltip></q-btn
@@ -82,6 +96,29 @@
             no-caps
             @click="createDevice"
             :loading="isCreatingDevice"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="deleteDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Delete Device</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Are you sure you want to delete this device?
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat color="grey-9" label="Cancel" v-close-popup no-caps />
+          <q-btn
+            unelevated
+            label="Delete"
+            color="red"
+            :loading="deleteInProgress"
+            no-caps
+            @click="deleteDevice()"
           />
         </q-card-actions>
       </q-card>
@@ -148,7 +185,6 @@ const columns: QTableProps['columns'] = [
     sortable: false,
   },
 ];
-
 getDevices();
 
 //Create device
@@ -175,6 +211,27 @@ async function createDevice() {
     toast.error('Creating device failed!');
   } finally {
     isCreatingDevice.value = false;
+  }
+}
+
+//Delete device dialog
+const deleteDialog = ref(false);
+const deleteInProgress = ref(false);
+const deletingDeviceId = ref<string | undefined>(undefined);
+async function deleteDevice() {
+  if (deletingDeviceId.value === undefined) return;
+
+  try {
+    deleteInProgress.value = true;
+    await deviceService.deleteDevice(deletingDeviceId.value);
+    toast.success('Device deleted!');
+    getDevices();
+    deleteDialog.value = false;
+  } catch (error) {
+    console.log(error);
+    toast.error('Deleting device failed!');
+  } finally {
+    deleteInProgress.value = false;
   }
 }
 </script>

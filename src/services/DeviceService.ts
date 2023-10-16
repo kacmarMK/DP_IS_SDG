@@ -14,6 +14,12 @@ class DeviceService {
     });
     return device;
   }
+
+  async deleteDevice(uid: string): Promise<void> {
+    await api(`device/delete/${uid}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export default new DeviceService();
