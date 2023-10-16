@@ -5,7 +5,7 @@ interface Command {
   name: string;
   params?: Array<number>;
   deviceType?: DeviceTypeEnum;
-  createdAt?: string;
+  createdAt?: number;
   deactivated?: boolean;
 }
 
