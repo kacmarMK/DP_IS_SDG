@@ -13,11 +13,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      content-class="bg-white shadow"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above class="shadow bg-white">
       <div class="column q-px-lg full-height">
         <router-link class="q-my-lg q-mx-auto full-width" to="/">
           <q-img

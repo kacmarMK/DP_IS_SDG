@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="store.createDialog">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-md">
       <q-card-section>
         <div class="text-h6">Create new device</div>
       </q-card-section>
