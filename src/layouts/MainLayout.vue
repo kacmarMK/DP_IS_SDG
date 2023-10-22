@@ -10,6 +10,48 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
+        <q-space />
+        <q-btn
+          class="q-mr-xs"
+          flat
+          dense
+          size="18px"
+          round
+          padding="4px"
+          icon="account_circle"
+          ripple="false"
+        >
+          <q-menu>
+            <q-list style="min-width: 150px" class="text-secondary">
+              <q-item>
+                <q-item-section class="q-py-xs">
+                  <div class="text-weight-medium">Username</div>
+                  <div class="text-grey-color">placeholder@gmail.com</div>
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item clickable to="/profile">
+                <div class="row items-center q-gutter-sm">
+                  <q-icon size="24px" name="person_outline" />
+                  <div>Profile</div>
+                </div>
+              </q-item>
+              <q-item clickable to="/settings">
+                <div class="row items-center q-gutter-sm">
+                  <q-icon size="24px" name="mdi-cog-outline" />
+                  <div>Settings</div>
+                </div>
+              </q-item>
+              <q-separator />
+              <q-item clickable to="/login">
+                <div class="row items-center q-gutter-sm">
+                  <q-icon size="24px" name="mdi-logout" />
+                  <div>Logout</div>
+                </div>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
