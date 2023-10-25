@@ -11,6 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <q-space />
+        <language-select class="q-mr-md"></language-select>
         <q-btn
           class="q-mr-xs"
           flat
@@ -106,6 +107,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import SideMenuButton from 'src/components/SideMenuButton.vue';
+import LanguageSelect from 'src/components/LanguageSelect.vue';
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
