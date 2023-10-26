@@ -3,10 +3,18 @@ import DeviceTypeEnum from './DeviceType';
 interface Command {
   id: string;
   name: string;
-  params?: Array<number>;
+  params?: Array<string>;
   deviceType?: DeviceTypeEnum;
   createdAt?: number;
   deactivated?: boolean;
 }
 
-export type { Command };
+interface CommandFrame {
+  name: string;
+  params?: Array<string>;
+  deviceType?: DeviceTypeEnum;
+  createdAt?: number;
+  deactivated?: boolean;
+}
+
+export type { Command, CommandFrame };

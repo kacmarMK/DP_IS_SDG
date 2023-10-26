@@ -1,31 +1,48 @@
 <template>
-  <div class="q-pa-md">
-    <q-table flat bordered title="Commands" :columns="columns" row-key="id">
-      <!--<template v-slot:top>
-        <q-space />
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          color="primary"
-          v-model="filter"
-        >
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>-->
-    </q-table>
-  </div>
+  <q-page class="main-padding">
+    <div>
+      <div class="q-mb-md row">
+        <p class="main-text">Commands</p>
+        <q-space></q-space>
+        <q-btn
+          class="shadow"
+          color="secondary"
+          label="Create new command"
+          unelevated
+          no-caps
+          size="15px"
+          @click="store.createDialog = true"
+        />
+      </div>
+      <q-table
+        :rows="store.commands"
+        :columns="columns"
+        :loading="store.isLoadingCommands"
+        flat
+        :rows-per-page-options="[10, 20, 50]"
+        class="shadow"
+        no-data-label="No Commands Found"
+        loading-label="Loading Commands..."
+      >
+        <template v-slot:no-data="{ message }">
+          <div class="full-width column flex-center q-pa-lg nothing-found-text">
+            <q-icon name="data_object" class="q-mb-md" size="50px"></q-icon>
+            {{ message }}
+          </div>
+        </template>
+      </q-table>
+    </div>
+    <create-command-dialog />
+  </q-page>
 </template>
 
 <script setup lang="ts">
-//import { ref } from 'vue';
 import { QTableProps } from 'quasar';
 import { useCommandsStore } from '../stores/commands-store';
+import CreateCommandDialog from '../components/CreateCommandDialog.vue';
 
 const store = useCommandsStore();
-//store.getCommands();
+store.getCommands();
 
 const columns: QTableProps['columns'] = [
   {
