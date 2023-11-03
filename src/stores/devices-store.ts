@@ -20,33 +20,6 @@ export const useDevicesStore = defineStore('devices', () => {
     }
   }
 
-  //Create device dialog
-  const createDialog = ref(false);
-  const deviceCreate = ref<DeviceCreate>({
-    name: '',
-    mac: '',
-    type: undefined,
-    version: '',
-    firmware: '',
-    initApiKey: '',
-    deactivated: false,
-  });
-  const isCreatingDevice = ref(false);
-  async function createDevice() {
-    try {
-      isCreatingDevice.value = true;
-      await deviceService.createDevice(deviceCreate.value);
-      toast.success('Device created!');
-      getDevices();
-      createDialog.value = false;
-    } catch (error) {
-      console.log(error);
-      toast.error('Creating device failed!');
-    } finally {
-      isCreatingDevice.value = false;
-    }
-  }
-
   //Delete device dialog
   const deleteDialog = ref(false);
   const deleteInProgress = ref(false);
@@ -94,10 +67,6 @@ export const useDevicesStore = defineStore('devices', () => {
     devices,
     isLoadingDevices,
     getDevices,
-    createDialog,
-    deviceCreate,
-    isCreatingDevice,
-    createDevice,
     deleteDialog,
     deleteInProgress,
     deletingDevice,

@@ -11,7 +11,7 @@
           no-caps
           size="15px"
           label="Create Device"
-          @click="store.createDialog = true"
+          to="/devices/create"
         />
       </div>
       <q-table
@@ -76,7 +76,6 @@
         </template>
       </q-table>
     </div>
-    <create-device-dialog />
     <delete-device-dialog />
   </q-page>
 </template>
@@ -84,7 +83,6 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { useDevicesStore } from '../stores/devices-store';
-import CreateDeviceDialog from '../components/CreateDeviceDialog.vue';
 import DeleteDeviceDialog from '../components/DeleteDeviceDialog.vue';
 
 const store = useDevicesStore();
