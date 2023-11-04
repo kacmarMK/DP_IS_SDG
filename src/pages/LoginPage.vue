@@ -132,5 +132,5 @@ async function login() {
 </script>
 
 <style lang="scss" scoped>
-@import url(../css/auth.scss);
+@import '../css/auth.scss';
 </style>
