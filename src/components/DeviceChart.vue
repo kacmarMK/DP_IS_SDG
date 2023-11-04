@@ -1,9 +1,28 @@
 <template>
   <div id="chart">
+    <div class="row items-center justify-start q-mb-md q-gutter-x-md">
+      <p class="text-weight-medium text-h6">Device Chart</p>
+      <q-space></q-space>
+      <device-time-range-select
+        @update:timeRange="updateTimeRange"
+      ></device-time-range-select>
+      <q-btn
+        text-color="primary"
+        outline
+        unelevated
+        no-caps
+        label="Refresh"
+        padding="0.5rem 1rem"
+        icon-right="mdi-refresh"
+        @click="store.refreshDevice()"
+        :loading="store.isRefreshingDevice"
+      ></q-btn>
+    </div>
     <apexchart
       height="350"
       width="100%"
       type="area"
+      ref="chart"
       :options="chartOptions"
       :series="series"
     ></apexchart>
@@ -11,33 +30,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useDevicesStore } from '../stores/devices-store';
+import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
 
 const store = useDevicesStore();
 
 const series = computed(() => {
-  const seriesData = store.device?.dataPointTags.map((tag) => ({
+  return store.device?.dataPointTags.map((tag) => ({
     name: tag.name,
     data: tag.storedData.map((data) => ({
       x: data.measureAdd,
       y: data.value,
-      unit: tag.unit, // Add unit to the data
+      unit: tag.unit,
     })),
   }));
-  return seriesData;
 });
 
 const yaxisLabels = store.device?.dataPointTags.map((tag) => tag.unit) || [];
 
-const chartOptions = {
+const chartOptions = ref({
   chart: {
     stacked: false,
     height: 350,
     zoom: {
       type: 'x',
       enabled: true,
-      autoScaleYaxis: true,
     },
     toolbar: {
       autoSelected: 'zoom',
@@ -53,7 +71,6 @@ const chartOptions = {
     size: 0,
   },
   title: {
-    text: 'Chart',
     align: 'left',
     margin: 0,
     offsetX: -10,
@@ -92,6 +109,11 @@ const chartOptions = {
   })),
   xaxis: {
     type: 'datetime',
+    labels: {
+      datetimeUTC: false,
+    },
+    min: new Date(store.timeRangeComputed.from).getTime(),
+    max: new Date(store.timeRangeComputed.to).getTime(),
   },
   tooltip: {
     shared: false,
@@ -101,7 +123,28 @@ const chartOptions = {
       },
     })),
   },
-};
+});
+
+const chart = ref<ApexCharts | null>(null);
+function updateTimeRange(timeRange: { from: string; to: string }) {
+  if (chart.value) {
+    chart.value.updateOptions({
+      xaxis: {
+        min: new Date(timeRange.from).getTime(),
+        max: new Date(timeRange.to).getTime(),
+      },
+    });
+  }
+}
+
+watch(
+  () => store.timeRangeComputed,
+  (val) => {
+    nextTick(() => {
+      updateTimeRange(val);
+    });
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>
