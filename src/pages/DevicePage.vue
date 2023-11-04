@@ -9,6 +9,15 @@
         >
         <p class="main-text">&nbsp;{{ store.device?.name }}</p>
         <q-space></q-space>
+        <device-time-range-select></device-time-range-select>
+        <q-btn
+          class="shadow q-ml-md"
+          color="primary"
+          unelevated
+          no-caps
+          size="15px"
+          label="Edit Device"
+        />
       </div>
       <div
         class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
@@ -34,6 +43,7 @@ import { useRoute } from 'vue-router';
 import { useDevicesStore } from '../stores/devices-store';
 import DeviceInfoContainer from '../components/DeviceInfoContainer.vue';
 import DeviceChart from 'src/components/DeviceChart.vue';
+import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
 
 const route = useRoute();
 const store = useDevicesStore();

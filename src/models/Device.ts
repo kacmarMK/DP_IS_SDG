@@ -1,3 +1,4 @@
+import { DataPointTag } from './DataPointTag';
 import DeviceTypeEnum from './DeviceType';
 
 interface Device {
@@ -7,6 +8,7 @@ interface Device {
   type: DeviceTypeEnum;
   version: string;
   firmware: string;
+  dataPointTags: DataPointTag[];
   responseTime: number;
   addTime?: number;
   initExpireTime?: number;

@@ -11,34 +11,24 @@
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import { useDevicesStore } from '../stores/devices-store';
 
 const store = useDevicesStore();
 
-const series = [
-  {
-    name: 'sensor-1',
-    data: [
-      [1634400000000, 432],
-      [1634403600000, 502],
-      [1634407200000, 452],
-      [1634410800000, 600],
-      [1634414400000, 300],
-      [1634418000000, 200],
-    ],
-  },
-  {
-    name: 'sensor-2',
-    data: [
-      [1634400000000, 942],
-      [1634403600000, 1202],
-      [1634407200000, 902],
-      [1634410800000, 1500],
-      [1634414400000, 900],
-      [1634418000000, 800],
-    ],
-  },
-];
+const series = computed(() => {
+  const seriesData = store.device?.dataPointTags.map((tag) => ({
+    name: tag.name,
+    data: tag.storedData.map((data) => ({
+      x: data.measureAdd,
+      y: data.value,
+      unit: tag.unit, // Add unit to the data
+    })),
+  }));
+  return seriesData;
+});
+
+const yaxisLabels = store.device?.dataPointTags.map((tag) => tag.unit) || [];
 
 const chartOptions = {
   chart: {
@@ -87,23 +77,29 @@ const chartOptions = {
       stops: [20, 100, 100, 100],
     },
   },
-  yaxis: {
+  yaxis: yaxisLabels.map((unit) => ({
+    axisBorder: {
+      show: true,
+    },
+    axisTicks: {
+      show: true,
+    },
     labels: {
       formatter: function (val: number) {
-        return val.toFixed(0);
+        return val.toFixed(2) + unit;
       },
     },
-  },
+  })),
   xaxis: {
     type: 'datetime',
   },
   tooltip: {
     shared: false,
-    y: {
+    y: yaxisLabels.map((unit) => ({
       formatter: function (val: number) {
-        return val.toFixed(0);
+        return val.toFixed(2) + unit;
       },
-    },
+    })),
   },
 };
 </script>

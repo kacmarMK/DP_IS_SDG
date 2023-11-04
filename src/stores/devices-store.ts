@@ -47,6 +47,7 @@ export const useDevicesStore = defineStore('devices', () => {
   // Device info
   const device = ref<Device | null>(null);
   const isLoadingDevice = ref(false);
+  const timeRangeSelected = ref();
   async function getDevice(uid: string) {
     try {
       isLoadingDevice.value = true;
@@ -74,5 +75,6 @@ export const useDevicesStore = defineStore('devices', () => {
     device,
     isLoadingDevice,
     getDevice,
+    timeRangeSelected,
   };
 });

@@ -35,7 +35,7 @@
           <q-td :props="props">
             <router-link
               :to="`/devices/${props.row.uid}`"
-              class="text-primary text-weight-medium"
+              class="text-black text-weight-regular"
             >
               {{ props.row.name }}
             </router-link>

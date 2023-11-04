@@ -43,12 +43,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import { useDevicesStore } from '../stores/devices-store';
 
-const route = useRoute();
 const store = useDevicesStore();
-store.getDevice(route.params.id.toString());
 </script>
 
 <style lang="scss" scoped></style>

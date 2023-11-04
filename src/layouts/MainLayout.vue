@@ -20,7 +20,7 @@
           round
           padding="4px"
           icon="account_circle"
-          ripple="false"
+          :ripple="false"
         >
           <q-menu>
             <q-list style="min-width: 150px" class="text-secondary">
