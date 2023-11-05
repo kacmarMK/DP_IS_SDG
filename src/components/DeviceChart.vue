@@ -1,7 +1,7 @@
 <template>
   <div id="chart">
     <div class="row items-center justify-start q-mb-md q-gutter-x-md">
-      <p class="text-weight-medium text-h6">Device Chart</p>
+      <p class="text-weight-medium text-h6">Chart</p>
       <q-space></q-space>
       <device-time-range-select
         @update:timeRange="updateTimeRange"
@@ -51,7 +51,6 @@ const yaxisLabels = store.device?.dataPointTags.map((tag) => tag.unit) || [];
 
 const chartOptions = ref({
   chart: {
-    stacked: false,
     height: 350,
     zoom: {
       type: 'x',
@@ -69,16 +68,6 @@ const chartOptions = ref({
   },
   markers: {
     size: 0,
-  },
-  title: {
-    align: 'left',
-    margin: 0,
-    offsetX: -10,
-    style: {
-      fontSize: '17px',
-      fontWeight: '500',
-      fontFamily: 'Inter',
-    },
   },
   legend: {
     position: 'bottom',
@@ -103,7 +92,7 @@ const chartOptions = ref({
     },
     labels: {
       formatter: function (val: number) {
-        return val.toFixed(2) + unit;
+        return val.toFixed(0) + unit;
       },
     },
   })),
@@ -116,12 +105,17 @@ const chartOptions = ref({
     max: new Date(store.timeRangeComputed.to).getTime(),
   },
   tooltip: {
-    shared: false,
+    shared: true,
     y: yaxisLabels.map((unit) => ({
       formatter: function (val: number) {
         return val.toFixed(2) + unit;
       },
     })),
+    x: {
+      formatter: function (val: number) {
+        return new Date(val).toLocaleString();
+      },
+    },
   },
 });
 

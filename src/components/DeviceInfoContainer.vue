@@ -1,6 +1,6 @@
 <template>
-  <div v-if="store.device" class="shadow container q-pa-lg">
-    <div class="text-weight-medium text-h6">Device info</div>
+  <div v-if="store.device">
+    <div class="text-weight-medium text-h6">Info</div>
     <div class="row q-mt-md q-gutter-y-xs">
       <div class="full-width row">
         <div class="col-5 text-weight-medium">Name</div>

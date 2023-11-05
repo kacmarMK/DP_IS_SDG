@@ -23,9 +23,16 @@
         v-if="store.device"
       >
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
-          <device-info-container></device-info-container>
+          <device-info-container
+            class="shadow container q-pa-lg full-height"
+          ></device-info-container>
         </div>
-        <div class="col-12 col-md-12 col-lg-8 col-xl-9">
+        <div class="col-12 col-md-12 col-lg-4 col-xl-3">
+          <device-sensors-list
+            class="shadow container q-pa-lg full-height"
+          ></device-sensors-list>
+        </div>
+        <div class="col-12 col-md-12 col-lg-4 col-xl-6">
           <div class="shadow container q-pa-lg full-height">...</div>
         </div>
         <div class="col-12">
@@ -41,6 +48,7 @@
 import { useRoute } from 'vue-router';
 import { useDevicesStore } from '../stores/devices-store';
 import DeviceInfoContainer from '../components/DeviceInfoContainer.vue';
+import DeviceSensorsList from 'src/components/DeviceSensorsList.vue';
 import DeviceChart from 'src/components/DeviceChart.vue';
 
 const route = useRoute();
