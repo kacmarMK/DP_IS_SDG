@@ -4,7 +4,8 @@
       <p class="text-weight-medium text-h6">Chart</p>
       <q-space></q-space>
       <device-time-range-select
-        @update:timeRange="updateTimeRange"
+        @update:model-value="updateTimeRange"
+        ref="timeRangeSelect"
       ></device-time-range-select>
       <q-btn
         text-color="primary"
@@ -14,7 +15,7 @@
         label="Refresh"
         padding="0.5rem 1rem"
         icon-right="mdi-refresh"
-        @click="store.refreshDevice()"
+        @click="refreshDevice()"
         :loading="store.isRefreshingDevice"
       ></q-btn>
     </div>
@@ -30,11 +31,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useDevicesStore } from '../stores/devices-store';
 import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
+import { TimeRange } from '../models/TimeRange';
 
 const store = useDevicesStore();
+
+const selectedTimeRange = ref<TimeRange>({
+  from: new Date().toISOString(),
+  to: new Date().toISOString(),
+});
+
+const timeRangeSelect = ref();
+function refreshDevice() {
+  store.refreshDevice();
+  timeRangeSelect.value?.refreshComputedTimeRange();
+}
 
 const series = computed(() => {
   return store.device?.dataPointTags.map((tag) => ({
@@ -101,8 +114,8 @@ const chartOptions = ref({
     labels: {
       datetimeUTC: false,
     },
-    min: new Date(store.timeRangeComputed.from).getTime(),
-    max: new Date(store.timeRangeComputed.to).getTime(),
+    min: new Date(selectedTimeRange.value.from).getTime(),
+    max: new Date(selectedTimeRange.value.to).getTime(),
   },
   tooltip: {
     shared: true,
@@ -120,7 +133,8 @@ const chartOptions = ref({
 });
 
 const chart = ref<ApexCharts | null>(null);
-function updateTimeRange(timeRange: { from: string; to: string }) {
+function updateTimeRange(timeRange: TimeRange) {
+  selectedTimeRange.value = timeRange;
   if (chart.value) {
     chart.value.updateOptions({
       xaxis: {
@@ -128,17 +142,11 @@ function updateTimeRange(timeRange: { from: string; to: string }) {
         max: new Date(timeRange.to).getTime(),
       },
     });
+  } else {
+    chartOptions.value.xaxis.min = new Date(timeRange.from).getTime();
+    chartOptions.value.xaxis.max = new Date(timeRange.to).getTime();
   }
 }
-
-watch(
-  () => store.timeRangeComputed,
-  (val) => {
-    nextTick(() => {
-      updateTimeRange(val);
-    });
-  }
-);
 </script>
 
 <style lang="scss" scoped></style>
