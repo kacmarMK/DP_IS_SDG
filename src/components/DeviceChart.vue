@@ -46,7 +46,7 @@ const selectedTimeRange = ref<TimeRange>({
 const timeRangeSelect = ref();
 function refreshDevice() {
   store.refreshDevice();
-  timeRangeSelect.value?.refreshComputedTimeRange();
+  timeRangeSelect.value?.emitUpdate();
 }
 
 const series = computed(() => {

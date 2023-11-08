@@ -47,12 +47,12 @@
 
 <script setup lang="ts">
 import { format, subSeconds } from 'date-fns';
-import { computed, ref, watch } from 'vue';
+import { ref } from 'vue';
 import { PredefinedTimeRange } from '../models/TimeRange';
 
 const emit = defineEmits(['update:modelValue']);
 defineExpose({
-  refreshComputedTimeRange,
+  emitUpdate,
 });
 
 const timeRanges = <PredefinedTimeRange[]>[
@@ -83,48 +83,37 @@ const customTimeRangeSelected = ref({
   to: new Date(),
 });
 const isCustomTimeRangeSelected = ref(false);
-const refreshKey = ref(0);
 
 function setCustomTimeRange(val: { from: Date; to: Date }) {
   customTimeRangeSelected.value = val;
   isCustomTimeRangeSelected.value = true;
+  emitUpdate();
 }
 
 function setPredefinedTimeRange(val: PredefinedTimeRange) {
   selectedTimeRange.value = val;
   isCustomTimeRangeSelected.value = false;
-}
-
-function refreshComputedTimeRange() {
-  refreshKey.value++;
+  emitUpdate();
 }
 
 const formatDate = (date: Date) => format(date, 'yyyy-MM-dd HH:mm:ss');
-const timeRangeComputed = computed(() => {
-  refreshKey.value;
+function emitUpdate() {
+  let newVal;
   if (isCustomTimeRangeSelected.value) {
-    return {
+    newVal = {
       from: formatDate(new Date(customTimeRangeSelected.value.from)),
       to: formatDate(new Date(customTimeRangeSelected.value.to)),
     };
   } else {
     const now = new Date();
-    return {
+    newVal = {
       from: formatDate(subSeconds(now, selectedTimeRange.value.time)),
       to: formatDate(now),
     };
   }
-});
-
-watch(
-  () => timeRangeComputed.value,
-  (newVal) => {
-    emit('update:modelValue', newVal);
-  },
-  {
-    immediate: true,
-  }
-);
+  emit('update:modelValue', newVal);
+}
+emitUpdate();
 </script>
 
 <style lang="scss" scoped>
