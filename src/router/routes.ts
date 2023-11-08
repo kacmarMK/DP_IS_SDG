@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
       },
       { path: '/devices/:id', component: () => import('pages/DevicePage.vue') },
       { path: '/commands', component: () => import('pages/CommandsPage.vue') },
+      { path: '/recipes', component: () => import('pages/RecipesPage.vue') },
     ],
   },
   {
