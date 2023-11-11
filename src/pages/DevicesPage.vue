@@ -135,4 +135,3 @@ const columns: QTableProps['columns'] = [
 </script>
 
 <style lang="scss" scoped></style>
-../stores/device-store
