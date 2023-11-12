@@ -27,13 +27,15 @@
             class="shadow container q-pa-lg full-height"
           ></device-info-container>
         </div>
+        <div class="col-12 col-md-12 col-lg-4 col-xl-6">
+          <current-job-card
+            class="shadow container q-pa-lg full-height"
+          ></current-job-card>
+        </div>
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
           <device-sensors-list
             class="shadow container q-pa-lg full-height"
           ></device-sensors-list>
-        </div>
-        <div class="col-12 col-md-12 col-lg-4 col-xl-6">
-          <div class="shadow container q-pa-lg full-height">...</div>
         </div>
         <div class="col-12">
           <device-chart class="bg-white shadow q-pa-lg"></device-chart>
@@ -50,6 +52,7 @@ import { useDevicesStore } from '../stores/devices-store';
 import DeviceInfoContainer from '../components/DeviceInfoContainer.vue';
 import DeviceSensorsList from 'src/components/DeviceSensorsList.vue';
 import DeviceChart from 'src/components/DeviceChart.vue';
+import CurrentJobCard from 'src/components/CurrentJobCard.vue';
 
 const route = useRoute();
 const store = useDevicesStore();

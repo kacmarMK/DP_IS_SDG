@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia';
 import { Device } from 'src/models/Device';
+import { Job } from 'src/models/Job';
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import deviceService from 'src/services/DeviceService';
+import jobService from 'src/services/JobService';
+import { JobStatusEnum } from 'src/models/JobStatus';
 
 export const useDevicesStore = defineStore('devices', () => {
   //Devices

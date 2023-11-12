@@ -1,5 +1,6 @@
 import { Recipe } from 'src/models/Recipe';
 import { api } from 'src/boot/ofetch';
+import DeviceTypeEnum from 'src/models/DeviceType';
 
 class RecipeService {
   async createRecipe(recipe: Recipe): Promise<Recipe> {
@@ -13,6 +14,15 @@ class RecipeService {
       `jobs/recipe/getAllRecipes/${sortBy}/${sortDirection}`
     );
   }
+
+  async getFullRecipesByDeviceType(
+    deviceType: DeviceTypeEnum
+  ): Promise<Recipe[]> {
+    return await api<Recipe[]>(
+      `/api/jobs/recipe/getFullRecipesByDeviceType/${deviceType}/NONE/NONE`
+    );
+  }
+
   // TODO pridat dalsie prepojenia na endpointy
 }
 
