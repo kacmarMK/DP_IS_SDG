@@ -22,7 +22,7 @@
     <apexchart
       height="350"
       width="100%"
-      type="area"
+      type="line"
       ref="chart"
       :options="chartOptions"
       :series="series"
@@ -35,6 +35,7 @@ import { computed, ref } from 'vue';
 import { useDevicesStore } from '../stores/devices-store';
 import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
 import { TimeRange } from '../models/TimeRange';
+import { graphColors } from '../utils/colors';
 
 const store = useDevicesStore();
 
@@ -50,13 +51,14 @@ function refreshDevice() {
 }
 
 const series = computed(() => {
-  return store.device?.dataPointTags.map((tag) => ({
+  return store.device?.dataPointTags.map((tag, index) => ({
     name: tag.name,
     data: tag.storedData.map((data) => ({
       x: data.measureAdd,
       y: data.value,
       unit: tag.unit,
     })),
+    color: graphColors[index],
   }));
 });
 
@@ -86,17 +88,7 @@ const chartOptions = ref({
     position: 'bottom',
     horizontalAlign: 'center',
   },
-  fill: {
-    type: 'gradient',
-    gradient: {
-      shadeIntensity: 1,
-      inverseColors: false,
-      opacityFrom: 0.45,
-      opacityTo: 0.05,
-      stops: [20, 100, 100, 100],
-    },
-  },
-  yaxis: yaxisLabels.map((unit) => ({
+  yaxis: yaxisLabels.map((unit, index) => ({
     axisBorder: {
       show: true,
     },
@@ -106,6 +98,9 @@ const chartOptions = ref({
     labels: {
       formatter: function (val: number) {
         return val.toFixed(0) + unit;
+      },
+      style: {
+        colors: graphColors[index],
       },
     },
   })),
@@ -118,7 +113,7 @@ const chartOptions = ref({
     max: new Date(selectedTimeRange.value.to).getTime(),
   },
   tooltip: {
-    shared: true,
+    shared: false,
     y: yaxisLabels.map((unit) => ({
       formatter: function (val: number) {
         return val.toFixed(2) + unit;
