@@ -16,6 +16,36 @@ class JobService {
       }
     );
   }
+
+  async skipStep(jobId: string): Promise<Job[]> {
+    return await api<Job[]>(`jobs/job/skipStep/${jobId}`, {
+      method: 'PUT',
+    });
+  }
+
+  async skipCycle(jobId: string): Promise<Job[]> {
+    return await api<Job[]>(`jobs/job/skipCycle/${jobId}`, {
+      method: 'PUT',
+    });
+  }
+
+  async pauseJob(jobId: string): Promise<Job[]> {
+    return await api<Job[]>(`jobs/job/pauseJob/${jobId}`, {
+      method: 'PUT',
+    });
+  }
+
+  async continueJob(jobId: string): Promise<Job[]> {
+    return await api<Job[]>(`jobs/job/continueJob/${jobId}`, {
+      method: 'PUT',
+    });
+  }
+
+  async cancelJob(jobId: string): Promise<Job[]> {
+    return await api<Job[]>(`jobs/job/cancelJob/${jobId}`, {
+      method: 'PUT',
+    });
+  }
 }
 
 export default new JobService();
