@@ -28,6 +28,35 @@
             lazy-rules
             :rules="repetitionRules"
           />
+          <div>Schedule</div>
+          <q-btn-group>
+            <q-btn
+              v-for="(button, index) in dayButtons"
+              :key="index"
+              :label="button.label"
+              :color="button.onOff ? 'primary' : 'grey'"
+              @click="dayButtons[index].onOff = !dayButtons[index].onOff"
+            ></q-btn>
+          </q-btn-group>
+          <q-input
+            v-model="scheduledTime"
+            mask="time"
+            fill-mask="-"
+            :rules="['time']"
+            label="Scheduled Time"
+          >
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-time v-model="scheduledTime" format24h>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup no-caps />
@@ -54,6 +83,7 @@ import { Recipe } from 'src/models/Recipe';
 import { QInput } from 'quasar';
 import { JobToRun } from 'src/models/Job';
 import { toast } from 'vue3-toastify';
+import { parse } from 'date-fns';
 
 const store = useDevicesStore();
 const props = defineProps(['modelValue']);
@@ -87,6 +117,13 @@ getRecipes();
 async function runJob() {
   if (!jobToRun.value || !store.device) return;
   try {
+    jobToRun.value.scheduledDays = selectedDays.value;
+
+    const date = parse(scheduledTime.value, 'HH:mm', new Date());
+
+    jobToRun.value.scheduledHour = date.getHours();
+    jobToRun.value.scheduledMinute = date.getMinutes();
+
     await jobService.runJobFromRecipe(jobToRun.value);
     openDialog.value = false;
     toast.success('Job started');
@@ -97,15 +134,35 @@ async function runJob() {
   }
 }
 
+const dayButtons = ref([
+  { label: 'Mon', value: 1, onOff: false },
+  { label: 'Tue', value: 2, onOff: false },
+  { label: 'Wed', value: 3, onOff: false },
+  { label: 'Thu', value: 4, onOff: false },
+  { label: 'Fri', value: 5, onOff: false },
+  { label: 'Sat', value: 6, onOff: false },
+  { label: 'Sun', value: 7, onOff: false },
+]);
+
+const selectedDays = computed(() => {
+  return dayButtons.value
+    .filter((button) => button.onOff)
+    .map((button) => button.value);
+});
+
+const scheduledTime = ref();
+
 function resetDialog() {
   jobToRun.value = {
     recipeId: '',
     deviceId: store.device?.uid ?? '',
     repetitions: 1,
-    scheduledDays: [1, 2, 3, 4, 5, 6, 7],
+    scheduledDays: selectedDays.value,
     scheduledHour: 0,
     scheduledMinute: 0,
   };
+  dayButtons.value.forEach((button) => (button.onOff = false));
+  scheduledTime.value = null;
   selectedRecipe.value = null;
 }
 resetDialog();
