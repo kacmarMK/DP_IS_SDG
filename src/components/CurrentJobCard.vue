@@ -1,33 +1,83 @@
 <template v-if="store.device">
   <div>
     <div class="column full-height">
-      <div class="text-weight-medium text-h6 full-width col-shrink">Job</div>
+      <div class="text-weight-medium text-h6 col-shrink">Job</div>
       <div v-if="jobLoading" class="flex justify-center items-center col-grow">
         <q-spinner-gears size="30px" color="grey-color" />
       </div>
-      <div v-else-if="runningJob" class="row">
-        <q-circular-progress
-          show-value
-          font-size="12px"
-          :value="currentProgress"
-          size="80px"
-          :thickness="0.22"
-          color="teal"
-          track-color="grey-3"
-          class="q-ma-md"
-        >
-          {{ (currentProgress * 100).toFixed(1) }}%
-        </q-circular-progress>
-        <div class="column q-ml-sm q-gutter-y-sm justify-center">
-          <q-badge :color="statusColor" class="q-pa-xs">
-            {{ runningJob.currentStatus }}
-          </q-badge>
-          <div class="text-weight-medium">
-            {{ runningJob.name }}
+      <div
+        v-else-if="runningJob"
+        class="column justify-between col-grow q-my-sm"
+      >
+        <div class="row justify-start items-center q-mb-lg">
+          <q-circular-progress
+            show-value
+            font-size="16px"
+            :value="currentProgress"
+            size="130px"
+            :thickness="0.22"
+            color="teal"
+            track-color="grey-3"
+            class="q-mr-md"
+          >
+            {{ (currentProgress * 100).toFixed(0) }}%
+          </q-circular-progress>
+          <div class="column q-ml-sm q-gutter-y-xs justify-center items-start">
+            <q-badge :color="statusColor" class="q-pa-xs">
+              {{ runningJob.currentStatus }}
+            </q-badge>
+            <div class="text-weight-medium">
+              {{ runningJob.name }}
+            </div>
+            <div v-if="runningJob.status">
+              Step: {{ runningJob.status.currentStep + 1 }} of
+              {{ runningJob.status.totalSteps }} ({{
+                runningJob.commands[currentStep].name
+              }})
+            </div>
+            <div v-if="runningJob.status">
+              Cycle: {{ runningJob.status.currentCycle + 1 }} of
+              {{ runningJob.noOfReps }}
+            </div>
           </div>
-          <div v-if="runningJob.status">
-            Cycle {{ runningJob.status.currentCycle + 1 }} of
-            {{ runningJob.noOfReps }}
+        </div>
+        <div class="row q-col-gutter-sm">
+          <div class="col-grow">
+            <JobControlButton
+              label="Pause"
+              color="grey-color"
+              icon="mdi-pause"
+              :disable="
+                runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
+              "
+            ></JobControlButton>
+          </div>
+          <div class="col-grow">
+            <JobControlButton
+              label="Next Step"
+              color="green-9"
+              icon="mdi-skip-next"
+              :disable="
+                runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
+              "
+            ></JobControlButton>
+          </div>
+          <div class="col-grow">
+            <JobControlButton
+              label="Next Cycle"
+              color="primary"
+              icon="mdi-skip-forward"
+              :disable="
+                runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
+              "
+            ></JobControlButton>
+          </div>
+          <div class="col-grow">
+            <JobControlButton
+              label="Stop"
+              color="red"
+              icon="mdi-stop"
+            ></JobControlButton>
           </div>
         </div>
       </div>
@@ -45,7 +95,7 @@
         />
       </div>
     </div>
-    <StartJobDialog v-model="openDialog" />
+    <StartJobDialog v-model="openDialog" @job-started="getRunningJob" />
   </div>
 </template>
 
@@ -56,6 +106,7 @@ import { computed, ref } from 'vue';
 import { JobStatusEnum } from 'src/models/JobStatus';
 import { Job } from 'src/models/Job';
 import jobService from 'src/services/JobService';
+import JobControlButton from './JobControlButton.vue';
 
 const openDialog = ref(false);
 
@@ -90,6 +141,13 @@ async function getRunningJob() {
   }
 }
 getRunningJob();
+
+const currentStep = computed(() => {
+  if (runningJob.value && runningJob.value.status.currentStep) {
+    return runningJob.value.status.currentStep;
+  }
+  return 0;
+});
 
 const currentProgress = computed(() => {
   if (runningJob.value && runningJob.value.status) {

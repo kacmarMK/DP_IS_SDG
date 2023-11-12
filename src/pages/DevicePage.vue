@@ -23,9 +23,10 @@
         v-if="store.device"
       >
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
-          <device-info-container
+          <device-info-card
+            :device="store.device"
             class="shadow container q-pa-lg full-height"
-          ></device-info-container>
+          ></device-info-card>
         </div>
         <div class="col-12 col-md-12 col-lg-4 col-xl-6">
           <current-job-card
@@ -49,7 +50,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { useDevicesStore } from '../stores/devices-store';
-import DeviceInfoContainer from '../components/DeviceInfoContainer.vue';
+import DeviceInfoCard from '../components/DeviceInfoCard.vue';
 import DeviceSensorsList from 'src/components/DeviceSensorsList.vue';
 import DeviceChart from 'src/components/DeviceChart.vue';
 import CurrentJobCard from 'src/components/CurrentJobCard.vue';

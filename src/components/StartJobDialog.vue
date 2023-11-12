@@ -57,7 +57,7 @@ import { toast } from 'vue3-toastify';
 
 const store = useDevicesStore();
 const props = defineProps(['modelValue']);
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'jobStarted']);
 
 const openDialog = computed({
   get() {
@@ -89,6 +89,8 @@ async function runJob() {
   try {
     await jobService.runJobFromRecipe(jobToRun.value);
     openDialog.value = false;
+    toast.success('Job started');
+    emit('jobStarted');
   } catch (e) {
     toast.error('Error running job');
     console.log(e);
