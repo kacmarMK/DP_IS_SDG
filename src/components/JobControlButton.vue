@@ -2,11 +2,11 @@
   <q-btn
     class="full-width"
     :color="color"
-    padding="0.7rem 0.3rem"
+    padding="0.5rem 0.3rem"
     size="14px"
     outline
-    @click="$emit('click')"
     :disable="disable"
+    :loading="loading"
   >
     <q-icon left size="1.5em" :name="icon" />
     <div>{{ props.label }}</div>
@@ -19,5 +19,6 @@ const props = defineProps({
   color: String,
   icon: String,
   disable: Boolean,
+  loading: Boolean,
 });
 </script>

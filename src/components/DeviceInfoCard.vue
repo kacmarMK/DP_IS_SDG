@@ -1,8 +1,8 @@
 <template>
   <div v-if="props.device" class="column">
     <div class="text-weight-medium text-h6">Info</div>
-    <div class="column q-mt-sm q-gutter-y-xs col-grow justify-evenly">
-      <div class="row q-mt-sm">
+    <div class="q-mt-sm q-gutter-y-xs column justify-between no-wrap">
+      <div class="row">
         <div class="col-5 text-grey-color">Name</div>
         <div class="col-7">{{ props.device.name }}</div>
       </div>

@@ -2,7 +2,10 @@
   <div>
     <div class="column full-height">
       <div class="text-weight-medium text-h6 col-shrink">Job</div>
-      <div v-if="jobLoading" class="flex justify-center items-center col-grow">
+      <div
+        v-if="jobLoading && !runningJob"
+        class="flex justify-center items-center col-grow"
+      >
         <q-spinner-gears size="30px" color="grey-color" />
       </div>
       <div
@@ -14,7 +17,7 @@
             show-value
             font-size="16px"
             :value="currentProgress"
-            size="130px"
+            size="100px"
             :thickness="0.22"
             color="teal"
             track-color="grey-3"
@@ -23,9 +26,18 @@
             {{ (currentProgress * 100).toFixed(0) }}%
           </q-circular-progress>
           <div class="column q-ml-sm q-gutter-y-xs justify-center items-start">
-            <q-badge :color="statusColor" class="q-pa-xs">
-              {{ runningJob.currentStatus }}
-            </q-badge>
+            <div class="row">
+              <q-badge :color="statusColor" class="q-pa-xs">
+                {{ runningJob.currentStatus }}
+              </q-badge>
+              <q-badge
+                v-if="runningJob.toCancel"
+                color="red"
+                class="q-pa-xs q-ml-sm"
+              >
+                STOPPING
+              </q-badge>
+            </div>
             <div class="text-weight-medium">
               {{ runningJob.name }}
             </div>
@@ -47,6 +59,8 @@
               label="Pause"
               color="grey-color"
               icon="mdi-pause"
+              :loading="pausingJob"
+              @click="pauseJob"
               :disable="
                 runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
               "
@@ -54,9 +68,11 @@
           </div>
           <div class="col-grow">
             <JobControlButton
-              label="Next Step"
+              label="Skip Step"
               color="green-9"
               icon="mdi-skip-next"
+              :loading="skipStepLoading"
+              @click="skipStep"
               :disable="
                 runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
               "
@@ -64,9 +80,11 @@
           </div>
           <div class="col-grow">
             <JobControlButton
-              label="Next Cycle"
+              label="Skip Cycle"
               color="primary"
               icon="mdi-skip-forward"
+              :loading="skipCycleLoading"
+              @click="skipCycle"
               :disable="
                 runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING
               "
@@ -77,6 +95,9 @@
               label="Stop"
               color="red"
               icon="mdi-stop"
+              :loading="stoppingJob"
+              @click="stopJob"
+              :disable="runningJob.toCancel == true"
             ></JobControlButton>
           </div>
         </div>
@@ -91,7 +112,7 @@
           no-caps
           size="15px"
           label="Run New Job"
-          @click="openDialog = true"
+          @click.stop="openDialog = true"
         />
       </div>
     </div>
@@ -102,11 +123,13 @@
 <script setup lang="ts">
 import { useDevicesStore } from '../stores/devices-store';
 import StartJobDialog from '../components/StartJobDialog.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onUnmounted, Ref } from 'vue';
 import { JobStatusEnum } from 'src/models/JobStatus';
 import { Job } from 'src/models/Job';
 import jobService from 'src/services/JobService';
 import JobControlButton from './JobControlButton.vue';
+import { toast } from 'vue3-toastify';
+import { ForkOptions } from 'child_process';
 
 const openDialog = ref(false);
 
@@ -117,9 +140,7 @@ const jobLoading = ref(false);
 async function getRunningJob() {
   if (store.device) {
     try {
-      runningJob.value = undefined;
       jobLoading.value = true;
-
       const jobs: Job[] = await jobService.getJobsOnDevice(store.device.uid);
 
       const runningJobs = jobs.filter(
@@ -173,6 +194,78 @@ const statusColor = computed(() => {
     }
   }
   return 'grey';
+});
+
+//Job actions
+async function performJobAction(
+  action: { (jobId: string): Promise<Job[]> },
+  successMessage: string,
+  errorMessage: string,
+  loadingRef: Ref<boolean>
+) {
+  if (!runningJob.value) return;
+  try {
+    loadingRef.value = true;
+    await action(runningJob.value.uid);
+    toast.success(successMessage);
+    getRunningJob();
+  } catch (e) {
+    toast.error(errorMessage);
+  } finally {
+    loadingRef.value = false;
+  }
+}
+
+const stoppingJob = ref(false);
+async function stopJob() {
+  await performJobAction(
+    jobService.cancelJob,
+    'Job stopped',
+    'Error stopping job',
+    stoppingJob
+  );
+}
+
+const pausingJob = ref(false);
+async function pauseJob() {
+  await performJobAction(
+    jobService.pauseJob,
+    'Job paused',
+    'Error pausing job',
+    pausingJob
+  );
+}
+
+const skipStepLoading = ref(false);
+async function skipStep() {
+  await performJobAction(
+    jobService.skipStep,
+    'Skipped step',
+    'Error skipping step',
+    skipStepLoading
+  );
+}
+
+const skipCycleLoading = ref(false);
+async function skipCycle() {
+  await performJobAction(
+    jobService.skipCycle,
+    'Skipped cycle',
+    'Error skipping cycle',
+    skipCycleLoading
+  );
+}
+
+//Refresh job every N seconds
+const refreshInterval = 10; // in seconds
+const intervalId = ref<NodeJS.Timeout>();
+onMounted(() => {
+  intervalId.value = setInterval(getRunningJob, refreshInterval * 1000);
+});
+
+// Stop the interval when the component is unmounted to prevent memory leaks
+onUnmounted(() => {
+  clearInterval(intervalId.value);
 });
 </script>
 

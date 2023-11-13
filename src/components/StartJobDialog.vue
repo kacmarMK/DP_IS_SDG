@@ -29,7 +29,7 @@
             :rules="repetitionRules"
           />
           <div>Schedule</div>
-          <q-btn-group>
+          <q-btn-group unelevated>
             <q-btn
               v-for="(button, index) in dayButtons"
               :key="index"
