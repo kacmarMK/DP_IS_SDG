@@ -2,16 +2,7 @@
   <div>
     <div class="column full-height">
       <div class="text-weight-medium text-h6 col-shrink">Job</div>
-      <div
-        v-if="jobLoading && !runningJob"
-        class="flex justify-center items-center col-grow"
-      >
-        <q-spinner-gears size="30px" color="grey-color" />
-      </div>
-      <div
-        v-else-if="runningJob"
-        class="column justify-between col-grow q-my-sm"
-      >
+      <div v-if="runningJob" class="column justify-between col-grow q-my-sm">
         <div class="row justify-start items-center q-mb-lg">
           <q-circular-progress
             show-value
@@ -123,41 +114,39 @@
 <script setup lang="ts">
 import { useDevicesStore } from '../stores/devices-store';
 import StartJobDialog from '../components/StartJobDialog.vue';
-import { computed, ref, onMounted, onUnmounted, Ref } from 'vue';
+import { computed, ref, onMounted, onUnmounted, Ref, PropType } from 'vue';
 import { JobStatusEnum } from 'src/models/JobStatus';
 import { Job } from 'src/models/Job';
 import jobService from 'src/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 import { toast } from 'vue3-toastify';
-import { ForkOptions } from 'child_process';
+
+const props = defineProps({
+  initialJobs: {
+    type: Array as PropType<Job[]>,
+    required: true,
+  },
+});
 
 const openDialog = ref(false);
-
 const store = useDevicesStore();
+const runningJob = ref<Job | undefined>(findActiveJob(props.initialJobs));
 
-const runningJob = ref<Job>();
-const jobLoading = ref(false);
+function findActiveJob(jobs: Job[]) {
+  return jobs.find(
+    (job) =>
+      job.currentStatus == JobStatusEnum.JOB_PENDING ||
+      job.currentStatus == JobStatusEnum.JOB_PROCESSING
+  );
+}
+
 async function getRunningJob() {
   if (store.device) {
     try {
-      jobLoading.value = true;
       const jobs: Job[] = await jobService.getJobsOnDevice(store.device.uid);
-
-      const runningJobs = jobs.filter(
-        (job) =>
-          job.currentStatus == JobStatusEnum.JOB_PENDING ||
-          job.currentStatus == JobStatusEnum.JOB_PROCESSING
-      );
-
-      console.log(runningJobs);
-
-      if (runningJobs.length > 0) {
-        runningJob.value = runningJobs[0];
-      }
+      return findActiveJob(jobs);
     } catch (error) {
       console.log('No running job found');
-    } finally {
-      jobLoading.value = false;
     }
   }
 }

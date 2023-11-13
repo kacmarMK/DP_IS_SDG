@@ -1,5 +1,6 @@
 import { DataPointTag } from './DataPointTag';
 import DeviceTypeEnum from './DeviceType';
+import { Job } from './Job';
 
 interface Device {
   uid: string;
@@ -14,6 +15,7 @@ interface Device {
   initExpireTime?: number;
   initApiKey?: string;
   deactivated: boolean;
+  jobs: Job[];
 }
 
 interface DeviceCreate {

@@ -31,6 +31,7 @@
         <div class="col-12 col-md-12 col-lg-4 col-xl-6">
           <current-job-card
             class="shadow container q-pa-lg full-height"
+            :initial-jobs="store.device.jobs"
           ></current-job-card>
         </div>
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
