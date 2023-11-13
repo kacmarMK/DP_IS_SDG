@@ -14,7 +14,7 @@
         no-caps
         label="Refresh"
         padding="0.5rem 1rem"
-        icon-right="mdi-refresh"
+        icon="mdi-refresh"
         @click="refreshDevice()"
         :loading="store.isRefreshingDevice"
       ></q-btn>

@@ -18,7 +18,10 @@
           </q-circular-progress>
           <div class="column q-ml-sm q-gutter-y-xs justify-center items-start">
             <div class="row">
-              <q-badge :color="statusColor" class="q-pa-xs">
+              <q-badge
+                :color="statusColors[runningJob.currentStatus]"
+                class="q-pa-xs"
+              >
                 {{ runningJob.currentStatus }}
               </q-badge>
               <q-badge
@@ -120,6 +123,7 @@ import { Job } from 'src/models/Job';
 import jobService from 'src/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 import { toast } from 'vue3-toastify';
+import { statusColors } from 'src/utils/colors';
 
 const props = defineProps({
   initialJobs: {
@@ -169,20 +173,6 @@ const currentProgress = computed(() => {
     return current * total;
   }
   return 0;
-});
-
-const statusColor = computed(() => {
-  if (runningJob.value) {
-    switch (runningJob.value.currentStatus) {
-      case JobStatusEnum.JOB_PENDING:
-        return 'accent';
-      case JobStatusEnum.JOB_PROCESSING:
-        return 'primary';
-      default:
-        return 'accent';
-    }
-  }
-  return 'grey';
 });
 
 //Job actions

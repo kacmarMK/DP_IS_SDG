@@ -1,3 +1,5 @@
+import { JobStatusEnum } from 'src/models/JobStatus';
+
 const graphColors = [
   '#3366cc',
   '#dc3912',
@@ -33,4 +35,16 @@ const graphColors = [
   '#743411',
 ];
 
-export { graphColors };
+const statusColors: Record<JobStatusEnum, string> = {
+  [JobStatusEnum.JOB_FREE]: '#3366cc',
+  [JobStatusEnum.JOB_IDLE]: '#dc3912',
+  [JobStatusEnum.JOB_PENDING]: 'accent',
+  [JobStatusEnum.JOB_PROCESSING]: 'primary',
+  [JobStatusEnum.JOB_DONE]: '#00bf0d',
+  [JobStatusEnum.JOB_ERR]: '#bf0000',
+  [JobStatusEnum.JOB_PAUSED]: '#de9800',
+  [JobStatusEnum.JOB_CANCELED]: '#8b00aa',
+  [JobStatusEnum.JOB_STATUS_MAX]: '#2eb875',
+};
+
+export { graphColors, statusColors };

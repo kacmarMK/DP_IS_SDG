@@ -5,7 +5,7 @@
         <router-link to="/devices">
           <p class="main-text text-accent">Devices ></p>
         </router-link>
-        <p class="main-text">&nbsp;Create</p>
+        <p class="main-text">&nbsp;Add</p>
       </div>
       <create-device-form class="q-mt-md" />
     </div>

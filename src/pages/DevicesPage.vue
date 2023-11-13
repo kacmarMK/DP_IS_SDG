@@ -10,7 +10,8 @@
           unelevated
           no-caps
           size="15px"
-          label="Create Device"
+          label="Add Device"
+          icon="mdi-plus"
           to="/devices/create"
         />
       </div>

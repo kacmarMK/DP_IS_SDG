@@ -10,12 +10,24 @@
         <p class="main-text">&nbsp;{{ store.device?.name }}</p>
         <q-space></q-space>
         <q-btn
+          v-if="store.device"
+          class="shadow bg-white q-ml-md"
+          :to="`/devices/${store.device?.uid}/jobs`"
+          text-color="grey-color"
+          unelevated
+          no-caps
+          size="15px"
+          label="Jobs"
+          icon="mdi-list-status"
+        />
+        <q-btn
           class="shadow q-ml-md"
           color="primary"
           unelevated
           no-caps
           size="15px"
           label="Edit Device"
+          icon="mdi-pencil"
         />
       </div>
       <div
