@@ -53,13 +53,13 @@
               :to="`/devices/${props.row.uid}`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Open
-              </q-tooltip></q-btn
-            >
+              </q-tooltip>
+            </q-btn>
             <q-btn icon="mdi-pencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
-              </q-tooltip></q-btn
-            >
+              </q-tooltip>
+            </q-btn>
             <q-btn
               @click.stop="
                 store.deleteDialog = true;
@@ -71,8 +71,8 @@
               round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Delete
-              </q-tooltip></q-btn
-            >
+              </q-tooltip>
+            </q-btn>
           </q-td>
         </template>
       </q-table>

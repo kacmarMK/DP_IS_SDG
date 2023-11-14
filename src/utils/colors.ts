@@ -1,4 +1,4 @@
-import { JobStatusEnum } from 'src/models/JobStatus';
+import { JobStatusEnum } from 'src/models/JobStatusEnum';
 
 const graphColors = [
   '#3366cc',

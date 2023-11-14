@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Jobs</p>
+        <p class="main-text">Jobs on device</p>
       </div>
       <q-table
         :rows="jobs"
@@ -43,7 +43,7 @@ import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import jobService from '../services/JobService';
 import { statusColors } from '../utils/colors';
-import { JobStatusEnum } from 'src/models/JobStatus';
+import { JobStatusEnum } from 'src/models/JobStatusEnum';
 
 const route = useRoute();
 
@@ -94,23 +94,21 @@ const columns: QTableProps['columns'] = [
   {
     name: 'step',
     label: 'Step',
-    field: 'status.currentStep',
+    field: (row) => row.status.currentStep,
     sortable: true,
     align: 'left',
-    format: (val: number, row: Job) => {
-      console.log(row.status);
-      return `${(val || 0) + 1} of ${row.noOfCmds}`;
+    format: (val: string, row: Job) => {
+      return `${val || 1} of ${row.noOfCmds}`;
     },
   },
   {
     name: 'cycle',
     label: 'Cycle',
-    field: 'status.currentCycle',
+    field: (row) => row.status.currentCycle,
     sortable: true,
     align: 'left',
     format: (val: number, row: Job) => {
-      console.log(row.status);
-      return `${(val || 0) + 1} of ${row.noOfReps}`;
+      return `${val || 1} of ${row.noOfReps}`;
     },
   },
   {
@@ -124,3 +122,4 @@ const columns: QTableProps['columns'] = [
 </script>
 
 <style lang="scss" scoped></style>
+src/models/JobStatusEnum

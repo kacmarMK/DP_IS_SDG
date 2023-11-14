@@ -5,7 +5,7 @@ import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import deviceService from 'src/services/DeviceService';
 import jobService from 'src/services/JobService';
-import { JobStatusEnum } from 'src/models/JobStatus';
+import { JobStatusEnum } from 'src/models/JobStatusEnum';
 
 export const useDevicesStore = defineStore('devices', () => {
   //Devices

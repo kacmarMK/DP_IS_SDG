@@ -1,6 +1,6 @@
 import { Command } from './Command';
 import { DataPoint } from './DataPoint';
-import { JobStatusEnum } from './JobStatus';
+import { JobStatusEnum } from './JobStatusEnum';
 
 interface Job {
   uid: string;
