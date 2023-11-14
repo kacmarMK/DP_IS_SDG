@@ -12,4 +12,14 @@ interface Recipe {
   deactivated?: boolean;
 }
 
-export type { Recipe };
+interface RecipeFrame {
+  name: string;
+  commands?: Array<Command>;
+  subRecipes?: Array<Recipe>;
+  deviceType?: DeviceTypeEnum;
+  subRecipe: boolean;
+  createdAt?: number;
+  deactivated?: boolean;
+}
+
+export type { Recipe, RecipeFrame };

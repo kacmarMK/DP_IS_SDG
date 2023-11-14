@@ -67,13 +67,6 @@ const columns: QTableProps['columns'] = [
     align: 'left',
   },
   {
-    name: 'createdAt',
-    label: 'Creation date',
-    field: 'createdAt',
-    sortable: true,
-    align: 'left',
-  },
-  {
     name: 'deactivated',
     label: 'Command Deactivated?',
     field: 'deactivated',

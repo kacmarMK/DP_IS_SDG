@@ -37,7 +37,7 @@ export const useCommandsStore = defineStore('commands', () => {
       createDialog.value = false;
     } catch (error) {
       console.log(error);
-      toast.error('Device creation failed.');
+      toast.error('Command creation failed.');
     } finally {
       isCreatingCommand.value = false;
     }

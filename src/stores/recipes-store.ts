@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Recipe } from 'src/models/Recipe';
+import { Recipe, RecipeFrame } from 'src/models/Recipe';
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import recipeService from 'src/services/RecipeService';
@@ -20,36 +20,39 @@ export const useRecipesStore = defineStore('recipes', () => {
   }
 
   const createDialog = ref(false);
-  /*const commandCreate = ref<CommandFrame>({
+  const recipeCreate = ref<RecipeFrame>({
     name: '',
-    params: [], // TODO
+    commands: [],
+    subRecipes: [],
     deviceType: undefined,
+    subRecipe: false,
     createdAt: 0,
     deactivated: false,
   });
-  const isCreatingCommand = ref(false);
-  async function createCommand() {
+
+  const isCreatingRecipe = ref(false);
+  async function createRecipe() {
     try {
-      isCreatingCommand.value = true;
-      await commandService.createCommand(commandCreate.value);
-      toast.success('Command created.');
-      getCommands();
+      isCreatingRecipe.value = true;
+      await recipeService.createRecipe(recipeCreate.value);
+      toast.success('Recipe created.');
+      getRecipes();
       createDialog.value = false;
     } catch (error) {
       console.log(error);
-      toast.error('Device creation failed.');
+      toast.error('Recipe creation failed.');
     } finally {
-      isCreatingCommand.value = false;
+      isCreatingRecipe.value = false;
     }
-  }*/
+  }
 
   return {
     recipes,
     isLoadingRecipes,
     getRecipes,
-    createDialog /*,
-    commandCreate,
-    isCreatingCommand,
-    createCommand,*/,
+    createDialog,
+    recipeCreate,
+    isCreatingRecipe,
+    createRecipe,
   };
 });

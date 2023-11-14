@@ -32,14 +32,14 @@
         </template>
       </q-table>
     </div>
-    <!--<create-command-dialog />-->
+    <create-recipe-dialog />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { useRecipesStore } from '../stores/recipes-store';
-//import CreateCommandDialog from '../components/CreateCommandDialog.vue';
+import CreateRecipeDialog from '../components/CreateRecipeDialog.vue';
 
 const store = useRecipesStore();
 store.getRecipes();
@@ -78,13 +78,6 @@ const columns: QTableProps['columns'] = [
     label: 'Has Subrecipes?',
     field: 'hasSubRecipes',
     sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'createdAt',
-    label: 'Creation date',
-    field: 'createdAt',
-    sortable: true,
     align: 'left',
   },
   {
