@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Jobs on device</p>
+        <p class="main-text">Job History</p>
       </div>
       <q-table
         :rows="jobs"
