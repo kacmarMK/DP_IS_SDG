@@ -55,7 +55,12 @@
                 Open
               </q-tooltip>
             </q-btn>
-            <q-btn icon="mdi-pencil" color="grey-color" flat round
+            <q-btn
+              icon="mdi-pencil"
+              color="grey-color"
+              flat
+              round
+              :to="`/devices/${props.row.uid}/edit`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
               </q-tooltip>

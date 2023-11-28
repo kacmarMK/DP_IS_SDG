@@ -18,7 +18,7 @@ interface Device {
   jobs: Job[];
 }
 
-interface DeviceCreate {
+interface DeviceInput {
   name: string;
   mac: string;
   type?: DeviceTypeEnum;
@@ -28,4 +28,4 @@ interface DeviceCreate {
   deactivated: boolean;
 }
 
-export type { Device, DeviceCreate };
+export type { Device, DeviceInput };

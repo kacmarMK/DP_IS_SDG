@@ -7,7 +7,7 @@
           to="/devices"
           >Devices ></router-link
         >
-        <p class="main-text">&nbsp;{{ store.device?.name }}</p>
+        <p class="main-text z-fab">&nbsp;{{ store.device?.name }}</p>
         <q-space></q-space>
         <q-btn
           v-if="store.device"
@@ -28,6 +28,7 @@
           size="15px"
           label="Edit Device"
           icon="mdi-pencil"
+          :to="`/devices/${store.device?.uid}/edit`"
         />
       </div>
       <div

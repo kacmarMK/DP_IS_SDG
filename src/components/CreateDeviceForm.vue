@@ -6,34 +6,34 @@
           <q-input
             class="col-12 col-md-6"
             label="Name"
-            v-model="deviceCreate.name"
+            v-model="deviceInput.name"
           />
           <q-input
             class="col-12 col-md-6"
             label="Mac"
-            v-model="deviceCreate.mac"
+            v-model="deviceInput.mac"
           />
           <q-select
             class="col-12 col-md-6"
             label="Type"
-            v-model="deviceCreate.type"
+            v-model="deviceInput.type"
             :options="Object.values(DeviceTypeEnum)"
           >
           </q-select>
           <q-input
             class="col-12 col-md-6"
             label="Init API Key"
-            v-model="deviceCreate.initApiKey"
+            v-model="deviceInput.initApiKey"
           />
           <q-input
             class="col-12 col-md-6"
             label="Firmware"
-            v-model="deviceCreate.firmware"
+            v-model="deviceInput.firmware"
           />
           <q-input
             class="col-12 col-md-6"
             label="Version"
-            v-model="deviceCreate.version"
+            v-model="deviceInput.version"
           />
         </div>
         <q-card-actions align="left" class="text-primary q-mt-sm">
@@ -48,6 +48,42 @@
         </q-card-actions>
       </q-step>
       <q-step :name="2" title="Add sensors" icon="mdi-thermostat">
+        <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
+          <div class="data-point-container q-my-md">
+            <div class="row items-center justify-end">
+              <q-btn
+                flat
+                round
+                color="grey-color"
+                icon="mdi-trash-can-outline"
+                dense
+                @click="deleteRemoteDataPointTag(dataPointTag.uid)"
+              />
+            </div>
+            <div class="row q-col-gutter-lg">
+              <q-input
+                class="col-12 col-md-6"
+                label="Name"
+                v-model="dataPointTag.name"
+              />
+              <q-input
+                class="col-12 col-md-6"
+                label="Tag"
+                v-model="dataPointTag.tag"
+              />
+              <q-input
+                class="col-12 col-md-6"
+                label="Unit"
+                v-model="dataPointTag.unit"
+              />
+              <q-input
+                class="col-12 col-md-6"
+                label="Decimal"
+                v-model="dataPointTag.decimal"
+              />
+            </div>
+          </div>
+        </div>
         <div v-for="(dataPointTag, index) in localDataPointTags" :key="index">
           <div class="data-point-container q-my-md">
             <div class="row items-center justify-end">
@@ -114,16 +150,23 @@
 import DeviceTypeEnum from 'src/models/DeviceType';
 import { DataPointTagCreate, DataPointTag } from 'src/models/DataPointTag';
 import { ref } from 'vue';
-import { Device, DeviceCreate } from 'src/models/Device';
+import { Device, DeviceInput } from 'src/models/Device';
 import { toast } from 'vue3-toastify';
 import deviceService from 'src/services/DeviceService';
 import dataPointTagService from 'src/services/DataPointTagService';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
+const props = defineProps({
+  isEditing: {
+    type: Boolean,
+    default: false,
+  },
+  editingDeviceId: String,
+});
 
+const router = useRouter();
 const createStep = ref(1);
-const deviceCreate = ref<DeviceCreate>({
+const deviceInput = ref<DeviceInput>({
   name: '',
   mac: '',
   type: undefined,
@@ -132,7 +175,48 @@ const deviceCreate = ref<DeviceCreate>({
   initApiKey: '',
   deactivated: false,
 });
-const isCreatingDevice = ref(false);
+
+async function getEditingDevice() {
+  if (!props.isEditing || !props.editingDeviceId) return;
+  try {
+    const editingDevice = await deviceService.getDevice(props.editingDeviceId);
+    deviceInput.value = {
+      name: editingDevice.name,
+      mac: editingDevice.mac,
+      type: editingDevice.type,
+      version: editingDevice.version,
+      firmware: editingDevice.firmware,
+      initApiKey: editingDevice.initApiKey,
+      deactivated: editingDevice.deactivated,
+    };
+    remoteDataPointTags.value = editingDevice.dataPointTags;
+    originalRemoteDataPointTags.value = cloneDataPointTags(
+      editingDevice.dataPointTags
+    );
+  } catch (error) {
+    console.log(error);
+    toast.error('Getting device failed!');
+  }
+}
+getEditingDevice();
+
+const remoteDataPointTags = ref<DataPointTag[]>([]);
+const originalRemoteDataPointTags = ref<DataPointTag[]>([]);
+async function deleteRemoteDataPointTag(id: string) {
+  try {
+    await dataPointTagService.deleteDataPointTag(id);
+    remoteDataPointTags.value = remoteDataPointTags.value.filter(
+      (dataPointTag) => dataPointTag.uid !== id
+    );
+  } catch (error) {
+    console.log(error);
+    toast.error('Deleting data point tag failed!');
+  }
+}
+
+function cloneDataPointTags(tags: DataPointTag[]) {
+  return tags.map((tag) => ({ ...tag }));
+}
 
 const localDataPointTags = ref<DataPointTagCreate[]>([]);
 function addLocalDataPointTag() {
@@ -143,11 +227,9 @@ function addLocalDataPointTag() {
     decimal: 0,
   });
 }
-
 function deleteLocalDataPointTag(index: number) {
   localDataPointTags.value.splice(index, 1);
 }
-
 async function createDataPointTags(): Promise<DataPointTag[]> {
   const dataPointTags: DataPointTag[] = [];
 
@@ -168,8 +250,7 @@ async function createDataPointTags(): Promise<DataPointTag[]> {
 async function createDevice(): Promise<Device | undefined> {
   let createdDevice!: Device;
   try {
-    isCreatingDevice.value = true;
-    createdDevice = await deviceService.createDevice(deviceCreate.value);
+    createdDevice = await deviceService.createDevice(deviceInput.value);
     createStep.value = 1;
   } catch (error) {
     console.log(error);
@@ -178,32 +259,88 @@ async function createDevice(): Promise<Device | undefined> {
   return createdDevice;
 }
 
+async function updateDevice(): Promise<Device | undefined> {
+  let editedDevice!: Device;
+  if (!props.isEditing || !props.editingDeviceId) return;
+
+  try {
+    editedDevice = await deviceService.updateDevice(
+      deviceInput.value,
+      props.editingDeviceId
+    );
+    createStep.value = 1;
+  } catch (error) {
+    console.log(error);
+    toast.error('Updating device failed!');
+  }
+  return editedDevice;
+}
+
 const submittingForm = ref(false);
 async function submitForm() {
   submittingForm.value = true;
-  const createdDevice = await createDevice();
-  if (!createdDevice) {
+
+  let device: Device | undefined;
+  if (props.isEditing) {
+    device = await updateDevice();
+  } else {
+    device = await createDevice();
+  }
+
+  if (!device) {
     submittingForm.value = false;
     return;
   }
 
+  //Create data point tags from localDataPointTags and add them to device
   const dataPointTags: DataPointTag[] = await createDataPointTags();
   for (const dataPointTag of dataPointTags) {
     try {
       await dataPointTagService.addDataPointTagToDevice(
-        createdDevice.uid,
+        device.uid,
         dataPointTag.uid
       );
     } catch (error) {
       console.log(error);
       toast.error('Adding data point tag to device failed!');
-      submittingForm.value = false;
-      return;
     }
   }
+
+  //Update remoteDataPointTags
+  for (const dataPointTag of remoteDataPointTags.value) {
+    const originalTag = originalRemoteDataPointTags.value.find(
+      (tag) => tag.uid === dataPointTag.uid
+    );
+
+    //Update only if tag has changed
+    if (JSON.stringify(originalTag) !== JSON.stringify(dataPointTag)) {
+      try {
+        const updatedDataPointTag: DataPointTagCreate = {
+          tag: dataPointTag.tag,
+          name: dataPointTag.name,
+          unit: dataPointTag.unit,
+          decimal: dataPointTag.decimal,
+        };
+        await dataPointTagService.updateDataPointTag(
+          updatedDataPointTag,
+          dataPointTag.uid
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error('Updating data point tag failed!');
+      }
+    }
+  }
+
   submittingForm.value = false;
-  toast.success('Device created!');
-  router.push('/devices/');
+
+  if (props.isEditing) {
+    toast.success('Device updated!');
+  } else {
+    toast.success('Device created!');
+  }
+
+  router.push(`/devices/${device.uid}`);
 }
 </script>
 <style lang="scss" scoped>

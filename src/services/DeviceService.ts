@@ -1,4 +1,4 @@
-import { Device, DeviceCreate } from 'src/models/Device';
+import { Device, DeviceInput } from 'src/models/Device';
 import { api } from 'src/boot/ofetch';
 
 class DeviceService {
@@ -10,10 +10,17 @@ class DeviceService {
     return await api<Device>(`device/getDeviceById/${uid}`);
   }
 
-  async createDevice(deviceCreate: DeviceCreate): Promise<Device> {
+  async createDevice(deviceCreate: DeviceInput): Promise<Device> {
     return await api<Device>('device/create', {
       method: 'POST',
       body: deviceCreate,
+    });
+  }
+
+  async updateDevice(deviceUpdate: DeviceInput, uid: string): Promise<Device> {
+    return await api<Device>(`device/updateDevice/${uid}`, {
+      method: 'PUT',
+      body: deviceUpdate,
     });
   }
 

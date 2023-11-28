@@ -27,6 +27,28 @@ class DataPointTagService {
       }
     );
   }
+
+  async updateDataPointTag(
+    dataPointTagUpdate: DataPointTagCreate,
+    dataPointTagId: string
+  ): Promise<DataPointTag> {
+    return await api<DataPointTag>(
+      `datapoint/datapointtag/updateDataPointTag/${dataPointTagId}`,
+      {
+        method: 'POST',
+        body: dataPointTagUpdate,
+      }
+    );
+  }
+
+  async deleteDataPointTag(dataPointTagId: string): Promise<DataPointTag> {
+    return await api<DataPointTag>(
+      `datapoint/datapointtag/deleteDataPointTag/${dataPointTagId}`,
+      {
+        method: 'DELETE',
+      }
+    );
+  }
 }
 
 export default new DataPointTagService();
