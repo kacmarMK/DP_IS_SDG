@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 import DeviceTypeEnum from 'src/models/DeviceType';
-import { DataPointTagCreate, DataPointTag } from 'src/models/DataPointTag';
+import { DataPointTagInput, DataPointTag } from 'src/models/DataPointTag';
 import { ref } from 'vue';
 import { Device, DeviceInput } from 'src/models/Device';
 import { toast } from 'vue3-toastify';
@@ -218,9 +218,9 @@ function cloneDataPointTags(tags: DataPointTag[]) {
   return tags.map((tag) => ({ ...tag }));
 }
 
-const localDataPointTags = ref<DataPointTagCreate[]>([]);
+const localDataPointTags = ref<DataPointTagInput[]>([]);
 function addLocalDataPointTag() {
-  localDataPointTags.value.push(<DataPointTagCreate>{
+  localDataPointTags.value.push(<DataPointTagInput>{
     tag: '',
     name: '',
     unit: '',
@@ -315,7 +315,7 @@ async function submitForm() {
     //Update only if tag has changed
     if (JSON.stringify(originalTag) !== JSON.stringify(dataPointTag)) {
       try {
-        const updatedDataPointTag: DataPointTagCreate = {
+        const updatedDataPointTag: DataPointTagInput = {
           tag: dataPointTag.tag,
           name: dataPointTag.name,
           unit: dataPointTag.unit,

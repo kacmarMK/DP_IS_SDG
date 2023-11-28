@@ -11,11 +11,11 @@ interface DataPointTag {
   deactivated: boolean;
 }
 
-interface DataPointTagCreate {
+interface DataPointTagInput {
   tag: string;
   name: string;
   unit: string;
   decimal: number;
 }
 
-export type { DataPointTag, DataPointTagCreate };
+export type { DataPointTag, DataPointTagInput };
