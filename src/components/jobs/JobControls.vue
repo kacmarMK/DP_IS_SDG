@@ -55,10 +55,10 @@
 
 <script setup lang="ts">
 import { toast } from 'vue3-toastify';
-import { JobStatusEnum } from 'src/models/JobStatusEnum';
-import { Job } from 'src/models/Job';
+import { JobStatusEnum } from '@/models/JobStatusEnum';
+import { Job } from '@/models/Job';
 import { PropType, ref, Ref } from 'vue';
-import jobService from 'src/services/JobService';
+import jobService from '@/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 
 const props = defineProps({

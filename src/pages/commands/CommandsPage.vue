@@ -2,12 +2,12 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Recipes</p>
+        <p class="main-text">Commands</p>
         <q-space></q-space>
         <q-btn
           class="shadow"
           color="secondary"
-          label="Create new recipe"
+          label="Create new command"
           unelevated
           no-caps
           size="15px"
@@ -15,15 +15,15 @@
         />
       </div>
       <q-table
-        :rows="store.recipes"
+        :rows="store.commands"
         :columns="columns"
-        :loading="store.isLoadingRecipes"
+        :loading="store.isLoadingCommands"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Recipes Found"
-        loading-label="Loading Recipes..."
-        rows-per-page-label="Recipes per page"
+        no-data-label="No Commands Found"
+        loading-label="Loading Commands..."
+        rows-per-page-label="Commands per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -33,17 +33,17 @@
         </template>
       </q-table>
     </div>
-    <create-recipe-dialog />
+    <create-command-dialog />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { useRecipesStore } from '../stores/recipes-store';
-import CreateRecipeDialog from '../components/CreateRecipeDialog.vue';
+import { useCommandsStore } from '@/stores/commands-store';
+import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
 
-const store = useRecipesStore();
-store.getRecipes();
+const store = useCommandsStore();
+store.getCommands();
 
 const columns: QTableProps['columns'] = [
   {
@@ -54,16 +54,9 @@ const columns: QTableProps['columns'] = [
     align: 'left',
   },
   {
-    name: 'cmds',
-    label: 'Commands',
-    field: 'cmds',
-    sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'subRecipes',
-    label: 'Subrecipes',
-    field: 'subRecipes',
+    name: 'params',
+    label: 'Parameters',
+    field: 'params',
     sortable: false,
     align: 'left',
   },
@@ -72,13 +65,6 @@ const columns: QTableProps['columns'] = [
     label: 'Device Type',
     field: 'deviceType',
     sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'hasSubRecipes',
-    label: 'Has Subrecipes?',
-    field: 'hasSubRecipes',
-    sortable: false,
     align: 'left',
   },
   {

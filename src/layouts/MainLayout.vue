@@ -106,8 +106,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import SideMenuButton from 'src/components/SideMenuButton.vue';
-import LanguageSelect from 'src/components/LanguageSelect.vue';
+import SideMenuButton from '@/components/core/SideMenuButton.vue';
+import LanguageSelect from '@/components/core/LanguageSelect.vue';
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

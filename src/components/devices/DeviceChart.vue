@@ -51,10 +51,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useDevicesStore } from '../stores/devices-store';
-import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
-import { TimeRange } from '../models/TimeRange';
-import { graphColors } from '../utils/colors';
+import { useDevicesStore } from '@/stores/devices-store';
+import DeviceTimeRangeSelect from '@/components/devices/DeviceTimeRangeSelect.vue';
+import { TimeRange } from '@/models/TimeRange';
+import { graphColors } from '@/utils/colors';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { format } from 'date-fns';
 

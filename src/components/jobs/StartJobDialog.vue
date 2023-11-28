@@ -76,12 +76,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useDevicesStore } from '../stores/devices-store';
-import recipeService from 'src/services/RecipeService';
-import jobService from 'src/services/JobService';
-import { Recipe } from 'src/models/Recipe';
+import { useDevicesStore } from '@/stores/devices-store';
+import recipeService from '@/services/RecipeService';
+import jobService from '@/services/JobService';
+import { Recipe } from '@/models/Recipe';
 import { QInput } from 'quasar';
-import { JobToRun } from 'src/models/Job';
+import { JobToRun } from '@/models/Job';
 import { toast } from 'vue3-toastify';
 import { parse } from 'date-fns';
 

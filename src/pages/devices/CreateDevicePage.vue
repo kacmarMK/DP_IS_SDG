@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import CreateDeviceForm from 'src/components/CreateDeviceForm.vue';
+import CreateDeviceForm from '@/components/devices/CreateDeviceForm.vue';
 </script>
 
 <style lang="scss" scoped></style>

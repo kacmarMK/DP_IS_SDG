@@ -32,7 +32,6 @@
             </q-badge>
           </q-td>
         </template>
-
         <template v-slot:body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
@@ -54,14 +53,11 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { Job } from 'src/models/Job';
+import { Job } from '@/models/Job';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-import jobService from '../services/JobService';
-import { statusColors } from '../utils/colors';
-import { JobStatusEnum } from 'src/models/JobStatusEnum';
-
-const route = useRoute();
+import jobService from '@/services/JobService';
+import { statusColors } from '@/utils/colors';
+import { JobStatusEnum } from '@/models/JobStatusEnum';
 
 const jobs = ref<Job[]>([]);
 
@@ -69,7 +65,7 @@ const isLoadingJobs = ref(false);
 async function getJobs() {
   try {
     isLoadingJobs.value = true;
-    jobs.value = await jobService.getJobsOnDevice(route.params.id.toString());
+    jobs.value = await jobService.getAllJobs();
   } catch (error) {
     console.error(error);
   } finally {

@@ -68,8 +68,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import authService from '../services/AuthService';
-import { UserLogin } from '../models/User';
+import authService from '@/services/AuthService';
+import { UserLogin } from '@/models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
@@ -132,5 +132,5 @@ async function login() {
 </script>
 
 <style lang="scss" scoped>
-@import '../css/auth.scss';
+@import '@/css/auth.scss';
 </style>

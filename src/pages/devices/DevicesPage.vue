@@ -89,8 +89,8 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { useDevicesStore } from '../stores/devices-store';
-import DeleteDeviceDialog from '../components/DeleteDeviceDialog.vue';
+import { useDevicesStore } from '@/stores/devices-store';
+import DeleteDeviceDialog from '@/components/devices/DeleteDeviceDialog.vue';
 
 const store = useDevicesStore();
 store.getDevices();

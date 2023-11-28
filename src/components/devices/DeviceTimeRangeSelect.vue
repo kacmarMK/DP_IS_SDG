@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { format, subSeconds } from 'date-fns';
 import { ref } from 'vue';
-import { PredefinedTimeRange } from '../models/TimeRange';
+import { PredefinedTimeRange } from '@/models/TimeRange';
 
 const emit = defineEmits(['update:modelValue']);
 defineExpose({

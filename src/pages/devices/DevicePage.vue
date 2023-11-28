@@ -63,11 +63,11 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { useDevicesStore } from '../stores/devices-store';
-import DeviceInfoCard from '../components/DeviceInfoCard.vue';
-import DeviceSensorsList from 'src/components/DeviceSensorsList.vue';
-import DeviceChart from 'src/components/DeviceChart.vue';
-import CurrentJobCard from 'src/components/CurrentJobCard.vue';
+import { useDevicesStore } from '@/stores/devices-store';
+import DeviceInfoCard from '@/components/devices/DeviceInfoCard.vue';
+import DeviceSensorsList from '@/components/devices/DeviceSensorsList.vue';
+import DeviceChart from '@/components/devices/DeviceChart.vue';
+import CurrentJobCard from '@/components/jobs/CurrentJobCard.vue';
 
 const route = useRoute();
 const store = useDevicesStore();

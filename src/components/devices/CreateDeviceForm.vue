@@ -147,13 +147,13 @@
 </template>
 
 <script setup lang="ts">
-import DeviceTypeEnum from 'src/models/DeviceType';
-import { DataPointTagInput, DataPointTag } from 'src/models/DataPointTag';
+import DeviceTypeEnum from '@/models/DeviceType';
+import { DataPointTagInput, DataPointTag } from '@/models/DataPointTag';
 import { ref } from 'vue';
-import { Device, DeviceInput } from 'src/models/Device';
+import { Device, DeviceInput } from '@/models/Device';
 import { toast } from 'vue3-toastify';
-import deviceService from 'src/services/DeviceService';
-import dataPointTagService from 'src/services/DataPointTagService';
+import deviceService from '@/services/DeviceService';
+import dataPointTagService from '@/services/DataPointTagService';
 import { useRouter } from 'vue-router';
 
 const props = defineProps({

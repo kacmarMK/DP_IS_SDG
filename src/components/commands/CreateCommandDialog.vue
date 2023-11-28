@@ -39,8 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import DeviceTypeEnum from 'src/models/DeviceType';
-import { useCommandsStore } from '../stores/commands-store';
+import DeviceTypeEnum from '@/models/DeviceType';
+import { useCommandsStore } from '@/stores/commands-store';
 
 const store = useCommandsStore();
 store.getCommands();
