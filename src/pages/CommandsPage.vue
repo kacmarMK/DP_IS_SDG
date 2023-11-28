@@ -23,6 +23,7 @@
         class="shadow"
         no-data-label="No Commands Found"
         loading-label="Loading Commands..."
+        rows-per-page-label="Commands per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">

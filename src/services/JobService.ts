@@ -2,6 +2,10 @@ import { api } from 'src/boot/ofetch';
 import { Job, JobToRun } from 'src/models/Job';
 
 class JobService {
+  async getAllJobs(): Promise<Job[]> {
+    return await api<Job[]>('/api/jobs/job/getAllJobs');
+  }
+
   async getJobsOnDevice(deviceId: string): Promise<Job[]> {
     return await api<Job[]>(
       `/jobs/job/getAllJobsOnDevice/${deviceId}/NONE/NONE`

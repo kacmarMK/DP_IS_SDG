@@ -23,6 +23,7 @@
         class="shadow"
         no-data-label="No Recipes Found"
         loading-label="Loading Recipes..."
+        rows-per-page-label="Recipes per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">

@@ -24,6 +24,7 @@
         class="shadow"
         no-data-label="No Devices Yet"
         loading-label="Loading Devices..."
+        rows-per-page-label="Devices per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -46,7 +47,7 @@
         <template v-slot:body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
-              icon="mdi-open-in-app"
+              icon="mdi-open-in-new"
               color="grey-color"
               flat
               round
