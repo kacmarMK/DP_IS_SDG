@@ -103,13 +103,6 @@ const columns: QTableProps['columns'] = [
     align: 'left',
   },
   {
-    name: 'mac',
-    label: 'Mac Address',
-    field: 'mac',
-    sortable: true,
-    align: 'left',
-  },
-  {
     name: 'type',
     label: 'Type',
     field: 'type',
