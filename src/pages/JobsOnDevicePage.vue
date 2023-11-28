@@ -94,21 +94,21 @@ const columns: QTableProps['columns'] = [
   {
     name: 'step',
     label: 'Step',
-    field: (row) => row.status.currentStep,
+    field: (row) => row.status?.currentStep || 1,
     sortable: true,
     align: 'left',
     format: (val: string, row: Job) => {
-      return `${val || 1} of ${row.noOfCmds}`;
+      return `${val} of ${row.noOfCmds}`;
     },
   },
   {
     name: 'cycle',
     label: 'Cycle',
-    field: (row) => row.status.currentCycle,
+    field: (row) => row.status?.currentCycle || 1,
     sortable: true,
     align: 'left',
     format: (val: number, row: Job) => {
-      return `${val || 1} of ${row.noOfReps}`;
+      return `${val} of ${row.noOfReps}`;
     },
   },
   {
