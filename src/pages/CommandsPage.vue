@@ -30,9 +30,42 @@
             {{ message }}
           </div>
         </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td auto-width :props="props">
+            <q-btn
+              @click.stop="
+                store.editDialog = true;
+                //store.editingCommand = props.row;
+                store.editCommandId = props.row.value?.id;
+              "
+              icon="mdi-pencil"
+              color="grey-color"
+              flat
+              round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Edit
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              @click.stop="
+                store.deleteDialog = true;
+                store.deletingCommand = props.row;
+              "
+              icon="mdi-trash-can-outline"
+              color="grey-color"
+              flat
+              round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Delete
+              </q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
       </q-table>
     </div>
     <create-command-dialog />
+    <edit-command-dialog />
+    <delete-command-dialog />
   </q-page>
 </template>
 
@@ -40,6 +73,8 @@
 import { QTableProps } from 'quasar';
 import { useCommandsStore } from '../stores/commands-store';
 import CreateCommandDialog from '../components/CreateCommandDialog.vue';
+import EditCommandDialog from '../components/EditCommandDialog.vue';
+import DeleteCommandDialog from '../components/DeleteCommandDialog.vue';
 
 const store = useCommandsStore();
 store.getCommands();
@@ -72,6 +107,13 @@ const columns: QTableProps['columns'] = [
     field: 'deactivated',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'actions',
+    label: '',
+    field: '',
+    align: 'center',
+    sortable: false,
   },
 ];
 </script>
