@@ -47,8 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import DeviceTypeEnum from 'src/models/DeviceType';
-import { useRecipesStore } from '../stores/recipes-store';
+import DeviceTypeEnum from '@/models/DeviceType';
+import { useRecipesStore } from '@/stores/recipes-store';
 
 const store = useRecipesStore();
 store.getRecipes();

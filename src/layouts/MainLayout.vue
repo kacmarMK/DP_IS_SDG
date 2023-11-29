@@ -69,21 +69,21 @@
         </router-link>
         <div class="links">
           <side-menu-button to="/" :exact="true" label="Home" icon="mdi-home" />
-          <side-menu-button
+          <!-- <side-menu-button
             to="/company"
             label="Team"
             icon="mdi-account-group"
-          />
+          /> -->
           <side-menu-button
             to="/devices"
             label="Devices"
             icon="mdi-cellphone-link"
           />
-          <side-menu-button
+          <!-- <side-menu-button
             to="/notifications"
             label="Notifications"
             icon="mdi-bell"
-          />
+          /> -->
           <side-menu-button
             to="/recipes"
             label="Recipes"
@@ -106,8 +106,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import SideMenuButton from 'src/components/SideMenuButton.vue';
-import LanguageSelect from 'src/components/LanguageSelect.vue';
+import SideMenuButton from '@/components/core/SideMenuButton.vue';
+import LanguageSelect from '@/components/core/LanguageSelect.vue';
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

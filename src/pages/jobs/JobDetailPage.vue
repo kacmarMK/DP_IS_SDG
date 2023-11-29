@@ -89,13 +89,13 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { Job } from 'src/models/Job';
+import { Job } from '@/models/Job';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import jobService from '../services/JobService';
-import JobControls from '../components/JobControls.vue';
-import { JobStatusEnum } from 'src/models/JobStatusEnum';
-import JobStatusBadges from '../components/JobStatusBadges.vue';
+import jobService from '@/services/JobService';
+import JobControls from '@/components/jobs/JobControls.vue';
+import { JobStatusEnum } from '@/models/JobStatusEnum';
+import JobStatusBadges from '@/components/jobs/JobStatusBadges.vue';
 
 const route = useRoute();
 

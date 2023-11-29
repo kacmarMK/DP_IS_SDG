@@ -18,6 +18,25 @@
         @click="refreshDevice()"
         :loading="store.isRefreshingDevice"
       ></q-btn>
+      <q-btn-dropdown
+        padding="0.5rem 1rem"
+        outline
+        no-caps
+        color="grey-color"
+        label="Options"
+      >
+        <q-list>
+          <q-item
+            clickable
+            v-close-popup
+            @click="download(csvConfig)(generateCSVData())"
+          >
+            <q-item-section>
+              <q-item-label>Export CSV</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </div>
     <apexchart
       height="350"
@@ -32,10 +51,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useDevicesStore } from '../stores/devices-store';
-import DeviceTimeRangeSelect from 'src/components/DeviceTimeRangeSelect.vue';
-import { TimeRange } from '../models/TimeRange';
-import { graphColors } from '../utils/colors';
+import { useDevicesStore } from '@/stores/devices-store';
+import DeviceTimeRangeSelect from '@/components/devices/DeviceTimeRangeSelect.vue';
+import { TimeRange } from '@/models/TimeRange';
+import { graphColors } from '@/utils/colors';
+import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { format } from 'date-fns';
 
 const store = useDevicesStore();
 
@@ -73,6 +94,9 @@ const chartOptions = ref({
     },
     toolbar: {
       autoSelected: 'zoom',
+      tools: {
+        download: false,
+      },
     },
   },
   dataLabels: {
@@ -142,6 +166,48 @@ function updateTimeRange(timeRange: TimeRange) {
     chartOptions.value.xaxis.max = new Date(timeRange.to).getTime();
   }
 }
+
+//CSV export
+const csvConfig = mkConfig({ useKeysAsHeaders: true, fieldSeparator: ';' });
+
+const generateCSVData = () => {
+  let allData: {
+    name: string;
+    unit: string;
+    measureAdd: number;
+    value: number;
+  }[] = [];
+
+  // Combine all data points from each tag
+  store.device?.dataPointTags.forEach((tag) => {
+    tag.storedData.forEach((data) => {
+      allData.push({
+        name: tag.name,
+        unit: tag.unit,
+        measureAdd: data.measureAdd,
+        value: data.value,
+      });
+    });
+  });
+
+  // Sort the data by measureAdd (timestamp)
+  allData.sort(
+    (a, b) =>
+      new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime()
+  );
+
+  // Format the data for CSV export
+  let csvData = allData.map((data) => ({
+    name: data.name,
+    unix: new Date(data.measureAdd).getTime(),
+    date: format(new Date(data.measureAdd), 'dd/MM/yyyy'),
+    time: format(new Date(data.measureAdd), 'HH:mm:ss'),
+    value: data.value,
+    unit: data.unit,
+  }));
+
+  return generateCsv(csvConfig)(csvData);
+};
 </script>
 
 <style lang="scss" scoped></style>

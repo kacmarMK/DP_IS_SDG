@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import { format, subSeconds } from 'date-fns';
 import { ref } from 'vue';
-import { PredefinedTimeRange } from '../models/TimeRange';
+import { PredefinedTimeRange } from '@/models/TimeRange';
 
 const emit = defineEmits(['update:modelValue']);
 defineExpose({
@@ -75,6 +75,21 @@ const timeRanges = <PredefinedTimeRange[]>[
     title: 'Last 12 Hours',
     name: '12h',
     time: 43200,
+  },
+  {
+    title: 'Last 24 Hours',
+    name: '24h',
+    time: 86400,
+  },
+  {
+    title: 'Last Week',
+    name: '1w',
+    time: 604800,
+  },
+  {
+    title: 'Last Month',
+    name: '1m',
+    time: 2592000,
   },
 ];
 const selectedTimeRange = ref(timeRanges[1]);

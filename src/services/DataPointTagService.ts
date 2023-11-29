@@ -1,5 +1,5 @@
 import { api } from 'src/boot/ofetch';
-import { DataPointTag, DataPointTagCreate } from 'src/models/DataPointTag';
+import { DataPointTag, DataPointTagInput } from 'src/models/DataPointTag';
 import { Device } from 'src/models/Device';
 
 class DataPointTagService {
@@ -8,7 +8,7 @@ class DataPointTagService {
   }
 
   async createDataPointTag(
-    dataPointTagCreate: DataPointTagCreate
+    dataPointTagCreate: DataPointTagInput
   ): Promise<DataPointTag> {
     return await api<DataPointTag>('datapoint/datapointtag/create', {
       method: 'POST',
@@ -24,6 +24,28 @@ class DataPointTagService {
       `device/addDataPointTagToDevice/${deviceId}/${dataPointTagId}`,
       {
         method: 'PUT',
+      }
+    );
+  }
+
+  async updateDataPointTag(
+    dataPointTagUpdate: DataPointTagInput,
+    dataPointTagId: string
+  ): Promise<DataPointTag> {
+    return await api<DataPointTag>(
+      `datapoint/datapointtag/updateDataPointTag/${dataPointTagId}`,
+      {
+        method: 'POST',
+        body: dataPointTagUpdate,
+      }
+    );
+  }
+
+  async deleteDataPointTag(dataPointTagId: string): Promise<DataPointTag> {
+    return await api<DataPointTag>(
+      `datapoint/datapointtag/deleteDataPointTag/${dataPointTagId}`,
+      {
+        method: 'DELETE',
       }
     );
   }

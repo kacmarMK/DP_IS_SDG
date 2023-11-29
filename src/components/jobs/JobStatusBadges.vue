@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { Job } from 'src/models/Job';
-import { statusColors } from 'src/utils/colors';
+import { Job } from '@/models/Job';
+import { statusColors } from '@/utils/colors';
 import { PropType } from 'vue';
 
 const props = defineProps({

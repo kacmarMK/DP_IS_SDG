@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch';
 
-const api = ofetch.create({ baseURL: '/api' });
+const api = ofetch.create({ baseURL: process.env.API_URL || '/api' });
 
 export { api };

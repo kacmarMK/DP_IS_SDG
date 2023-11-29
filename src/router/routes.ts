@@ -6,31 +6,51 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: '/devices', component: () => import('pages/DevicesPage.vue') },
+      {
+        path: '/devices',
+        component: () => import('pages/devices/DevicesPage.vue'),
+      },
       {
         path: '/devices/create',
-        component: () => import('pages/CreateDevicePage.vue'),
+        component: () => import('pages/devices/CreateDevicePage.vue'),
       },
-      { path: '/devices/:id', component: () => import('pages/DevicePage.vue') },
+      {
+        path: '/devices/:id',
+        component: () => import('pages/devices/DevicePage.vue'),
+      },
       {
         path: '/devices/:id/jobs',
-        component: () => import('pages/JobsOnDevicePage.vue'),
+        component: () => import('pages/jobs/JobsOnDevicePage.vue'),
+      },
+      {
+        path: '/devices/:id/edit',
+        component: () => import('pages/devices/UpdateDevicePage.vue'),
+      },
+      {
+        path: '/jobs',
+        component: () => import('pages/jobs/AllJobsPage.vue'),
       },
       {
         path: '/jobs/:id/',
-        component: () => import('pages/JobDetailPage.vue'),
+        component: () => import('pages/jobs/JobDetailPage.vue'),
       },
-      { path: '/commands', component: () => import('pages/CommandsPage.vue') },
-      { path: '/recipes', component: () => import('pages/RecipesPage.vue') },
+      {
+        path: '/commands',
+        component: () => import('pages/commands/CommandsPage.vue'),
+      },
+      {
+        path: '/recipes',
+        component: () => import('pages/recipes/RecipesPage.vue'),
+      },
     ],
   },
   {
     path: '/login',
-    component: () => import('pages/LoginPage.vue'),
+    component: () => import('pages/auth/LoginPage.vue'),
   },
   {
     path: '/register',
-    component: () => import('pages/RegisterPage.vue'),
+    component: () => import('pages/auth/RegisterPage.vue'),
   },
 
   // Always leave this as last one,

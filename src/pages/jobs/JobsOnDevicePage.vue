@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Jobs on device</p>
+        <p class="main-text">Job History</p>
       </div>
       <q-table
         :rows="jobs"
@@ -13,6 +13,7 @@
         class="shadow"
         no-data-label="No Jobs Yet"
         loading-label="Loading Jobs..."
+        rows-per-page-label="Jobs per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -31,6 +32,21 @@
             </q-badge>
           </q-td>
         </template>
+
+        <template v-slot:body-cell-actions="props">
+          <q-td auto-width :props="props">
+            <q-btn
+              icon="mdi-open-in-new"
+              color="grey-color"
+              flat
+              round
+              :to="`/jobs/${props.row.uid}`"
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Open
+              </q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
       </q-table>
     </div>
   </q-page>
@@ -38,11 +54,11 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { Job } from 'src/models/Job';
+import { Job } from '@/models/Job';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import jobService from '../services/JobService';
-import { statusColors } from '../utils/colors';
+import jobService from '@/services/JobService';
+import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from 'src/models/JobStatusEnum';
 
 const route = useRoute();
@@ -94,21 +110,21 @@ const columns: QTableProps['columns'] = [
   {
     name: 'step',
     label: 'Step',
-    field: (row) => row.status.currentStep,
+    field: (row) => row.status?.currentStep || 1,
     sortable: true,
     align: 'left',
     format: (val: string, row: Job) => {
-      return `${val || 1} of ${row.noOfCmds}`;
+      return `${val} of ${row.noOfCmds}`;
     },
   },
   {
     name: 'cycle',
     label: 'Cycle',
-    field: (row) => row.status.currentCycle,
+    field: (row) => row.status?.currentCycle || 1,
     sortable: true,
     align: 'left',
     format: (val: number, row: Job) => {
-      return `${val || 1} of ${row.noOfReps}`;
+      return `${val} of ${row.noOfReps}`;
     },
   },
   {
@@ -118,8 +134,14 @@ const columns: QTableProps['columns'] = [
     sortable: false,
     align: 'center',
   },
+  {
+    name: 'actions',
+    label: '',
+    field: '',
+    align: 'center',
+    sortable: false,
+  },
 ];
 </script>
 
 <style lang="scss" scoped></style>
-src/models/JobStatusEnum

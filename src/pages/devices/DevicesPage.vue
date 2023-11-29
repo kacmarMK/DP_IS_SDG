@@ -2,46 +2,66 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Commands</p>
+        <p class="main-text">Devices</p>
         <q-space></q-space>
         <q-btn
           class="shadow"
-          color="secondary"
-          label="Create new command"
+          color="primary"
           unelevated
           no-caps
           size="15px"
-          @click="store.createDialog = true"
+          label="Add Device"
+          icon="mdi-plus"
+          to="/devices/create"
         />
       </div>
       <q-table
-        :rows="store.commands"
+        :rows="store.devices"
         :columns="columns"
-        :loading="store.isLoadingCommands"
+        :loading="store.isLoadingDevices"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Commands Found"
-        loading-label="Loading Commands..."
+        no-data-label="No Devices Yet"
+        loading-label="Loading Devices..."
+        rows-per-page-label="Devices per page"
       >
         <template v-slot:no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon name="data_object" class="q-mb-md" size="50px"></q-icon>
+            <q-icon name="devices" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
+
+        <template v-slot:body-cell-name="props">
+          <q-td :props="props">
+            <router-link
+              :to="`/devices/${props.row.uid}`"
+              class="text-black text-weight-regular"
+            >
+              {{ props.row.name }}
+            </router-link>
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
-              @click.stop="
-                store.editDialog = true;
-                //store.editingCommand = props.row;
-                store.editCommandId = props.row.value?.id;
-              "
+              icon="mdi-open-in-new"
+              color="grey-color"
+              flat
+              round
+              :to="`/devices/${props.row.uid}`"
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Open
+              </q-tooltip>
+            </q-btn>
+            <q-btn
               icon="mdi-pencil"
               color="grey-color"
               flat
               round
+              :to="`/devices/${props.row.uid}/edit`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
               </q-tooltip>
@@ -49,7 +69,7 @@
             <q-btn
               @click.stop="
                 store.deleteDialog = true;
-                store.deletingCommand = props.row;
+                store.deletingDevice = props.row;
               "
               icon="mdi-trash-can-outline"
               color="grey-color"
@@ -63,21 +83,17 @@
         </template>
       </q-table>
     </div>
-    <create-command-dialog />
-    <edit-command-dialog />
-    <delete-command-dialog />
+    <delete-device-dialog />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { useCommandsStore } from '../stores/commands-store';
-import CreateCommandDialog from '../components/CreateCommandDialog.vue';
-import EditCommandDialog from '../components/EditCommandDialog.vue';
-import DeleteCommandDialog from '../components/DeleteCommandDialog.vue';
+import { useDevicesStore } from '@/stores/devices-store';
+import DeleteDeviceDialog from '@/components/devices/DeleteDeviceDialog.vue';
 
-const store = useCommandsStore();
-store.getCommands();
+const store = useDevicesStore();
+store.getDevices();
 
 const columns: QTableProps['columns'] = [
   {
@@ -88,23 +104,23 @@ const columns: QTableProps['columns'] = [
     align: 'left',
   },
   {
-    name: 'params',
-    label: 'Parameters',
-    field: 'params',
-    sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'deviceType',
-    label: 'Device Type',
-    field: 'deviceType',
+    name: 'type',
+    label: 'Type',
+    field: 'type',
     sortable: true,
     align: 'left',
   },
   {
-    name: 'deactivated',
-    label: 'Command Deactivated?',
-    field: 'deactivated',
+    name: 'version',
+    label: 'Version',
+    field: 'version',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'firmware',
+    label: 'Firmware',
+    field: 'firmware',
     sortable: true,
     align: 'left',
   },
@@ -117,4 +133,5 @@ const columns: QTableProps['columns'] = [
   },
 ];
 </script>
+
 <style lang="scss" scoped></style>

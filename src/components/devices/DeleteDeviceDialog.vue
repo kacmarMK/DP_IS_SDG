@@ -25,10 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { useDevicesStore } from '../stores/devices-store';
+import { useDevicesStore } from '@/stores/devices-store';
 
 const store = useDevicesStore();
-store.getDevices();
 </script>
 
 <style lang="scss" scoped></style>

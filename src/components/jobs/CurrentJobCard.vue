@@ -80,12 +80,12 @@
 </template>
 
 <script setup lang="ts">
-import { useDevicesStore } from '../stores/devices-store';
-import StartJobDialog from '../components/StartJobDialog.vue';
+import { useDevicesStore } from '@/stores/devices-store';
+import StartJobDialog from '@/components/jobs/StartJobDialog.vue';
 import { computed, ref, onMounted, onUnmounted, PropType } from 'vue';
-import { JobStatusEnum } from 'src/models/JobStatusEnum';
-import { Job } from 'src/models/Job';
-import jobService from 'src/services/JobService';
+import { JobStatusEnum } from '@/models/JobStatusEnum';
+import { Job } from '@/models/Job';
+import jobService from '@/services/JobService';
 import JobControls from './JobControls.vue';
 import JobStatusBadges from './JobStatusBadges.vue';
 

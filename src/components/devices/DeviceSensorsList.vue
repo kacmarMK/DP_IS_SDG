@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useDevicesStore } from '../stores/devices-store';
+import { useDevicesStore } from '@/stores/devices-store';
 const store = useDevicesStore();
 
 const selected = ref(false);

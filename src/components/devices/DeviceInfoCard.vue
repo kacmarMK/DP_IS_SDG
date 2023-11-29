@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { Device } from 'src/models/Device';
+import { Device } from '@/models/Device';
 
 const props = defineProps({
   device: {
