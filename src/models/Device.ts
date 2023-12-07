@@ -26,6 +26,7 @@ interface DeviceInput {
   firmware: string;
   initApiKey?: string;
   deactivated: boolean;
+  dataPointTags?: DataPointTag[] | null;
 }
 
 export type { Device, DeviceInput };
