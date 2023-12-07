@@ -84,12 +84,12 @@
             label="Notifications"
             icon="mdi-bell"
           /> -->
+          <side-menu-button to="/jobs" label="Jobs" icon="mdi-list-status" />
           <side-menu-button
             to="/recipes"
             label="Recipes"
             icon="mdi-book-multiple"
           />
-          <side-menu-button to="/jobs" label="Jobs" icon="mdi-list-status" />
           <side-menu-button
             to="/commands"
             label="Commands"

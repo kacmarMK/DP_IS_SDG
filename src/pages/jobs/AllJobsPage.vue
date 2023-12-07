@@ -55,17 +55,24 @@
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
 import { ref } from 'vue';
-import jobService from '@/services/JobService';
+import deviceService from '@/services/DeviceService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
+import { JobDevice } from '@/models/Job';
 
-const jobs = ref<Job[]>([]);
+const jobs = ref<JobDevice[]>([]);
 
 const isLoadingJobs = ref(false);
 async function getJobs() {
   try {
     isLoadingJobs.value = true;
-    jobs.value = await jobService.getAllJobs();
+    const devices = await deviceService.getDevices();
+    jobs.value = devices.flatMap(device =>
+      device.jobs.map(job => ({
+        ...job,
+        deviceName: device.name
+      }))
+    );
   } catch (error) {
     console.error(error);
   } finally {
@@ -76,8 +83,15 @@ getJobs();
 
 const columns: QTableProps['columns'] = [
   {
-    name: 'name',
-    label: 'Name',
+    name: 'device',
+    label: 'Device',
+    field: 'deviceName',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'recipe',
+    label: 'Recipe',
     field: 'name',
     sortable: true,
     align: 'left',
@@ -127,7 +141,7 @@ const columns: QTableProps['columns'] = [
     name: 'status',
     label: 'Status',
     field: '',
-    sortable: false,
+    sortable: true,
     align: 'center',
   },
   {
