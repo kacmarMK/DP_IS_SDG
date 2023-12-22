@@ -107,7 +107,7 @@ async function getJob() {
     isLoadingJob.value = true;
     job.value = await jobService.getJobById(route.params.id.toString());
   } catch (error) {
-    console.error(error);
+    console.log(error);
   } finally {
     isLoadingJob.value = false;
   }
@@ -126,7 +126,7 @@ const currentStepCycle = computed(() => {
   const currentStepIndex = steps.value.findIndex(
     (step) =>
       currentStep.value > step.step &&
-      currentStep.value < step.step + step.cycles
+      currentStep.value < step.step + step.cycles,
   );
 
   if (currentStepIndex === -1) return 1;

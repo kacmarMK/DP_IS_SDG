@@ -8,7 +8,7 @@ class JobService {
 
   async getJobsOnDevice(deviceId: string): Promise<Job[]> {
     return await api<Job[]>(
-      `/jobs/job/getAllJobsOnDevice/${deviceId}/NONE/NONE`
+      `/jobs/job/getAllJobsOnDevice/${deviceId}/NONE/NONE`,
     );
   }
 
@@ -21,7 +21,7 @@ class JobService {
       `jobs/job/runJobFromRecipe/${jobToRun.recipeId}/${jobToRun.deviceId}/${jobToRun.repetitions}/${jobToRun.scheduledDays}/${jobToRun.scheduledHour}/${jobToRun.scheduledMinute}`,
       {
         method: 'POST',
-      }
+      },
     );
   }
 

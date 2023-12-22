@@ -59,6 +59,7 @@ import deviceService from '@/services/DeviceService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import { JobDevice } from '@/models/Job';
+import { handleError } from '@/utils/error-handler';
 
 const jobs = ref<JobDevice[]>([]);
 
@@ -67,14 +68,15 @@ async function getJobs() {
   try {
     isLoadingJobs.value = true;
     const devices = await deviceService.getDevices();
-    jobs.value = devices.flatMap(device =>
-      device.jobs.map(job => ({
+    jobs.value = devices.flatMap((device) =>
+      device.jobs.map((job) => ({
         ...job,
-        deviceName: device.name
-      }))
+        deviceName: device.name,
+      })),
     );
   } catch (error) {
-    console.error(error);
+    console.log('ahoj');
+    handleError(error, 'Loading jobs failed!');
   } finally {
     isLoadingJobs.value = false;
   }

@@ -5,6 +5,7 @@
         <div class="text-weight-medium text-h6 col-shrink">Job</div>
         <q-space></q-space>
         <q-btn
+          v-if="runningJob"
           dense
           size="14px"
           icon="mdi-open-in-new"
@@ -114,7 +115,7 @@ function findActiveJob(jobs: Job[]) {
   return jobs.find(
     (job) =>
       job.currentStatus == JobStatusEnum.JOB_PROCESSING ||
-      job.currentStatus == JobStatusEnum.JOB_PENDING
+      job.currentStatus == JobStatusEnum.JOB_PENDING,
   );
 }
 
@@ -124,7 +125,7 @@ async function getRunningJob() {
       const jobs: Job[] = await jobService.getJobsOnDevice(store.device.uid);
       runningJob.value = findActiveJob(jobs);
     } catch (error) {
-      console.log('No running job found');
+      console.log(error);
     }
   }
 }

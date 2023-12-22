@@ -72,6 +72,7 @@ import { UserRegister } from '@/models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
+import { handleError } from '@/utils/error-handler';
 
 const router = useRouter();
 
@@ -129,8 +130,7 @@ async function register() {
     toast.success('Registration successful!');
     router.push('/');
   } catch (error) {
-    console.log(error);
-    toast.error('Registration failed!');
+    handleError(error, 'Registration failed!');
   } finally {
     isSubmitting.value = false;
   }

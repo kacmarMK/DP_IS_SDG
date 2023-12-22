@@ -3,6 +3,7 @@ import { Device } from 'src/models/Device';
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import deviceService from 'src/services/DeviceService';
+import { handleError } from '@/utils/error-handler';
 
 export const useDevicesStore = defineStore('devices', () => {
   //Devices
@@ -13,8 +14,7 @@ export const useDevicesStore = defineStore('devices', () => {
       isLoadingDevices.value = true;
       devices.value = await deviceService.getDevices();
     } catch (error) {
-      console.log(error);
-      toast.error('Loading devices failed!');
+      handleError(error, 'Loading devices failed!');
     } finally {
       isLoadingDevices.value = false;
     }
@@ -37,8 +37,7 @@ export const useDevicesStore = defineStore('devices', () => {
       getDevices();
       deleteDialog.value = false;
     } catch (error) {
-      console.log(error);
-      toast.error('Deleting device failed!');
+      handleError(error, 'Deleting device failed!');
     } finally {
       deleteInProgress.value = false;
     }
@@ -56,8 +55,7 @@ export const useDevicesStore = defineStore('devices', () => {
       }
       device.value = await deviceService.getDevice(uid);
     } catch (error) {
-      console.log(error);
-      toast.error('Loading device failed!');
+      handleError(error, 'Loading device failed!');
     } finally {
       isLoadingDevice.value = false;
     }
@@ -70,8 +68,7 @@ export const useDevicesStore = defineStore('devices', () => {
       isRefreshingDevice.value = true;
       device.value = await deviceService.getDevice(device.value.uid);
     } catch (error) {
-      console.log(error);
-      toast.error('Refreshing device failed!');
+      handleError(error, 'Refreshing device failed!');
     } finally {
       isRefreshingDevice.value = false;
     }

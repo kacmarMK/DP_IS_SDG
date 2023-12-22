@@ -73,6 +73,7 @@ import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { useAuthStore } from '@/stores/auth-store';
+import { handleError } from '@/utils/error-handler';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -124,8 +125,7 @@ async function login() {
     toast.success('Login successful!');
     router.push('/');
   } catch (error) {
-    console.log(error);
-    toast.error('Login failed!');
+    handleError(error, 'Login failed!');
   } finally {
     isSubmitting.value = false;
   }

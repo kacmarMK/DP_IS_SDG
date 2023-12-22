@@ -1,12 +1,13 @@
 import { FetchContext, ofetch } from 'ofetch';
 import { useAuthStore } from '@/stores/auth-store';
 
-function onResponseError(context: { response: Response }) {
+async function onResponseError(context: FetchContext) {
   const { response } = context;
+  const authStore = useAuthStore();
 
-  if (response.status === 403) {
-    const authStore = useAuthStore();
-    console.log('403');
+  if (!response) return;
+
+  if (response.status === 403 && authStore.isTokenExpired) {
     authStore.logout();
   }
 }

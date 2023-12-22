@@ -155,6 +155,7 @@ import { toast } from 'vue3-toastify';
 import deviceService from '@/services/DeviceService';
 import dataPointTagService from '@/services/DataPointTagService';
 import { useRouter } from 'vue-router';
+import { handleError } from '@/utils/error-handler';
 
 const props = defineProps({
   isEditing: {
@@ -191,11 +192,10 @@ async function getEditingDevice() {
     };
     remoteDataPointTags.value = editingDevice.dataPointTags;
     originalRemoteDataPointTags.value = cloneDataPointTags(
-      editingDevice.dataPointTags
+      editingDevice.dataPointTags,
     );
   } catch (error) {
-    console.log(error);
-    toast.error('Getting device failed!');
+    handleError(error, 'Getting device failed!');
   }
 }
 getEditingDevice();
@@ -206,11 +206,10 @@ async function deleteRemoteDataPointTag(id: string) {
   try {
     await dataPointTagService.deleteDataPointTag(id);
     remoteDataPointTags.value = remoteDataPointTags.value.filter(
-      (dataPointTag) => dataPointTag.uid !== id
+      (dataPointTag) => dataPointTag.uid !== id,
     );
   } catch (error) {
-    console.log(error);
-    toast.error('Deleting data point tag failed!');
+    handleError(error, 'Deleting data point tag failed!');
   }
 }
 
@@ -235,13 +234,11 @@ async function createDataPointTags(): Promise<DataPointTag[]> {
 
   for (const dataPointTag of localDataPointTags.value) {
     try {
-      const createdDataPointTag = await dataPointTagService.createDataPointTag(
-        dataPointTag
-      );
+      const createdDataPointTag =
+        await dataPointTagService.createDataPointTag(dataPointTag);
       dataPointTags.push(createdDataPointTag);
     } catch (error) {
-      console.log(error);
-      toast.error('Creating data point tag failed!');
+      handleError(error, 'Creating data point tag failed!');
     }
   }
   return dataPointTags;
@@ -253,8 +250,7 @@ async function createDevice(): Promise<Device | undefined> {
     createdDevice = await deviceService.createDevice(deviceInput.value);
     createStep.value = 1;
   } catch (error) {
-    console.log(error);
-    toast.error('Creating device failed!');
+    handleError(error, 'Creating device failed!');
   }
   return createdDevice;
 }
@@ -266,12 +262,11 @@ async function updateDevice(): Promise<Device | undefined> {
   try {
     editedDevice = await deviceService.updateDevice(
       deviceInput.value,
-      props.editingDeviceId
+      props.editingDeviceId,
     );
     createStep.value = 1;
   } catch (error) {
-    console.log(error);
-    toast.error('Updating device failed!');
+    handleError(error, 'Updating device failed!');
   }
   return editedDevice;
 }
@@ -298,18 +293,17 @@ async function submitForm() {
     try {
       await dataPointTagService.addDataPointTagToDevice(
         device.uid,
-        dataPointTag.uid
+        dataPointTag.uid,
       );
     } catch (error) {
-      console.log(error);
-      toast.error('Adding data point tag to device failed!');
+      handleError(error, 'Adding data point tag to device failed!');
     }
   }
 
   //Update remoteDataPointTags
   for (const dataPointTag of remoteDataPointTags.value) {
     const originalTag = originalRemoteDataPointTags.value.find(
-      (tag) => tag.uid === dataPointTag.uid
+      (tag) => tag.uid === dataPointTag.uid,
     );
 
     //Update only if tag has changed
@@ -323,11 +317,10 @@ async function submitForm() {
         };
         await dataPointTagService.updateDataPointTag(
           updatedDataPointTag,
-          dataPointTag.uid
+          dataPointTag.uid,
         );
       } catch (error) {
-        console.log(error);
-        toast.error('Updating data point tag failed!');
+        handleError(error, 'Updating data point tag failed!');
       }
     }
   }

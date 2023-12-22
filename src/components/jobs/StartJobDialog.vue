@@ -84,6 +84,7 @@ import { QInput } from 'quasar';
 import { JobToRun } from '@/models/Job';
 import { toast } from 'vue3-toastify';
 import { parse } from 'date-fns';
+import { handleError } from '@/utils/error-handler';
 
 const store = useDevicesStore();
 const props = defineProps(['modelValue']);
@@ -106,7 +107,7 @@ async function getRecipes() {
   if (!store.device) return;
   try {
     recipesAvailable.value = await recipeService.getFullRecipesByDeviceType(
-      store.device.type
+      store.device.type,
     );
   } catch (e) {
     console.log(e);
@@ -128,9 +129,8 @@ async function runJob() {
     openDialog.value = false;
     toast.success('Job started');
     emit('jobStarted');
-  } catch (e) {
-    toast.error('Error running job');
-    console.log(e);
+  } catch (error) {
+    handleError(error, 'Error running job');
   }
 }
 
@@ -153,17 +153,26 @@ const selectedDays = computed(() => {
 const scheduledTime = ref();
 
 function resetDialog() {
+  const now = new Date();
+  const day = now.getDay();
+  const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+
   jobToRun.value = {
     recipeId: '',
     deviceId: store.device?.uid ?? '',
     repetitions: 1,
-    scheduledDays: selectedDays.value,
-    scheduledHour: 0,
-    scheduledMinute: 0,
+    scheduledDays: [day],
+    scheduledHour: now.getHours(),
+    scheduledMinute: now.getMinutes(),
   };
   dayButtons.value.forEach((button) => (button.onOff = false));
-  scheduledTime.value = null;
+  scheduledTime.value = formattedTime;
   selectedRecipe.value = null;
+
+  dayButtons.value[day - 1].onOff = true;
 }
 resetDialog();
 
