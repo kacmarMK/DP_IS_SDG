@@ -68,13 +68,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import authService from '@/services/AuthService';
 import { UserLogin } from '@/models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
+import { useAuthStore } from '@/stores/auth-store';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const userLogin = ref<UserLogin>({
   name: '',
@@ -119,7 +120,7 @@ async function login() {
 
   try {
     isSubmitting.value = true;
-    await authService.login(userLogin.value);
+    await authStore.login(userLogin.value);
     toast.success('Login successful!');
     router.push('/');
   } catch (error) {

@@ -2,18 +2,18 @@ import { User, UserLogin, UserRegister } from 'src/models/User';
 import { api } from 'src/boot/ofetch';
 
 class AuthService {
-  async login(userLogin: UserLogin): Promise<User> {
-    const user: User = await api<User>(
-      `user/loginUser/${userLogin.name}/${userLogin.password}`,
+  async login(userLogin: UserLogin): Promise<string> {
+    const jwt = await api<string>(
+      `user/login/${userLogin.name}/${userLogin.password}`,
       {
         method: 'POST',
-      }
+      },
     );
-    return user;
+    return jwt;
   }
 
   async register(userRegister: UserRegister): Promise<User> {
-    const user: User = await api<User>('user/create', {
+    const user: User = await api<User>('user/create/user', {
       method: 'POST',
       body: userRegister,
     });
