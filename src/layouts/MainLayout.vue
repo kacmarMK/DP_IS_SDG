@@ -69,6 +69,11 @@
         </router-link>
         <div class="links">
           <side-menu-button to="/" :exact="true" label="Home" icon="mdi-home" />
+          <side-menu-button
+            to="/collections"
+            label="Collections"
+            icon="mdi-hub-outline"
+          />
           <!-- <side-menu-button
             to="/company"
             label="Team"
@@ -88,7 +93,7 @@
           <side-menu-button
             to="/recipes"
             label="Recipes"
-            icon="mdi-book-multiple"
+            icon="mdi-book-multiple-outline"
           />
           <side-menu-button
             to="/commands"

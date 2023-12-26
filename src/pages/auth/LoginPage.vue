@@ -31,12 +31,12 @@
                     />
                   </template>
                 </q-input>
-                <q-checkbox
+                <!-- <q-checkbox
                   v-model="rememberMe"
                   class="q-mb-md"
                   dense
                   label="Remember me"
-                />
+                /> -->
                 <q-btn
                   class="q-my-md full-width"
                   color="primary"
@@ -82,7 +82,7 @@ const userLogin = ref<UserLogin>({
   name: '',
   password: '',
 });
-const rememberMe = ref(false);
+// const rememberMe = ref(false);
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
