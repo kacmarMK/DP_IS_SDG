@@ -26,8 +26,10 @@
             <q-list style="min-width: 150px" class="text-secondary">
               <q-item>
                 <q-item-section class="q-py-xs">
-                  <div class="text-weight-medium">Username</div>
-                  <div class="text-grey-color">placeholder@gmail.com</div>
+                  <div class="text-weight-medium">
+                    {{ authStore.user?.name }}
+                  </div>
+                  <div class="text-grey-color">{{ authStore.user?.mail }}</div>
                 </q-item-section>
               </q-item>
               <q-separator />
@@ -44,7 +46,7 @@
                 </div>
               </q-item>
               <q-separator />
-              <q-item clickable to="/login">
+              <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-logout" />
                   <div>Logout</div>
@@ -113,6 +115,9 @@
 import { ref } from 'vue';
 import SideMenuButton from '@/components/core/SideMenuButton.vue';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
+import { useAuthStore } from '@/stores/auth-store';
+
+const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {

@@ -19,6 +19,13 @@ class AuthService {
     });
     return user;
   }
+
+  async getUserById(id: string): Promise<User> {
+    const user: User = await api<User>(`user/getUserById/${id}`, {
+      method: 'GET',
+    });
+    return user;
+  }
 }
 
 export default new AuthService();
