@@ -90,7 +90,11 @@
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
             <q-td colspan="100%" class="bg-grey-1" no-hover>
-              <ModulesTable class="q-pa-md" v-model="props.row" />
+              <ModulesTable
+                class="q-pa-md"
+                v-model="props.row"
+                @update:model-value="updateCollection"
+              />
             </q-td>
           </q-tr>
         </template>
@@ -140,6 +144,12 @@ async function getCollections() {
 }
 getCollections();
 
+function updateCollection(collection: Collection) {
+  const index = collections.value.findIndex((c) => c.uid === collection.uid);
+  if (index === -1) return;
+  collections.value[index] = collection;
+}
+
 const createCollectionDialog = ref(false);
 const deleteCollectionDialog = ref(false);
 const editCollectionDialog = ref(false);
@@ -152,6 +162,13 @@ const columns: QTableProps['columns'] = [
     field: 'name',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'modules',
+    label: 'Modules',
+    field: (row) => row.modules.length || 0,
+    sortable: true,
+    align: 'right',
   },
 ];
 </script>
