@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { Device } from 'src/models/Device';
 import { ref } from 'vue';
-import { toast } from 'vue3-toastify';
 import deviceService from 'src/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
 
@@ -17,29 +16,6 @@ export const useDevicesStore = defineStore('devices', () => {
       handleError(error, 'Loading devices failed!');
     } finally {
       isLoadingDevices.value = false;
-    }
-  }
-
-  //Delete device dialog
-  const deleteDialog = ref(false);
-  const deleteInProgress = ref(false);
-  const deletingDevice = ref<Device>();
-  async function deleteDevice() {
-    const deletingDeviceId = deletingDevice.value?.uid;
-    if (!deletingDeviceId) {
-      return;
-    }
-
-    try {
-      deleteInProgress.value = true;
-      await deviceService.deleteDevice(deletingDeviceId);
-      toast.success('Device deleted!');
-      getDevices();
-      deleteDialog.value = false;
-    } catch (error) {
-      handleError(error, 'Deleting device failed!');
-    } finally {
-      deleteInProgress.value = false;
     }
   }
 
@@ -78,10 +54,6 @@ export const useDevicesStore = defineStore('devices', () => {
     devices,
     isLoadingDevices,
     getDevices,
-    deleteDialog,
-    deleteInProgress,
-    deletingDevice,
-    deleteDevice,
     device,
     isLoadingDevice,
     getDevice,

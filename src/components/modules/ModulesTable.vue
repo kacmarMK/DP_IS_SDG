@@ -74,7 +74,9 @@
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
             <!-- TODO: add devices -->
-            <q-td colspan="100%">Module info {{ props.row.name }} </q-td>
+            <q-td colspan="100%" no-hover class="bg-grey-1"
+              >Module info {{ props.row.name }}
+            </q-td>
           </q-tr>
         </template>
       </q-table>
