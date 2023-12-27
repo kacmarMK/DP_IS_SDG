@@ -89,7 +89,7 @@
             </q-td>
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
-            <q-td colspan="100%" class="bg-grey-1" no-hover>
+            <q-td colspan="100%" no-hover>
               <ModulesTable
                 class="q-pa-md"
                 v-model="props.row"

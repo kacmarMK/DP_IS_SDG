@@ -20,7 +20,7 @@
         :rows="collection.modules || []"
         :columns="columns"
         flat
-        class="outline"
+        class="outline shadow"
         hide-pagination
         no-data-label="No modules Yet"
         loading-label="Loading modules..."
@@ -88,7 +88,7 @@
             </q-td>
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
-            <q-td colspan="100%" no-hover class="bg-grey-1">
+            <q-td colspan="100%" no-hover>
               <DevicesInModuleTable
                 v-model="props.row.devices"
                 :module="props.row"

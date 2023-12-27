@@ -22,7 +22,7 @@
       hide-pagination
       no-data-label="No Devices Yet"
       loading-label="Loading Devices..."
-      class="outline"
+      class="outline shadow"
     >
       <template v-slot:no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
