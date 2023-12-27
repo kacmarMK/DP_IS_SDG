@@ -26,6 +26,25 @@ class ModuleService {
       },
     );
   }
+
+  async updateModule(uid: string, module: ModuleInput): Promise<Module> {
+    return await api<Module>(`module/update/${uid}`, {
+      method: 'PUT',
+      body: module,
+    });
+  }
+
+  async removeModuleFromCollection(
+    collectionId: string,
+    moduleId: string,
+  ): Promise<Module> {
+    return await api<Module>(
+      `collection/removeModule/${collectionId}/${moduleId}`,
+      {
+        method: 'DELETE',
+      },
+    );
+  }
 }
 
 export default new ModuleService();

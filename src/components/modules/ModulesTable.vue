@@ -60,12 +60,28 @@
               {{ col.value }}
             </q-td>
             <q-td auto-width>
-              <q-btn icon="mdi-pencil" color="grey-color" flat round
+              <q-btn
+                @click="
+                  moduleToUpdate = props.row;
+                  editModuleDialog = true;
+                "
+                icon="mdi-pencil"
+                color="grey-color"
+                flat
+                round
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Edit
                 </q-tooltip>
               </q-btn>
-              <q-btn icon="mdi-trash-can-outline" color="grey-color" flat round
+              <q-btn
+                @click="
+                  moduleToUpdate = props.row;
+                  deleteModuleDialog = true;
+                "
+                icon="mdi-trash-can-outline"
+                color="grey-color"
+                flat
+                round
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Delete
                 </q-tooltip>
@@ -73,9 +89,15 @@
             </q-td>
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
-            <!-- TODO: add devices -->
-            <q-td colspan="100%" no-hover class="bg-grey-1"
-              >Module info {{ props.row.name }}
+            <q-td colspan="100%" no-hover class="bg-grey-1">
+              <div class="q-pa-md">
+                <p class="text-h6">Devices</p>
+                <DevicesInModuleTable
+                  v-model="props.row.devices"
+                  :module-uid="props.row.uid"
+                  class="outline"
+                />
+              </div>
             </q-td>
           </q-tr>
         </template>
@@ -84,7 +106,21 @@
     <CreateModuleDialog
       v-model="createModuleDialog"
       :collection="collection"
-      @onCreate="onCreateModule"
+      @onCreate="getCollection"
+    />
+    <DeleteConfirmationDialog
+      v-if="moduleToUpdate"
+      v-model="deleteModuleDialog"
+      :itemUid="moduleToUpdate.uid"
+      itemType="module"
+      :deleteFunction="ModuleService.deleteModule"
+      @onDeleted="onModuleDeleted"
+    />
+    <EditModuleDialog
+      v-if="moduleToUpdate"
+      v-model="editModuleDialog"
+      :module="moduleToUpdate"
+      @onUpdate="getCollection"
     />
   </div>
 </template>
@@ -92,9 +128,15 @@
 <script setup lang="ts">
 import { Collection } from '@/models/Collection';
 import { QTableProps } from 'quasar';
-import { PropType, computed, defineProps, ref } from 'vue';
+import { PropType, computed, ref } from 'vue';
 import CreateModuleDialog from './CreateModuleDialog.vue';
+import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
+import EditModuleDialog from './EditModuleDialog.vue';
 import CollectionService from '@/services/CollectionService';
+import DevicesInModuleTable from '@/components/modules/DevicesInModuleTable.vue';
+import { handleError } from '@/utils/error-handler';
+import { Module } from '@/models/Module';
+import ModuleService from '@/services/ModuleService';
 
 const props = defineProps({
   modelValue: {
@@ -115,15 +157,21 @@ const collection = computed({
 });
 
 const createModuleDialog = ref(false);
+const deleteModuleDialog = ref(false);
+const editModuleDialog = ref(false);
+const moduleToUpdate = ref<Module>();
+async function onModuleDeleted() {
+  await getCollection();
+}
 
-async function onCreateModule() {
+async function getCollection() {
   try {
     const updatedCollection = await CollectionService.getCollection(
       collection.value.uid,
     );
     collection.value = updatedCollection;
   } catch (error) {
-    console.log(error);
+    handleError(error, 'Getting collection failed!');
   }
 }
 
@@ -134,6 +182,13 @@ const columns: QTableProps['columns'] = [
     field: 'name',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'devices',
+    label: 'Devices',
+    field: (row) => row.devices.length || 0,
+    sortable: true,
+    align: 'right',
   },
 ];
 </script>

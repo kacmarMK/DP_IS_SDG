@@ -62,7 +62,7 @@
             <q-td auto-width>
               <q-btn
                 @click="
-                  collectionOperation = props.row;
+                  collectionToUpdate = props.row;
                   editCollectionDialog = true;
                 "
                 icon="mdi-pencil"
@@ -75,7 +75,7 @@
               </q-btn>
               <q-btn
                 @click="
-                  collectionOperation = props.row;
+                  collectionToUpdate = props.row;
                   deleteCollectionDialog = true;
                 "
                 icon="mdi-trash-can-outline"
@@ -104,16 +104,18 @@
       v-model="createCollectionDialog"
       @onCreate="getCollections"
     />
-    <DeleteCollectionDialog
-      v-if="collectionOperation"
+    <DeleteConfirmationDialog
+      v-if="collectionToUpdate"
       v-model="deleteCollectionDialog"
-      :collection="collectionOperation"
+      :itemUid="collectionToUpdate.uid"
+      itemType="collection"
+      :deleteFunction="CollectionService.deleteCollection"
       @onDeleted="getCollections"
     />
     <EditCollectionDialog
-      v-if="collectionOperation"
+      v-if="collectionToUpdate"
       v-model="editCollectionDialog"
-      :collection="collectionOperation"
+      :collection="collectionToUpdate"
       @onUpdate="getCollections"
     />
   </q-page>
@@ -126,9 +128,9 @@ import { ref } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import CollectionService from '@/services/CollectionService';
 import CreateCollectionDialog from '@/components/collections/CreateCollectionDialog.vue';
-import DeleteCollectionDialog from '@/components/collections/DeleteCollectionDialog.vue';
 import EditCollectionDialog from '@/components/collections/EditCollectionDialog.vue';
 import ModulesTable from '@/components/modules/ModulesTable.vue';
+import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 
 const collections = ref<Collection[]>([]);
 const isLoadingCollections = ref(false);
@@ -153,7 +155,7 @@ function updateCollection(collection: Collection) {
 const createCollectionDialog = ref(false);
 const deleteCollectionDialog = ref(false);
 const editCollectionDialog = ref(false);
-const collectionOperation = ref<Collection>();
+const collectionToUpdate = ref<Collection>();
 
 const columns: QTableProps['columns'] = [
   {

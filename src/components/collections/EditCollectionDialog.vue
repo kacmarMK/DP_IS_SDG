@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { PropType, ref, watch } from 'vue';
-import type { CollectionInput } from '@/models/Collection';
+import type { Collection } from '@/models/Collection';
 import CollectionService from '@/services/CollectionService';
 import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
@@ -36,13 +36,13 @@ const props = defineProps({
     required: true,
   },
   collection: {
-    type: Object as PropType<CollectionInput>,
+    type: Object as PropType<Collection>,
     required: true,
   },
 });
 const emit = defineEmits(['update:modelValue', 'onUpdate']);
 
-function deepCopyCollection(collectionObject: CollectionInput) {
+function deepCopyCollection(collectionObject: Collection) {
   return JSON.parse(JSON.stringify(collectionObject));
 }
 
@@ -56,12 +56,15 @@ const isDialogVisible = computed({
 });
 
 const updatingCollection = ref(false);
-const collection = ref<CollectionInput>(deepCopyCollection(props.collection));
+const collection = ref<Collection>(deepCopyCollection(props.collection));
 
 async function updateCollection() {
   try {
     updatingCollection.value = true;
-    await CollectionService.createCollection(collection.value);
+    await CollectionService.updateCollection(
+      props.collection.uid,
+      collection.value,
+    );
     isDialogVisible.value = false;
     emit('onUpdate');
     toast.success('Collection updated!');

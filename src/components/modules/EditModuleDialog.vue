@@ -2,20 +2,20 @@
   <q-dialog v-model="isDialogVisible">
     <q-card style="min-width: 350px" class="q-pa-">
       <q-card-section>
-        <div class="text-h6">Create new module</div>
+        <div class="text-h6">Edit module</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input autofocus label="Name" v-model="moduleObj.name" />
+        <q-input autofocus label="Name" v-model="moduleLocal.name" />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" v-close-popup no-caps />
         <q-btn
           unelevated
           color="primary"
-          label="Create Collection"
+          label="Create Module"
           no-caps
-          @click="createModule"
-          :loading="creatingModule"
+          @click="updateModule"
+          :loading="updatingModule"
         />
       </q-card-actions>
     </q-card>
@@ -23,25 +23,28 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue';
-import type { Collection } from '@/models/Collection';
+import { PropType, ref, watch } from 'vue';
 import ModuleService from '@/services/ModuleService';
 import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
 import { toast } from 'vue3-toastify';
-import { ModuleInput } from '@/models/Module';
+import { Module, ModuleInput } from '@/models/Module';
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
     required: true,
   },
-  collection: {
-    type: Object as PropType<Collection>,
+  module: {
+    type: Object as PropType<Module>,
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue', 'onCreate']);
+const emit = defineEmits(['update:modelValue', 'onUpdate']);
+
+function deepCopyModule(moduleObject: ModuleInput) {
+  return JSON.parse(JSON.stringify(moduleObject));
+}
 
 const isDialogVisible = computed({
   get() {
@@ -52,31 +55,29 @@ const isDialogVisible = computed({
   },
 });
 
-const getEmptyModule = (): ModuleInput => ({
-  name: '',
-});
+const updatingModule = ref(false);
+const moduleLocal = ref<ModuleInput>(deepCopyModule(props.module));
 
-const creatingModule = ref(false);
-const moduleObj = ref<ModuleInput>(getEmptyModule());
-
-async function createModule() {
+async function updateModule() {
   try {
-    creatingModule.value = true;
-    const createdModule = await ModuleService.createModule(moduleObj.value);
-    await ModuleService.addModuleToCollection(
-      props.collection.uid,
-      createdModule.uid,
-    );
-    moduleObj.value = getEmptyModule();
+    updatingModule.value = true;
+    await ModuleService.updateModule(props.module.uid, moduleLocal.value);
     isDialogVisible.value = false;
-    emit('onCreate');
-    toast.success('Module created!');
+    emit('onUpdate');
+    toast.success('Module updated!');
   } catch (error) {
-    handleError(error, 'Creating module failed!');
+    handleError(error, 'Updating module failed!');
   } finally {
-    creatingModule.value = false;
+    updatingModule.value = false;
   }
 }
+
+watch(
+  () => props.module,
+  (value) => {
+    moduleLocal.value = deepCopyModule(value);
+  },
+);
 </script>
 
 <style lang="scss" scoped></style>

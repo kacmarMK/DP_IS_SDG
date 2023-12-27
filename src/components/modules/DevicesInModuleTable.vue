@@ -3,7 +3,6 @@
     <q-table
       :rows="devices"
       :columns="columns"
-      :loading="props.loading"
       flat
       :rows-per-page-options="[10, 20, 50]"
       no-data-label="No Devices Yet"
@@ -66,12 +65,10 @@
         </q-td>
       </template>
     </q-table>
-    <DeleteConfirmationDialog
+    <DeleteDeviceDialog
       v-if="deviceToDelete"
       v-model="deleteDialog"
-      :item-uid="deviceToDelete.uid"
-      item-type="device"
-      :delete-function="DeviceService.deleteDevice"
+      :device="deviceToDelete"
       @on-deleted="deviceDeleted"
     />
   </div>
@@ -79,18 +76,17 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import DeleteConfirmationDialog from '../core/DeleteConfirmationDialog.vue';
+import DeleteDeviceDialog from '@/components/devices/DeleteDeviceDialog.vue';
 import { PropType, computed, ref } from 'vue';
 import { Device } from '@/models/Device';
-import DeviceService from '@/services/DeviceService';
 
 const props = defineProps({
   modelValue: {
     type: Array as PropType<Device[]>,
     required: true,
   },
-  loading: {
-    type: Boolean,
+  moduleUid: {
+    type: String as PropType<string>,
     required: true,
   },
 });

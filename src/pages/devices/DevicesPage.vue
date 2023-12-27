@@ -19,6 +19,7 @@
         v-model="store.devices"
         :loading="store.isLoadingDevices"
         @on-change="store.getDevices"
+        class="shadow"
       />
     </div>
   </q-page>
