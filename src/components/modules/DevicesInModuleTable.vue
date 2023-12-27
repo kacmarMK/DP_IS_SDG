@@ -1,13 +1,28 @@
 <template>
   <div>
+    <div class="q-mb-md row">
+      <p class="devices-text">Devices</p>
+      <q-space></q-space>
+      <q-btn
+        class="shadow bg-white"
+        color="primary"
+        unelevated
+        outline
+        no-caps
+        size="15px"
+        label="Add device"
+        icon="mdi-plus"
+        @click="addDeviceDialog = true"
+      />
+    </div>
     <q-table
       :rows="devices"
       :columns="columns"
       flat
-      :rows-per-page-options="[10, 20, 50]"
+      hide-pagination
       no-data-label="No Devices Yet"
       loading-label="Loading Devices..."
-      rows-per-page-label="Devices per page"
+      class="outline"
     >
       <template v-slot:no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -65,28 +80,37 @@
         </q-td>
       </template>
     </q-table>
-    <DeleteDeviceDialog
+    <RemoveDeviceModuleDialog
       v-if="deviceToDelete"
       v-model="deleteDialog"
       :device="deviceToDelete"
+      :module="module"
       @on-deleted="deviceDeleted"
+    />
+    <AddDeviceToModuleDialog
+      v-model="addDeviceDialog"
+      :module="module"
+      :alreadyAddedDevices="devices"
+      @on-added="emit('onChange', devices)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import DeleteDeviceDialog from '@/components/devices/DeleteDeviceDialog.vue';
+import RemoveDeviceModuleDialog from './RemoveDeviceModuleDialog.vue';
+import AddDeviceToModuleDialog from './AddDeviceToModuleDialog.vue';
 import { PropType, computed, ref } from 'vue';
 import { Device } from '@/models/Device';
+import { Module } from '@/models/Module';
 
 const props = defineProps({
   modelValue: {
     type: Array as PropType<Device[]>,
     required: true,
   },
-  moduleUid: {
-    type: String as PropType<string>,
+  module: {
+    type: Object as PropType<Module>,
     required: true,
   },
 });
@@ -103,13 +127,14 @@ const devices = computed({
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();
-
 function deviceDeleted() {
   devices.value = devices.value.filter(
     (device) => device.uid !== deviceToDelete.value?.uid,
   );
   emit('onChange', devices.value);
 }
+
+const addDeviceDialog = ref(false);
 
 const columns: QTableProps['columns'] = [
   {
@@ -150,4 +175,12 @@ const columns: QTableProps['columns'] = [
 ];
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.devices-text {
+  font-size: 1.4em;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  color: $secondary;
+}
+</style>

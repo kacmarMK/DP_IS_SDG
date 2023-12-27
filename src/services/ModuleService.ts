@@ -45,6 +45,21 @@ class ModuleService {
       },
     );
   }
+
+  async addDeviceToModule(moduleId: string, deviceId: string): Promise<Module> {
+    return await api<Module>(`module/addDevice/${moduleId}/${deviceId}`, {
+      method: 'PUT',
+    });
+  }
+
+  async removeDeviceFromModule(
+    moduleId: string,
+    deviceId: string,
+  ): Promise<Module> {
+    return await api<Module>(`module/removeDevice/${moduleId}/${deviceId}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export default new ModuleService();

@@ -21,10 +21,9 @@
         :columns="columns"
         flat
         class="outline"
-        :rows-per-page-options="[10, 20, 50]"
+        hide-pagination
         no-data-label="No modules Yet"
         loading-label="Loading modules..."
-        rows-per-page-label="Modules per page"
         row-key="uid"
       >
         <template v-slot:no-data="{ message }">
@@ -90,14 +89,12 @@
           </q-tr>
           <q-tr v-show="props.expand" :props="props">
             <q-td colspan="100%" no-hover class="bg-grey-1">
-              <div class="q-pa-md">
-                <p class="text-h6">Devices</p>
-                <DevicesInModuleTable
-                  v-model="props.row.devices"
-                  :module-uid="props.row.uid"
-                  class="outline"
-                />
-              </div>
+              <DevicesInModuleTable
+                v-model="props.row.devices"
+                :module="props.row"
+                class="q-pa-md"
+                @on-change="getCollection"
+              />
             </q-td>
           </q-tr>
         </template>
@@ -194,10 +191,6 @@ const columns: QTableProps['columns'] = [
 </script>
 
 <style lang="scss" scoped>
-.outline {
-  border: 1px solid #e0e0e0;
-}
-
 .modules-text {
   font-size: 1.5em;
   font-weight: 600;
