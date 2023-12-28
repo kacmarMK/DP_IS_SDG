@@ -44,7 +44,7 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props">
+          <q-tr :props="props" no-hover>
             <q-td auto-width>
               <q-btn
                 color="secondary"
@@ -88,13 +88,17 @@
               </q-btn>
             </q-td>
           </q-tr>
-          <q-tr v-show="props.expand" :props="props">
-            <q-td colspan="100%" no-hover>
-              <ModulesTable
-                class="q-pa-md"
-                v-model="props.row"
-                @update:model-value="updateCollection"
-              />
+          <q-tr class="bg-grey-1 no-height" :props="props">
+            <q-td colspan="100%" class="no-height" no-hover>
+              <q-slide-transition :duration="150">
+                <div v-show="props.expand">
+                  <ModulesTable
+                    class="q-pa-md"
+                    v-model="props.row"
+                    @update:model-value="updateCollection"
+                  />
+                </div>
+              </q-slide-transition>
             </q-td>
           </q-tr>
         </template>
@@ -108,9 +112,12 @@
       v-if="collectionToUpdate"
       v-model="deleteCollectionDialog"
       :itemUid="collectionToUpdate.uid"
-      itemType="collection"
       :deleteFunction="CollectionService.deleteCollection"
       @onDeleted="getCollections"
+      title="Delete Collection"
+      description="Are you sure you want to delete this collection?"
+      success-message="Collection deleted successfully!"
+      failed-message="Deleting collection failed!"
     />
     <EditCollectionDialog
       v-if="collectionToUpdate"
@@ -175,4 +182,9 @@ const columns: QTableProps['columns'] = [
 ];
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.no-height {
+  height: 0px;
+  padding: 0px;
+}
+</style>

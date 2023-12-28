@@ -11,6 +11,13 @@ class CollectionService {
         collection.modules = collection.modules.filter(
           (module) => module !== null,
         );
+        // Additional filter for null devices in each module
+        collection.modules = collection.modules.map((module) => {
+          if (module.devices) {
+            module.devices = module.devices.filter((device) => device !== null);
+          }
+          return module;
+        });
       }
       return collection;
     });

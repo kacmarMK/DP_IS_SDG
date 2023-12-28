@@ -43,7 +43,7 @@
           </q-tr>
         </template>
         <template v-slot:body="props">
-          <q-tr :props="props">
+          <q-tr :props="props" no-hover>
             <q-td auto-width>
               <q-btn
                 color="secondary"
@@ -87,14 +87,19 @@
               </q-btn>
             </q-td>
           </q-tr>
-          <q-tr v-show="props.expand" :props="props">
-            <q-td colspan="100%" no-hover>
-              <DevicesInModuleTable
-                v-model="props.row.devices"
-                :module="props.row"
-                class="q-pa-md"
-                @on-change="getCollection"
-              />
+
+          <q-tr class="bg-grey-1 no-height" :props="props">
+            <q-td colspan="100%" class="no-height" no-hover>
+              <q-slide-transition :duration="150">
+                <div v-show="props.expand">
+                  <DevicesInModuleTable
+                    v-model="props.row.devices"
+                    :module="props.row"
+                    class="q-pa-md"
+                    @on-change="getCollection"
+                  />
+                </div>
+              </q-slide-transition>
             </q-td>
           </q-tr>
         </template>
@@ -109,9 +114,12 @@
       v-if="moduleToUpdate"
       v-model="deleteModuleDialog"
       :itemUid="moduleToUpdate.uid"
-      itemType="module"
       :deleteFunction="ModuleService.deleteModule"
       @onDeleted="onModuleDeleted"
+      title="Delete Module"
+      description="Are you sure you want to delete this module?"
+      success-message="Module deleted successfully!"
+      failed-message="Deleting module failed!"
     />
     <EditModuleDialog
       v-if="moduleToUpdate"
@@ -197,5 +205,10 @@ const columns: QTableProps['columns'] = [
   margin: 0;
   padding: 0;
   color: $secondary;
+}
+
+.no-height {
+  height: 0px;
+  padding: 0px;
 }
 </style>

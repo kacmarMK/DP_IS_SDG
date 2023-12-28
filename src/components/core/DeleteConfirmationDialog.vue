@@ -2,11 +2,11 @@
   <q-dialog v-model="isVisible">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Delete {{ itemType }}</div>
+        <div class="text-h6">{{ title }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        Are you sure you want to delete this {{ itemType }}?
+        {{ description }}
       </q-card-section>
 
       <q-card-actions align="right">
@@ -38,13 +38,25 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  itemType: {
-    type: String,
-    required: true,
-  },
   deleteFunction: {
     type: Function,
     required: true,
+  },
+  title: {
+    type: String,
+    default: 'Delete',
+  },
+  description: {
+    type: String,
+    default: 'Are you sure you want to delete this item?',
+  },
+  successMessage: {
+    type: String,
+    default: 'Deleted successfully!',
+  },
+  failedMessage: {
+    type: String,
+    default: 'Deleting failed!',
   },
 });
 
@@ -66,9 +78,9 @@ async function handleDelete() {
     await props.deleteFunction(props.itemUid);
     isVisible.value = false;
     emit('onDeleted');
-    toast.success(`Deleted ${props.itemType} successfully!`);
+    toast.success(props.successMessage);
   } catch (error) {
-    handleError(error, `Deleting ${props.itemType} failed!`);
+    handleError(error, props.failedMessage);
   } finally {
     isDeleteInProgress.value = false;
   }

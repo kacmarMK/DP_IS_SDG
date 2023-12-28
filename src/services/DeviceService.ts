@@ -1,5 +1,7 @@
 import { Device, DeviceInput } from 'src/models/Device';
 import { api } from 'src/boot/ofetch';
+import { User } from '@/models/User';
+import { useAuthStore } from '@/stores/auth-store';
 
 class DeviceService {
   async getDevices(): Promise<Device[]> {
@@ -29,6 +31,48 @@ class DeviceService {
     await api(`device/delete/${uid}`, {
       method: 'DELETE',
     });
+  }
+
+  async initExpireTime(uid: string): Promise<void> {
+    await api(`/device/initExpireTime/${uid}`, {
+      method: 'GET',
+    });
+  }
+
+  async getSharedDevices(): Promise<Device[]> {
+    return await api<Device[]>('device/getDevicesSharedWithUser', {
+      method: 'GET',
+    });
+  }
+
+  async shareDevice(deviceUid: string, email: string): Promise<void> {
+    await api(`device/addSharedUser/${deviceUid}/${email}`, {
+      method: 'PUT',
+    });
+  }
+
+  async removeSharedUser(deviceUid: string, email: string): Promise<void> {
+    await api(`device/removeSharedUser/${deviceUid}/${email}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getSharedUsers(deviceUid: string): Promise<User[]> {
+    let users = await api<User[]>(`device/getSharedUsers/${deviceUid}`, {
+      method: 'GET',
+    });
+
+    if (!users) {
+      return [];
+    }
+    users = users.filter((user) => user !== null);
+
+    return users;
+  }
+
+  isOwner(device: Device): boolean {
+    const authStore = useAuthStore();
+    return device.user.uid === authStore.user?.uid;
   }
 }
 

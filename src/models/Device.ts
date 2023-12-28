@@ -1,9 +1,12 @@
 import { DataPointTag } from './DataPointTag';
 import DeviceTypeEnum from './DeviceType';
 import { Job } from './Job';
+import { User } from './User';
 
 interface Device {
   uid: string;
+  user: User;
+  sharedUsers: User[];
   name: string;
   mac: string;
   type: DeviceTypeEnum;

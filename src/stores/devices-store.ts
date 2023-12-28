@@ -11,7 +11,11 @@ export const useDevicesStore = defineStore('devices', () => {
   async function getDevices() {
     try {
       isLoadingDevices.value = true;
-      devices.value = await deviceService.getDevices();
+      const [ownedDevices, sharedDevices] = await Promise.all([
+        deviceService.getDevices(),
+        deviceService.getSharedDevices(),
+      ]);
+      devices.value = [...ownedDevices, ...sharedDevices];
     } catch (error) {
       handleError(error, 'Loading devices failed!');
     } finally {

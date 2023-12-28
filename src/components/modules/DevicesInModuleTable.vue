@@ -31,8 +31,14 @@
         </div>
       </template>
 
+      <template v-slot:body-cell="props">
+        <q-td :props="props" no-hover>
+          {{ props.row[props.col.field] }}
+        </q-td>
+      </template>
+
       <template v-slot:body-cell-name="props">
-        <q-td :props="props">
+        <q-td :props="props" no-hover>
           <router-link
             :to="`/devices/${props.row.uid}`"
             class="text-black text-weight-regular"
@@ -43,7 +49,7 @@
       </template>
 
       <template v-slot:body-cell-actions="props">
-        <q-td auto-width :props="props">
+        <q-td auto-width :props="props" no-hover>
           <q-btn
             icon="mdi-open-in-new"
             color="grey-color"
