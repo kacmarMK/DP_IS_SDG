@@ -16,7 +16,6 @@
         padding="0.5rem 1rem"
         icon="mdi-refresh"
         @click="refreshDevice()"
-        :loading="store.isRefreshingDevice"
       ></q-btn>
       <q-btn-dropdown
         padding="0.5rem 1rem"
@@ -50,15 +49,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useDevicesStore } from '@/stores/devices-store';
+import { PropType, computed, ref } from 'vue';
 import DeviceTimeRangeSelect from '@/components/devices/DeviceTimeRangeSelect.vue';
 import { TimeRange } from '@/models/TimeRange';
 import { graphColors } from '@/utils/colors';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { format } from 'date-fns';
+import { DataPointTag } from '@/models/DataPointTag';
 
-const store = useDevicesStore();
+const props = defineProps({
+  dataPointTags: {
+    type: Array as PropType<DataPointTag[]>,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['refresh']);
 
 const selectedTimeRange = ref<TimeRange>({
   from: new Date().toISOString(),
@@ -67,12 +73,12 @@ const selectedTimeRange = ref<TimeRange>({
 
 const timeRangeSelect = ref();
 function refreshDevice() {
-  store.refreshDevice();
+  emit('refresh');
   timeRangeSelect.value?.emitUpdate();
 }
 
 const series = computed(() => {
-  return store.device?.dataPointTags.map((tag, index) => ({
+  return props.dataPointTags.map((tag, index) => ({
     name: tag.name,
     data: tag.storedData.map((data) => ({
       x: data.measureAdd,
@@ -83,7 +89,7 @@ const series = computed(() => {
   }));
 });
 
-const yaxisLabels = store.device?.dataPointTags.map((tag) => tag.unit) || [];
+const yaxisLabels = props.dataPointTags.map((tag) => tag.unit) || [];
 
 const chartOptions = ref({
   chart: {
@@ -179,7 +185,7 @@ const generateCSVData = () => {
   }[] = [];
 
   // Combine all data points from each tag
-  store.device?.dataPointTags.forEach((tag) => {
+  props.dataPointTags.forEach((tag) => {
     tag.storedData.forEach((data) => {
       allData.push({
         name: tag.name,
@@ -193,7 +199,7 @@ const generateCSVData = () => {
   // Sort the data by measureAdd (timestamp)
   allData.sort(
     (a, b) =>
-      new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime()
+      new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime(),
   );
 
   // Format the data for CSV export

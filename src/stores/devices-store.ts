@@ -24,44 +24,10 @@ export const useDevicesStore = defineStore('devices', () => {
   }
 
   // Device info
-  const device = ref<Device | null>(null);
-  const isLoadingDevice = ref(false);
-  const isRefreshingDevice = ref(false);
-  async function getDevice(uid: string) {
-    try {
-      isLoadingDevice.value = true;
-      if (device.value?.uid != uid) {
-        device.value = null;
-      }
-      device.value = await deviceService.getDevice(uid);
-    } catch (error) {
-      handleError(error, 'Loading device failed!');
-    } finally {
-      isLoadingDevice.value = false;
-    }
-  }
-  async function refreshDevice() {
-    try {
-      if (!device.value) {
-        return;
-      }
-      isRefreshingDevice.value = true;
-      device.value = await deviceService.getDevice(device.value.uid);
-    } catch (error) {
-      handleError(error, 'Refreshing device failed!');
-    } finally {
-      isRefreshingDevice.value = false;
-    }
-  }
 
   return {
     devices,
     isLoadingDevices,
     getDevices,
-    device,
-    isLoadingDevice,
-    getDevice,
-    refreshDevice,
-    isRefreshingDevice,
   };
 });

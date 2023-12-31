@@ -75,8 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useDevicesStore } from '@/stores/devices-store';
+import { PropType, computed, ref } from 'vue';
 import recipeService from '@/services/RecipeService';
 import jobService from '@/services/JobService';
 import { Recipe } from '@/models/Recipe';
@@ -85,9 +84,18 @@ import { JobToRun } from '@/models/Job';
 import { toast } from 'vue3-toastify';
 import { parse } from 'date-fns';
 import { handleError } from '@/utils/error-handler';
+import { Device } from '@/models/Device';
 
-const store = useDevicesStore();
-const props = defineProps(['modelValue']);
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    required: true,
+  },
+  device: {
+    type: Object as PropType<Device>,
+    required: true,
+  },
+});
 const emit = defineEmits(['update:modelValue', 'jobStarted']);
 
 const openDialog = computed({
@@ -104,10 +112,10 @@ const jobToRun = ref<JobToRun>();
 const recipesAvailable = ref<Recipe[]>([]);
 const selectedRecipe = ref<Recipe | null>(null);
 async function getRecipes() {
-  if (!store.device) return;
+  if (!props.device) return;
   try {
     recipesAvailable.value = await recipeService.getFullRecipesByDeviceType(
-      store.device.type,
+      props.device.type,
     );
   } catch (e) {
     console.log(e);
@@ -116,7 +124,7 @@ async function getRecipes() {
 getRecipes();
 
 async function runJob() {
-  if (!jobToRun.value || !store.device) return;
+  if (!jobToRun.value || !props.device) return;
   try {
     jobToRun.value.scheduledDays = selectedDays.value;
 
@@ -154,7 +162,7 @@ const scheduledTime = ref();
 
 function resetDialog() {
   const now = new Date();
-  const day = now.getDay();
+  const day = now.getDay() || 7;
   const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now
     .getMinutes()
     .toString()
@@ -162,7 +170,7 @@ function resetDialog() {
 
   jobToRun.value = {
     recipeId: '',
-    deviceId: store.device?.uid ?? '',
+    deviceId: props.device?.uid ?? '',
     repetitions: 1,
     scheduledDays: [day],
     scheduledHour: now.getHours(),

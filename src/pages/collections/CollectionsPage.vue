@@ -61,6 +61,16 @@
             </q-td>
             <q-td auto-width>
               <q-btn
+                icon="mdi-open-in-new"
+                color="grey-color"
+                flat
+                round
+                :to="`/collections/${props.row.uid}`"
+                ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                  Open
+                </q-tooltip>
+              </q-btn>
+              <q-btn
                 @click="
                   collectionToUpdate = props.row;
                   editCollectionDialog = true;
@@ -90,7 +100,7 @@
           </q-tr>
           <q-tr class="bg-grey-1 no-height" :props="props">
             <q-td colspan="100%" class="no-height" no-hover>
-              <q-slide-transition :duration="150">
+              <q-slide-transition :duration="250">
                 <div v-show="props.expand">
                   <ModulesTable
                     class="q-pa-md"

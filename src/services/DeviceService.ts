@@ -9,7 +9,11 @@ class DeviceService {
   }
 
   async getDevice(uid: string): Promise<Device> {
-    return await api<Device>(`device/getDeviceById/${uid}`);
+    const device = await api<Device>(`device/getDeviceById/${uid}`);
+    device.dataPointTags = device.dataPointTags.filter(
+      (dataPoint) => dataPoint !== null,
+    );
+    return device;
   }
 
   async createDevice(deviceCreate: DeviceInput): Promise<Device> {

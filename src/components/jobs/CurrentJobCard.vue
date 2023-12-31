@@ -76,12 +76,15 @@
         />
       </div>
     </div>
-    <StartJobDialog v-model="openDialog" @job-started="getRunningJob" />
+    <StartJobDialog
+      v-model="openDialog"
+      :device="props.device"
+      @job-started="getRunningJob"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useDevicesStore } from '@/stores/devices-store';
 import StartJobDialog from '@/components/jobs/StartJobDialog.vue';
 import { computed, ref, onMounted, onUnmounted, PropType } from 'vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
@@ -89,8 +92,13 @@ import { Job } from '@/models/Job';
 import jobService from '@/services/JobService';
 import JobControls from './JobControls.vue';
 import JobStatusBadges from './JobStatusBadges.vue';
+import { Device } from '@/models/Device';
 
 const props = defineProps({
+  device: {
+    type: Object as PropType<Device>,
+    required: true,
+  },
   initialJobs: {
     type: Array as PropType<Job[]>,
     required: true,
@@ -98,7 +106,6 @@ const props = defineProps({
 });
 
 const openDialog = ref(false);
-const store = useDevicesStore();
 const runningJob = ref<Job | undefined>(findActiveJob(props.initialJobs));
 
 function findActiveJob(jobs: Job[]) {
@@ -120,9 +127,9 @@ function findActiveJob(jobs: Job[]) {
 }
 
 async function getRunningJob() {
-  if (store.device) {
+  if (props.device) {
     try {
-      const jobs: Job[] = await jobService.getJobsOnDevice(store.device.uid);
+      const jobs: Job[] = await jobService.getJobsOnDevice(props.device.uid);
       runningJob.value = findActiveJob(jobs);
     } catch (error) {
       console.log(error);
@@ -157,4 +164,3 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped></style>
-src/models/JobStatusEnum
