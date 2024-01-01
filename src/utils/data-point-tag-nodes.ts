@@ -1,5 +1,4 @@
 import { Collection } from '@/models/Collection';
-import { DataPointTag } from '@/models/DataPointTag';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
 import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
@@ -35,16 +34,20 @@ function collectionToDataPointTagNode(coll: Collection): DataPointTagNode {
   };
 }
 
-function nodeToDataPointTags(node: DataPointTagNode): DataPointTag[] {
-  const tags: DataPointTag[] = [];
+function nodeToDataPointTags(node: DataPointTagNode, seenUids = new Set()) {
+  if (!node) return [];
 
-  if (node.dataPointTag) {
-    tags.push(node.dataPointTag);
+  const { dataPointTag, children } = node;
+  const tags = [];
+
+  if (dataPointTag && !seenUids.has(dataPointTag.uid)) {
+    seenUids.add(dataPointTag.uid);
+    tags.push(dataPointTag);
   }
 
-  if (node.children) {
-    node.children.forEach((child) => {
-      tags.push(...nodeToDataPointTags(child));
+  if (children) {
+    children.forEach((child) => {
+      tags.push(...nodeToDataPointTags(child, seenUids));
     });
   }
 

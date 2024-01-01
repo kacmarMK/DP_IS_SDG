@@ -25,7 +25,7 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
-    // preFetch: true,
+    preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -78,6 +78,10 @@ module.exports = configure(function (/* ctx */) {
         Object.assign(viteConf.resolve.alias, {
           '@': path.join(__dirname, './src'),
         });
+        viteConf.define = {
+          ...viteConf.define,
+          __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true',
+        };
       },
       // viteVuePluginOptions: {},
 

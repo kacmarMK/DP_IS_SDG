@@ -1,7 +1,8 @@
 <template>
   <q-btn
+    no-wrap
     dense
-    class="full-width bg-white no-wrap text-no-wrap"
+    class="full-width bg-white"
     :color="color"
     padding="0.6rem 0.8rem"
     size="13px"

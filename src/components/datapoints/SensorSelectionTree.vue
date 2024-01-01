@@ -16,7 +16,8 @@
         <template v-slot:default-header="prop">
           <div
             v-if="prop.node.dataPointTag"
-            class="text-weight-medium text-primary"
+            class="text-weight-medium text-primary cursor-pointer"
+            @click="prop.ticked = !prop.ticked"
           >
             {{ prop.node.name }} ({{ prop.node.dataPointTag.unit }})
           </div>
@@ -40,7 +41,7 @@ const props = defineProps({
     required: true,
   },
 });
-const tickedNodes = defineModel<string[]>('tickedTags');
+const tickedNodes = defineModel<string[]>('tickedNodes');
 const expanded = ref<string[]>(extractNodeKeys(props.dataPointTagTree));
 
 const noChildren = computed(() => {

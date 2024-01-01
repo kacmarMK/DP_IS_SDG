@@ -4,8 +4,11 @@
       <div class="q-mb-md row items-center">
         <p class="main-text">Job</p>
         <p class="job-name text-weight-medium" v-if="job">({{ job.name }})</p>
+        <q-badge class="q-pa-xs q-ml-sm" color="primary">
+          Cycle: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
+        </q-badge>
         <job-status-badges
-          class="q-ml-md"
+          class="q-ml-sm"
           v-if="job"
           :job="job"
         ></job-status-badges>

@@ -51,6 +51,10 @@ const routes: RouteRecordRaw[] = [
         path: '/collections/:id/',
         component: () => import('pages/collections/CollectionPage.vue'),
       },
+      {
+        path: '/modules/:id/',
+        component: () => import('pages/modules/ModulePage.vue'),
+      },
     ],
   },
   {

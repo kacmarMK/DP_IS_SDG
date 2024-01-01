@@ -60,7 +60,8 @@
           <data-point-chart
             class="bg-white shadow q-pa-lg"
             :dataPointTags="device.dataPointTags"
-            v-on:refresh="refreshDevice()"
+            v-model:tickedNodes="tickedNodes"
+            @refresh="refreshDevice()"
           ></data-point-chart>
         </div>
       </div>

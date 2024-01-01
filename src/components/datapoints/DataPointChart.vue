@@ -3,10 +3,10 @@
     <div class="row items-center justify-start q-mb-md q-gutter-x-md">
       <p class="text-weight-medium text-h6">Chart</p>
       <q-space></q-space>
-      <device-time-range-select
+      <chart-time-range-select
         @update:model-value="updateTimeRange"
         ref="timeRangeSelect"
-      ></device-time-range-select>
+      ></chart-time-range-select>
       <q-btn
         text-color="primary"
         outline
@@ -44,18 +44,21 @@
       ref="chart"
       :options="chartOptions"
       :series="series"
+      @mounted="setChartUpdate"
+      @legendClick="legendClick"
     ></apexchart>
   </div>
 </template>
 
 <script setup lang="ts">
-import { PropType, computed, ref } from 'vue';
-import DeviceTimeRangeSelect from '@/components/devices/DeviceTimeRangeSelect.vue';
+import { PropType, computed, nextTick, ref, watch } from 'vue';
+import ChartTimeRangeSelect from '@/components/datapoints/ChartTimeRangeSelect.vue';
 import { TimeRange } from '@/models/TimeRange';
 import { graphColors } from '@/utils/colors';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { format } from 'date-fns';
 import { DataPointTag } from '@/models/DataPointTag';
+import { now } from '@vueuse/core';
 
 const props = defineProps({
   dataPointTags: {
@@ -65,11 +68,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['refresh']);
-
-const selectedTimeRange = ref<TimeRange>({
-  from: new Date().toISOString(),
-  to: new Date().toISOString(),
-});
+const selectedTimeRange = ref<TimeRange>();
 
 const timeRangeSelect = ref();
 function refreshDevice() {
@@ -79,7 +78,7 @@ function refreshDevice() {
 
 const series = computed(() => {
   return props.dataPointTags.map((tag, index) => ({
-    name: tag.name,
+    name: `${tag.name} (${tag.unit})`,
     data: tag.storedData.map((data) => ({
       x: data.measureAdd,
       y: data.value,
@@ -127,7 +126,7 @@ const chartOptions = ref({
     },
     labels: {
       formatter: function (val: number) {
-        return val.toFixed(0) + unit;
+        return `${val.toFixed(0)} ${unit}`;
       },
       style: {
         colors: graphColors[index],
@@ -139,14 +138,14 @@ const chartOptions = ref({
     labels: {
       datetimeUTC: false,
     },
-    min: new Date(selectedTimeRange.value.from).getTime(),
-    max: new Date(selectedTimeRange.value.to).getTime(),
+    min: new Date(selectedTimeRange.value?.from ?? now()).getTime(),
+    max: new Date(selectedTimeRange.value?.to ?? now()).getTime(),
   },
   tooltip: {
     shared: false,
     y: yaxisLabels.map((unit) => ({
       formatter: function (val: number) {
-        return val.toFixed(2) + unit;
+        return `${val.toFixed(2)} ${unit}`;
       },
     })),
     x: {
@@ -214,6 +213,63 @@ const generateCSVData = () => {
 
   return generateCsv(csvConfig)(csvData);
 };
+
+//Legend control
+const tickedNodes = defineModel<string[]>('tickedNodes');
+const seriesVisibility = ref<boolean[]>(props.dataPointTags.map(() => true));
+const chartCnt = ref();
+function setChartUpdate(chartContext: unknown) {
+  chartCnt.value = chartContext;
+}
+
+function legendClick(_chartContext: unknown, seriesIndex: number) {
+  seriesVisibility.value[seriesIndex] = !seriesVisibility.value[seriesIndex];
+  tickedNodes.value = props.dataPointTags
+    .filter((_, index) => seriesVisibility.value[index])
+    .map((tag) => tag.uid);
+}
+
+function updateSeriesVisibility(tags: DataPointTag[], ticked: string[]) {
+  if (!chartCnt.value) return;
+
+  //Disable chart update for performance
+  const update = chartCnt.value.update;
+  chartCnt.value.update = () => {
+    return Promise.resolve();
+  };
+
+  if (chart.value) {
+    tags.forEach((tag) => {
+      const seriesName = `${tag.name} (${tag.unit})`;
+      if (ticked.includes(tag.uid)) {
+        chart.value?.showSeries(seriesName);
+        seriesVisibility.value[tags.indexOf(tag)] = true;
+      } else {
+        chart.value?.hideSeries(seriesName);
+        seriesVisibility.value[tags.indexOf(tag)] = false;
+      }
+    });
+  }
+
+  //Re-enable chart update
+  chartCnt.value.update = update;
+  chartCnt.value.update();
+}
+
+watch(
+  () => tickedNodes.value,
+  (newTicked) => {
+    updateSeriesVisibility(props.dataPointTags, newTicked || []);
+  },
+);
+
+watch(
+  () => props.dataPointTags,
+  async (newTags) => {
+    await nextTick();
+    updateSeriesVisibility(newTags, tickedNodes.value || []);
+  },
+);
 </script>
 
 <style lang="scss" scoped></style>

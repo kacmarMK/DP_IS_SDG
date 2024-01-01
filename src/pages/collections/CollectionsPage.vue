@@ -57,7 +57,17 @@
               />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
-              {{ col.value }}
+              <template v-if="col.name === 'name'">
+                <router-link
+                  :to="`/collections/${props.row.uid}`"
+                  class="text-black text-weight-regular"
+                >
+                  {{ col.value }}
+                </router-link>
+              </template>
+              <template v-else>
+                {{ col.value }}
+              </template>
             </q-td>
             <q-td auto-width>
               <q-btn

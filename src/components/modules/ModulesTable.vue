@@ -56,9 +56,29 @@
               />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
-              {{ col.value }}
+              <template v-if="col.name === 'name'">
+                <router-link
+                  :to="`/modules/${props.row.uid}`"
+                  class="text-black text-weight-regular"
+                >
+                  {{ col.value }}
+                </router-link>
+              </template>
+              <template v-else>
+                {{ col.value }}
+              </template>
             </q-td>
             <q-td auto-width>
+              <q-btn
+                icon="mdi-open-in-new"
+                color="grey-color"
+                flat
+                round
+                :to="`/modules/${props.row.uid}`"
+                ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                  Open
+                </q-tooltip>
+              </q-btn>
               <q-btn
                 @click="
                   moduleToUpdate = props.row;

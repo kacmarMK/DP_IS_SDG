@@ -5,7 +5,7 @@
         <router-link
           class="main-text text-accent text-weight-medium z-fab"
           to="/collections"
-          >Collection ></router-link
+          >Module ></router-link
         >
         <p v-if="dataPointTagTree" class="main-text z-fab">
           &nbsp;{{ dataPointTagTree.name }}
@@ -26,7 +26,7 @@
           <data-point-chart
             :dataPointTags="dataPointTags"
             v-model:tickedNodes="tickedNodes"
-            @refresh="getCollection()"
+            @refresh="getModule()"
             class="bg-white shadow q-pa-lg"
           ></data-point-chart>
         </div>
@@ -40,36 +40,36 @@
 import { useRoute } from 'vue-router';
 import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue';
 import DataPointChart from '@/components/datapoints/DataPointChart.vue';
-import CollectionService from '@/services/CollectionService';
 import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
 import {
-  collectionToDataPointTagNode,
+  moduleToDataPointTagNode,
   nodeToDataPointTags,
 } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
+import ModuleService from '@/services/ModuleService';
 
 const route = useRoute();
 
 const tickedNodes = ref<string[]>();
 const dataPointTagTree = ref<DataPointTagNode>();
-const isLoadingCollection = ref(false);
+const isLoadingModule = ref(false);
 
-async function getCollection() {
+async function getModule() {
   try {
-    isLoadingCollection.value = true;
-    const collection = await CollectionService.getCollection(
+    isLoadingModule.value = true;
+    const collection = await ModuleService.getModule(
       route.params.id.toString(),
     );
-    dataPointTagTree.value = collectionToDataPointTagNode(collection);
+    dataPointTagTree.value = moduleToDataPointTagNode(collection);
   } catch (error) {
     handleError(error, 'Loading collection failed!');
   } finally {
-    isLoadingCollection.value = false;
+    isLoadingModule.value = false;
   }
 }
-getCollection();
+getModule();
 
 const dataPointTags = computed(() => {
   if (!dataPointTagTree.value) {

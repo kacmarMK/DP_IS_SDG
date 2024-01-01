@@ -9,6 +9,10 @@ class ModuleService {
     });
   }
 
+  async getModule(uid: string): Promise<Module> {
+    return await api<Module>(`module/${uid}`);
+  }
+
   async deleteModule(uid: string): Promise<Module> {
     return await api<Module>(`module/delete/${uid}`, {
       method: 'DELETE',
