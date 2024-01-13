@@ -7,6 +7,31 @@
         @update:model-value="updateTimeRange"
         ref="timeRangeSelect"
       ></chart-time-range-select>
+      <q-btn-dropdown
+        padding="0.5rem 1rem"
+        outline
+        no-caps
+        color="grey-7"
+        text-color="grey-5"
+        class="options-dropdown"
+      >
+        <template v-slot:label>
+          <div class="text-grey-10 text-weight-regular">Options</div>
+        </template>
+        <template v-slot:default>
+          <q-list>
+            <q-item
+              clickable
+              v-close-popup
+              @click="download(csvConfig)(generateCSVData())"
+            >
+              <q-item-section>
+                <q-item-label>Export CSV</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list></template
+        >
+      </q-btn-dropdown>
       <q-btn
         text-color="primary"
         outline
@@ -17,25 +42,6 @@
         icon="mdi-refresh"
         @click="refreshDevice()"
       ></q-btn>
-      <q-btn-dropdown
-        padding="0.5rem 1rem"
-        outline
-        no-caps
-        color="grey-color"
-        label="Options"
-      >
-        <q-list>
-          <q-item
-            clickable
-            v-close-popup
-            @click="download(csvConfig)(generateCSVData())"
-          >
-            <q-item-section>
-              <q-item-label>Export CSV</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
     </div>
     <apexchart
       height="350"
@@ -272,4 +278,10 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.options-dropdown {
+  .q-icon {
+    color: #757575 !important;
+  }
+}
+</style>
