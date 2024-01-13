@@ -1,5 +1,5 @@
-import { User, UserLogin, UserRegister } from 'src/models/User';
-import { api } from 'src/boot/ofetch';
+import { User, UserLogin, UserRegister, UserUpdate } from 'src/models/User';
+import { api } from '@/utils/api';
 
 class AuthService {
   async login(userLogin: UserLogin): Promise<string> {
@@ -25,6 +25,14 @@ class AuthService {
       method: 'GET',
     });
     return user;
+  }
+
+  async updateUser(user: UserUpdate, id: string): Promise<User> {
+    const updatedUser: User = await api<User>(`user/updateUser/${id}`, {
+      method: 'POST',
+      body: user,
+    });
+    return updatedUser;
   }
 }
 

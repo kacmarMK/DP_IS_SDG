@@ -16,4 +16,10 @@ interface UserRegister {
   password: string;
 }
 
-export type { User, UserLogin, UserRegister };
+interface UserUpdate {
+  name?: string;
+  mail?: string;
+  password?: string;
+}
+
+export type { User, UserLogin, UserRegister, UserUpdate };

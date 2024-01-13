@@ -1,5 +1,5 @@
 import { Device, DeviceInput } from 'src/models/Device';
-import { api } from 'src/boot/ofetch';
+import { api } from '@/utils/api';
 import { User } from '@/models/User';
 import { useAuthStore } from '@/stores/auth-store';
 

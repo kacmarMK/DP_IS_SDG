@@ -73,6 +73,7 @@ import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { handleError } from '@/utils/error-handler';
+import { isFormValid } from '@/utils/form-validation';
 
 const router = useRouter();
 
@@ -103,27 +104,10 @@ const passwordRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your password',
 ];
 
-function isFormInvalid(): boolean {
-  const inputRefs = [nicknameRef, passwordRef, mailRef];
-  let hasError = false;
-
-  for (const ref of inputRefs) {
-    const input = ref.value;
-    if (input) {
-      input.validate();
-      if (input.hasError) {
-        hasError = true;
-      }
-    }
-  }
-  return hasError;
-}
-
 async function register() {
-  if (isFormInvalid()) {
+  if (!isFormValid([nicknameRef.value, mailRef.value, passwordRef.value])) {
     return;
   }
-
   try {
     isSubmitting.value = true;
     await authService.register(userRegister.value);

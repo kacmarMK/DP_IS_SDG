@@ -1,5 +1,5 @@
 import { Command, CommandFrame } from 'src/models/Command';
-import { api } from 'src/boot/ofetch';
+import { api } from '@/utils/api';
 
 class CommandService {
   async createCommand(command: CommandFrame): Promise<Command> {
@@ -19,7 +19,7 @@ class CommandService {
 
   async getCommands(sortBy: string, sortDirection: string): Promise<Command[]> {
     return await api<Command[]>(
-      `jobs/command/getAllCommands/${sortBy}/${sortDirection}`
+      `jobs/command/getAllCommands/${sortBy}/${sortDirection}`,
     );
   }
 

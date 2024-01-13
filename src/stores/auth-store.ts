@@ -25,10 +25,14 @@ export const useAuthStore = defineStore('authStore', () => {
     }
   }
 
-  async function getUser() {
+  async function getCurrentUser() {
     if (!userId.value) return null;
     const user = await AuthService.getUserById(userId.value);
     return user;
+  }
+
+  async function refreshUser() {
+    user.value = await getCurrentUser();
   }
 
   const userId = computed(() => {
@@ -53,11 +57,20 @@ export const useAuthStore = defineStore('authStore', () => {
     userId,
     async () => {
       await nextTick(); // Ensures the JWT is set before the user is fetched
-      user.value = await getUser();
+      await refreshUser();
     },
     { immediate: true },
   );
-  return { jwt, login, logout, isAuthenticated, isTokenExpired, user };
+  return {
+    jwt,
+    login,
+    logout,
+    isAuthenticated,
+    isTokenExpired,
+    user,
+    userId,
+    refreshUser,
+  };
 });
 
 type AuthUserStore = ReturnType<typeof useAuthStore>;

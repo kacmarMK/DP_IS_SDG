@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'ofetch', 'toastify', 'apexcharts'],
+    boot: ['i18n', 'toastify', 'apexcharts'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -74,7 +74,7 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      extendViteConf(viteConf, { isServer, isClient }) {
+      extendViteConf(viteConf, {}) {
         Object.assign(viteConf.resolve.alias, {
           '@': path.join(__dirname, './src'),
         });

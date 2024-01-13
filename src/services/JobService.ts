@@ -1,4 +1,4 @@
-import { api } from 'src/boot/ofetch';
+import { api } from '@/utils/api';
 import { Job, JobToRun } from 'src/models/Job';
 
 class JobService {

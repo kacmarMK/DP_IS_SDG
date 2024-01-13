@@ -1,4 +1,4 @@
-import { api } from 'src/boot/ofetch';
+import { api } from '@/utils/api';
 import { Module, ModuleInput } from '@/models/Module';
 
 class ModuleService {

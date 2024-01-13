@@ -45,8 +45,8 @@
                   size="1rem"
                   no-caps
                   unelevated
-                  @click.prevent="login"
                   :loading="isSubmitting"
+                  @click.prevent="login"
                 />
               </q-form>
               <div class="column items-center q-my-lg links">
@@ -74,6 +74,7 @@ import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { useAuthStore } from '@/stores/auth-store';
 import { handleError } from '@/utils/error-handler';
+import { isFormValid } from '@/utils/form-validation';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -98,24 +99,8 @@ const passwordRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your password',
 ];
 
-function isFormInvalid(): boolean {
-  const inputRefs = [nameRef, passwordRef];
-  let hasError = false;
-
-  for (const ref of inputRefs) {
-    const input = ref.value;
-    if (input) {
-      input.validate();
-      if (input.hasError) {
-        hasError = true;
-      }
-    }
-  }
-  return hasError;
-}
-
 async function login() {
-  if (isFormInvalid()) {
+  if (!isFormValid([nameRef.value, passwordRef.value])) {
     return;
   }
 

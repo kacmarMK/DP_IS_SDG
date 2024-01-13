@@ -33,18 +33,18 @@
                 </q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable to="/profile">
+              <q-item clickable to="/account">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="person_outline" />
-                  <div>Profile</div>
+                  <div>Account</div>
                 </div>
               </q-item>
-              <q-item clickable to="/settings">
+              <!-- <q-item clickable to="/settings">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-cog-outline" />
                   <div>Settings</div>
                 </div>
-              </q-item>
+              </q-item> -->
               <q-separator />
               <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">

@@ -1,4 +1,4 @@
-import { api } from 'src/boot/ofetch';
+import { api } from '@/utils/api';
 import { Collection, CollectionInput } from '@/models/Collection';
 
 class CollectionService {
