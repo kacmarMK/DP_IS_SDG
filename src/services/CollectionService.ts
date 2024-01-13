@@ -48,6 +48,7 @@ class CollectionService {
     uid: string,
     collection: CollectionInput,
   ): Promise<Collection> {
+    collection.modules = null;
     return await api<Collection>(`collection/update/${uid}`, {
       method: 'PUT',
       body: collection,

@@ -5,7 +5,7 @@
         <div class="text-h6">Edit module</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input autofocus label="Name" v-model="moduleLocal.name" />
+        <q-input autofocus label="Name" v-model="moduleInput.name" />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" v-close-popup no-caps />
@@ -42,10 +42,6 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:modelValue', 'onUpdate']);
 
-function deepCopyModule(moduleObject: ModuleInput) {
-  return JSON.parse(JSON.stringify(moduleObject));
-}
-
 const isDialogVisible = computed({
   get() {
     return props.modelValue;
@@ -55,13 +51,19 @@ const isDialogVisible = computed({
   },
 });
 
+function newModuleInput(module: Module): ModuleInput {
+  return {
+    name: module.name,
+  };
+}
+
 const updatingModule = ref(false);
-const moduleLocal = ref<ModuleInput>(deepCopyModule(props.module));
+const moduleInput = ref<ModuleInput>(newModuleInput(props.module));
 
 async function updateModule() {
   try {
     updatingModule.value = true;
-    await ModuleService.updateModule(props.module.uid, moduleLocal.value);
+    await ModuleService.updateModule(props.module.uid, moduleInput.value);
     isDialogVisible.value = false;
     emit('onUpdate');
     toast.success('Module updated!');
@@ -75,7 +77,7 @@ async function updateModule() {
 watch(
   () => props.module,
   (value) => {
-    moduleLocal.value = deepCopyModule(value);
+    moduleInput.value = newModuleInput(value);
   },
 );
 </script>

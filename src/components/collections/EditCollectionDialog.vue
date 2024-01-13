@@ -5,7 +5,7 @@
         <div class="text-h6">Edit collection</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input autofocus label="Name" v-model="collection.name" />
+        <q-input autofocus label="Name" v-model="collectionInput.name" />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" v-close-popup no-caps />
@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { PropType, ref, watch } from 'vue';
-import type { Collection } from '@/models/Collection';
+import type { Collection, CollectionInput } from '@/models/Collection';
 import CollectionService from '@/services/CollectionService';
 import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
@@ -42,8 +42,10 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:modelValue', 'onUpdate']);
 
-function deepCopyCollection(collectionObject: Collection) {
-  return JSON.parse(JSON.stringify(collectionObject));
+function newCollectionInput(collection: Collection): CollectionInput {
+  return {
+    name: collection.name,
+  };
 }
 
 const isDialogVisible = computed({
@@ -56,14 +58,16 @@ const isDialogVisible = computed({
 });
 
 const updatingCollection = ref(false);
-const collection = ref<Collection>(deepCopyCollection(props.collection));
+const collectionInput = ref<CollectionInput>(
+  newCollectionInput(props.collection),
+);
 
 async function updateCollection() {
   try {
     updatingCollection.value = true;
     await CollectionService.updateCollection(
       props.collection.uid,
-      collection.value,
+      collectionInput.value,
     );
     isDialogVisible.value = false;
     emit('onUpdate');
@@ -78,7 +82,7 @@ async function updateCollection() {
 watch(
   () => props.collection,
   (value) => {
-    collection.value = deepCopyCollection(value);
+    collectionInput.value = newCollectionInput(value);
   },
 );
 </script>

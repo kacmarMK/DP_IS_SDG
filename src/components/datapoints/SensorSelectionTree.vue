@@ -18,6 +18,7 @@
             v-if="prop.node.dataPointTag"
             class="text-weight-medium text-primary cursor-pointer"
             @click="prop.ticked = !prop.ticked"
+            @mousedown.prevent
           >
             {{ prop.node.name }} ({{ prop.node.dataPointTag.unit }})
           </div>

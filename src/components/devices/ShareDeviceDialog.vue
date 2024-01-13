@@ -27,7 +27,7 @@
                   round
                   flat
                   dense
-                  icon="mdi-trash-can-outline"
+                  icon="mdi-close"
                   @click="removeSharedUser(user)"
                 />
               </q-item-section>

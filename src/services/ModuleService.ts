@@ -32,6 +32,7 @@ class ModuleService {
   }
 
   async updateModule(uid: string, module: ModuleInput): Promise<Module> {
+    module.devices = null;
     return await api<Module>(`module/update/${uid}`, {
       method: 'PUT',
       body: module,

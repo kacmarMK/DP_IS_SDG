@@ -8,6 +8,7 @@ interface Collection {
 
 interface CollectionInput {
   name: string;
+  modules?: Array<Module> | null;
 }
 
 export type { Collection, CollectionInput };

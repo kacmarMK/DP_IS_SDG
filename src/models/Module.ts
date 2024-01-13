@@ -8,6 +8,7 @@ interface Module {
 
 interface ModuleInput {
   name: string;
+  devices?: Array<Device> | null;
 }
 
 export type { Module, ModuleInput };
