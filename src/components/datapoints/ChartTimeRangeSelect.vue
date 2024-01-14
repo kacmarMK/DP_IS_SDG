@@ -12,7 +12,7 @@
     :model-value="selectedTimeRange"
     @update:model-value="setPredefinedTimeRange"
   >
-    <template v-slot:prepend>
+    <template #prepend>
       <q-icon name="mdi-clock-outline" />
     </template>
     <template #after-options>
@@ -23,17 +23,17 @@
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-date
             :model-value="customTimeRangeSelected"
-            @update:model-value="setCustomTimeRange"
             range
+            @update:model-value="setCustomTimeRange"
           >
             <div class="row items-center justify-end q-gutter-sm">
-              <q-btn label="OK" color="primary" flat v-close-popup />
+              <q-btn v-close-popup label="OK" color="primary" flat />
             </div>
           </q-date>
         </q-popup-proxy>
       </q-item>
     </template>
-    <template v-slot:selected-item="scope">
+    <template #selected-item="scope">
       <template v-if="isCustomTimeRangeSelected"
         >{{ customTimeRangeSelected.from }} -
         {{ customTimeRangeSelected.to }}</template
@@ -55,7 +55,7 @@ defineExpose({
   emitUpdate,
 });
 
-const timeRanges = <PredefinedTimeRange[]>[
+const timeRanges: PredefinedTimeRange[] = [
   {
     title: 'Last 10 Minutes',
     name: '10m',

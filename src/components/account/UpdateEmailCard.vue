@@ -9,11 +9,11 @@
     ></q-input>
     <q-form autocomplete="off">
       <q-input
+        ref="mailRef"
         v-model="newEmail"
         autocomplete="off"
         label="New Email"
         type="email"
-        ref="mailRef"
         :rules="mailRules"
       ></q-input>
       <q-btn
@@ -24,8 +24,8 @@
         type="submit"
         label="Save"
         :loading="changingEmail"
-        @click.prevent="updateEmail"
         no-caps
+        @click.prevent="updateEmail"
       ></q-btn>
     </q-form>
   </q-card>

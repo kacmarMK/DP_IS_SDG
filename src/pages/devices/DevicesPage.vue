@@ -18,8 +18,8 @@
       <DevicesTable
         v-model="store.devices"
         :loading="store.isLoadingDevices"
-        @on-change="store.getDevices"
         class="shadow"
+        @on-change="store.getDevices"
       />
     </div>
   </q-page>

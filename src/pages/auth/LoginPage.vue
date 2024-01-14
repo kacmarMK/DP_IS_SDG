@@ -8,22 +8,22 @@
             <div>
               <q-form>
                 <q-input
-                  v-model="userLogin.name"
                   ref="nameRef"
+                  v-model="userLogin.name"
                   label="Username"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
                 />
                 <q-input
-                  v-model="userLogin.password"
                   ref="passwordRef"
+                  v-model="userLogin.password"
                   label="Password"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
                 >
-                  <template v-slot:append>
+                  <template #append>
                     <q-icon
                       :name="isPwd ? 'visibility_off' : 'visibility'"
                       class="cursor-pointer"

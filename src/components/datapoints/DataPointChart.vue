@@ -4,8 +4,8 @@
       <p class="text-weight-medium text-h6">Chart</p>
       <q-space></q-space>
       <chart-time-range-select
-        @update:model-value="updateTimeRange"
         ref="timeRangeSelect"
+        @update:model-value="updateTimeRange"
       ></chart-time-range-select>
       <q-btn-dropdown
         padding="0.5rem 1rem"
@@ -15,14 +15,14 @@
         text-color="grey-5"
         class="options-dropdown"
       >
-        <template v-slot:label>
+        <template #label>
           <div class="text-grey-10 text-weight-regular">Options</div>
         </template>
-        <template v-slot:default>
+        <template #default>
           <q-list>
             <q-item
-              clickable
               v-close-popup
+              clickable
               @click="download(csvConfig)(generateCSVData())"
             >
               <q-item-section>
@@ -44,14 +44,14 @@
       ></q-btn>
     </div>
     <apexchart
+      ref="chart"
       height="350"
       width="100%"
       type="line"
-      ref="chart"
       :options="chartOptions"
       :series="series"
       @mounted="setChartUpdate"
-      @legendClick="legendClick"
+      @legend-click="legendClick"
     ></apexchart>
   </div>
 </template>

@@ -25,37 +25,37 @@
         loading-label="Loading Commands..."
         rows-per-page-label="Commands per page"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="data_object" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
+              icon="mdi-pencil"
+              color="grey-color"
+              flat
+              round
               @click.stop="
                 store.editDialog = true;
                 //store.editingCommand = props.row;
                 store.editCommandId = props.row.value?.id;
               "
-              icon="mdi-pencil"
-              color="grey-color"
-              flat
-              round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
               </q-tooltip>
             </q-btn>
             <q-btn
-              @click.stop="
-                store.deleteDialog = true;
-                store.deletingCommand = props.row;
-              "
               icon="mdi-trash-can-outline"
               color="grey-color"
               flat
               round
+              @click.stop="
+                store.deleteDialog = true;
+                store.deletingCommand = props.row;
+              "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Delete
               </q-tooltip>

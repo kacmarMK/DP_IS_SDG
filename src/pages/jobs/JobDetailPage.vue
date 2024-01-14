@@ -3,19 +3,19 @@
     <div>
       <div class="q-mb-md row items-center">
         <p class="main-text">Job</p>
-        <p class="job-name text-weight-medium" v-if="job">({{ job.name }})</p>
+        <p v-if="job" class="job-name text-weight-medium">({{ job.name }})</p>
         <q-badge class="q-pa-xs q-ml-sm" color="primary">
           Cycle: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
         </q-badge>
         <job-status-badges
-          class="q-ml-sm"
           v-if="job"
+          class="q-ml-sm"
           :job="job"
         ></job-status-badges>
         <q-space></q-space>
         <job-controls
-          class="col-grow"
           v-if="job"
+          class="col-grow"
           :running-job="job"
           @action-performed="getJob"
         ></job-controls>
@@ -31,13 +31,13 @@
         loading-label="Loading Job..."
         hide-bottom
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="mdi-list-status" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
-        <template v-slot:body-cell-progress="props">
+        <template #body-cell-progress="props">
           <q-td auto-width :props="props">
             <div
               style="min-height: 45px"
@@ -75,12 +75,12 @@
             </div>
           </q-td>
         </template>
-        <template v-slot:body-cell-step="props">
+        <template #body-cell-step="props">
           <q-td auto-width :props="props">
             {{ props.row.step }}
           </q-td>
         </template>
-        <template v-slot:body-cell-cycles="props">
+        <template #body-cell-cycles="props">
           <q-td auto-width :props="props">
             {{ props.row.cycles }}
           </q-td>
@@ -203,7 +203,7 @@ const columns: QTableProps['columns'] = [
 
 //Refresh job every N seconds
 const refreshInterval = 10; // in seconds
-const intervalId = ref<NodeJS.Timeout>();
+const intervalId = ref();
 onMounted(() => {
   intervalId.value = setInterval(getJob, refreshInterval * 1000);
 });

@@ -26,14 +26,14 @@
         loading-label="Loading modules..."
         row-key="uid"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="mdi-hub-outline" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
 
-        <template v-slot:header="props">
+        <template #header="props">
           <q-tr :props="props">
             <q-th auto-width />
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -42,7 +42,7 @@
             <q-th auto-width />
           </q-tr>
         </template>
-        <template v-slot:body="props">
+        <template #body="props">
           <q-tr :props="props" no-hover>
             <q-td auto-width>
               <q-btn
@@ -51,8 +51,8 @@
                 dense
                 unelevated
                 flat
-                @click="props.expand = !props.expand"
                 :icon="props.expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                @click="props.expand = !props.expand"
               />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
@@ -80,27 +80,27 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
-                @click="
-                  moduleToUpdate = props.row;
-                  editModuleDialog = true;
-                "
                 icon="mdi-pencil"
                 color="grey-color"
                 flat
                 round
+                @click="
+                  moduleToUpdate = props.row;
+                  editModuleDialog = true;
+                "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Edit
                 </q-tooltip>
               </q-btn>
               <q-btn
-                @click="
-                  moduleToUpdate = props.row;
-                  deleteModuleDialog = true;
-                "
                 icon="mdi-trash-can-outline"
                 color="grey-color"
                 flat
                 round
+                @click="
+                  moduleToUpdate = props.row;
+                  deleteModuleDialog = true;
+                "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Delete
                 </q-tooltip>
@@ -128,24 +128,24 @@
     <CreateModuleDialog
       v-model="createModuleDialog"
       :collection="collection"
-      @onCreate="getCollection"
+      @on-create="getCollection"
     />
     <DeleteConfirmationDialog
       v-if="moduleToUpdate"
       v-model="deleteModuleDialog"
-      :itemUid="moduleToUpdate.uid"
-      :deleteFunction="ModuleService.deleteModule"
-      @onDeleted="onModuleDeleted"
+      :item-uid="moduleToUpdate.uid"
+      :delete-function="ModuleService.deleteModule"
       title="Delete Module"
       description="Are you sure you want to delete this module?"
       success-message="Module deleted successfully!"
       failed-message="Deleting module failed!"
+      @on-deleted="onModuleDeleted"
     />
     <EditModuleDialog
       v-if="moduleToUpdate"
       v-model="editModuleDialog"
       :module="moduleToUpdate"
-      @onUpdate="getCollection"
+      @on-update="getCollection"
     />
   </div>
 </template>

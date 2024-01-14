@@ -10,14 +10,14 @@
       loading-label="Loading Devices..."
       rows-per-page-label="Devices per page"
     >
-      <template v-slot:no-data="{ message }">
+      <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
           <q-icon name="devices" class="q-mb-md" size="50px"></q-icon>
           {{ message }}
         </div>
       </template>
 
-      <template v-slot:body-cell-name="props">
+      <template #body-cell-name="props">
         <q-td :props="props">
           <router-link
             :to="`/devices/${props.row.uid}`"
@@ -28,7 +28,7 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-actions="props">
+      <template #body-cell-actions="props">
         <q-td auto-width :props="props">
           <q-btn
             icon="mdi-open-in-new"
@@ -51,14 +51,14 @@
             </q-tooltip>
           </q-btn>
           <q-btn
-            @click.stop="
-              deleteDialog = true;
-              deviceToDelete = props.row;
-            "
             icon="mdi-trash-can-outline"
             color="grey-color"
             flat
             round
+            @click.stop="
+              deleteDialog = true;
+              deviceToDelete = props.row;
+            "
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               Delete
             </q-tooltip>
@@ -67,8 +67,8 @@
             <q-menu anchor="bottom right" self="top right">
               <q-list>
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="initExpireTimeWindow(props.row.uid)"
                 >
                   <div class="row items-center q-gutter-sm">
@@ -77,8 +77,8 @@
                   </div>
                 </q-item>
                 <q-item
-                  clickable
                   v-close-popup
+                  clickable
                   @click="
                     shareDialog = true;
                     deviceToShare = props.row;
@@ -100,11 +100,11 @@
       v-model="deleteDialog"
       :item-uid="deviceToDelete.uid"
       :delete-function="DeviceService.deleteDevice"
-      @on-deleted="deviceDeleted"
       title="Delete Device"
       description="Are you sure you want to delete this device?"
       success-message="Device deleted successfully!"
       failed-message="Deleting device failed!"
+      @on-deleted="deviceDeleted"
     />
     <ShareDeviceDialog
       v-if="deviceToShare"

@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="text-weight-medium text-h6">Sensors</div>
-    <div class="column q-mt-sm q-gutter-y-sm" v-if="dataPointTagTree.children">
+    <div v-if="dataPointTagTree.children" class="column q-mt-sm q-gutter-y-sm">
       <q-tree
+        v-model:ticked="tickedNodes"
+        v-model:expanded="expanded"
         :nodes="dataPointTagTree.children"
         node-key="uid"
         label-key="name"
         tick-strategy="leaf"
         no-nodes-label="No sensors available"
         default-expand-all
-        v-model:ticked="tickedNodes"
-        v-model:expanded="expanded"
         :class="noChildren ? 'no-children' : ''"
       >
-        <template v-slot:default-header="prop">
+        <template #default-header="prop">
           <div
             v-if="prop.node.dataPointTag"
             class="text-weight-medium text-primary cursor-pointer"

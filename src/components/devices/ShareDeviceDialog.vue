@@ -5,14 +5,14 @@
         <div class="text-h6">Share device</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input autofocus label="E-mail" v-model="emailToShare" />
+        <q-input v-model="emailToShare" autofocus label="E-mail" />
         <q-btn
           unelevated
           color="primary"
           label="Share Device"
           no-caps
-          @click="shareDevice"
           :loading="shareInProgress"
+          @click="shareDevice"
         />
         <div>
           <div class="text-shared q-my-md">Shared with</div>
@@ -36,7 +36,7 @@
         </div>
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup no-caps />
+        <q-btn v-close-popup flat label="Cancel" no-caps />
       </q-card-actions>
     </q-card>
   </q-dialog>

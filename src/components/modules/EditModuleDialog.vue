@@ -5,17 +5,17 @@
         <div class="text-h6">Edit module</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input autofocus label="Name" v-model="moduleInput.name" />
+        <q-input v-model="moduleInput.name" autofocus label="Name" />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup no-caps />
+        <q-btn v-close-popup flat label="Cancel" no-caps />
         <q-btn
           unelevated
           color="primary"
           label="Create Module"
           no-caps
-          @click="updateModule"
           :loading="updatingModule"
+          @click="updateModule"
         />
       </q-card-actions>
     </q-card>

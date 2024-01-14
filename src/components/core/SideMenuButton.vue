@@ -18,8 +18,14 @@
 import { useRoute } from 'vue-router';
 
 const props = defineProps({
-  label: String,
-  icon: String,
+  label: {
+    type: String,
+    required: true,
+  },
+  icon: {
+    type: String,
+    required: true,
+  },
   to: {
     type: String,
     required: true,

@@ -24,20 +24,20 @@
       loading-label="Loading Devices..."
       class="outline shadow"
     >
-      <template v-slot:no-data="{ message }">
+      <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
           <q-icon name="devices" class="q-mb-md" size="50px"></q-icon>
           {{ message }}
         </div>
       </template>
 
-      <template v-slot:body-cell="props">
+      <template #body-cell="props">
         <q-td :props="props" no-hover>
           {{ props.row[props.col.field] }}
         </q-td>
       </template>
 
-      <template v-slot:body-cell-name="props">
+      <template #body-cell-name="props">
         <q-td :props="props" no-hover>
           <router-link
             :to="`/devices/${props.row.uid}`"
@@ -48,7 +48,7 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-actions="props">
+      <template #body-cell-actions="props">
         <q-td auto-width :props="props" no-hover>
           <q-btn
             icon="mdi-open-in-new"
@@ -71,14 +71,14 @@
             </q-tooltip>
           </q-btn>
           <q-btn
-            @click.stop="
-              deleteDialog = true;
-              deviceToDelete = props.row;
-            "
             icon="mdi-trash-can-outline"
             color="grey-color"
             flat
             round
+            @click.stop="
+              deleteDialog = true;
+              deviceToDelete = props.row;
+            "
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               Delete
             </q-tooltip>
@@ -96,7 +96,7 @@
     <AddDeviceToModuleDialog
       v-model="addDeviceDialog"
       :module="module"
-      :alreadyAddedDevices="devices"
+      :already-added-devices="devices"
       @on-added="emit('onChange', devices)"
     />
   </div>

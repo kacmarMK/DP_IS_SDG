@@ -1,23 +1,23 @@
 <template>
   <div class="row q-col-gutter-sm items-center justify-center">
-    <div class="col-12 col-sm-3" v-if="!runningJob.paused">
+    <div v-if="!runningJob.paused" class="col-12 col-sm-3">
       <JobControlButton
         label="Pause"
         color="grey-color"
         icon="mdi-pause"
         :loading="pausingJob"
-        @click="pauseJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="pauseJob"
       ></JobControlButton>
     </div>
-    <div class="col-12 col-sm-3" v-else>
+    <div v-else class="col-12 col-sm-3">
       <JobControlButton
         label="Resume"
         color="primary"
         icon="mdi-play"
         :loading="resumingJob"
-        @click="resumeJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="resumeJob"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -26,8 +26,8 @@
         color="green-9"
         icon="mdi-skip-next"
         :loading="skipStepLoading"
-        @click="skipStep"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="skipStep"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -36,8 +36,8 @@
         color="primary"
         icon="mdi-skip-forward"
         :loading="skipCycleLoading"
-        @click="skipCycle"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="skipCycle"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -46,8 +46,8 @@
         color="red"
         icon="mdi-stop"
         :loading="stoppingJob"
-        @click="stopJob"
         :disable="runningJob.toCancel == true"
+        @click="stopJob"
       ></JobControlButton>
     </div>
   </div>

@@ -2,15 +2,15 @@
   <q-card class="shadow q-pa-lg">
     <q-form autocomplete="off">
       <q-input
+        ref="currentPwRef"
         v-model="oldPassword"
         autocomplete="off"
         label="Current Password"
         :type="hidePwCurrent ? 'password' : 'text'"
-        ref="currentPwRef"
         lazy-rules
         :rules="currentPasswordRules"
       >
-        <template v-slot:append>
+        <template #append>
           <q-icon
             :name="hidePwCurrent ? 'mdi-eye-off' : 'mdi-eye'"
             class="cursor-pointer"
@@ -19,14 +19,14 @@
         </template>
       </q-input>
       <q-input
+        ref="newPwRef"
         v-model="newPassword"
         autocomplete="off"
         label="New Password"
         :type="hidePwNew ? 'password' : 'text'"
-        ref="newPwRef"
         :rules="newPasswordRules"
       >
-        <template v-slot:append>
+        <template #append>
           <q-icon
             :name="hidePwNew ? 'mdi-eye-off' : 'mdi-eye'"
             class="cursor-pointer"
@@ -42,8 +42,8 @@
         type="submit"
         label="Save"
         :loading="changingPassword"
-        @click.prevent="updatePassword"
         no-caps
+        @click.prevent="updatePassword"
       ></q-btn>
     </q-form>
   </q-card>

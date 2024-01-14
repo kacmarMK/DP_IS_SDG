@@ -12,22 +12,22 @@
         </p>
       </div>
       <div
-        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
         v-if="dataPointTagTree"
+        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
       >
         <div class="col-12">
           <sensor-selection-tree
-            :dataPointTagTree="dataPointTagTree"
             v-model:tickedNodes="tickedNodes"
+            :data-point-tag-tree="dataPointTagTree"
             class="shadow container q-pa-lg full-height"
           ></sensor-selection-tree>
         </div>
         <div class="col-12">
           <data-point-chart
-            :dataPointTags="dataPointTags"
             v-model:tickedNodes="tickedNodes"
-            @refresh="getModule()"
+            :data-point-tags="dataPointTags"
             class="bg-white shadow q-pa-lg"
+            @refresh="getModule()"
           ></data-point-chart>
         </div>
       </div>

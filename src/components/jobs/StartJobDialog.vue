@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="openDialog" v-if="jobToRun">
+  <q-dialog v-if="jobToRun" v-model="openDialog">
     <q-card style="min-width: 350px" class="q-pa-sm">
       <q-card-section>
         <div class="text-h6">Run Job</div>
@@ -8,9 +8,9 @@
       <q-form>
         <q-card-section class="q-pt-none column q-gutter-md">
           <q-select
-            label="Recipe"
             ref="recipeRef"
             v-model="jobToRun.recipeId"
+            label="Recipe"
             :options="recipesAvailable"
             option-value="id"
             option-label="name"
@@ -21,9 +21,9 @@
           >
           </q-select>
           <q-input
-            label="Repetitions"
             ref="repetitionsRef"
             v-model="jobToRun.repetitions"
+            label="Repetitions"
             type="number"
             lazy-rules
             :rules="repetitionRules"
@@ -45,7 +45,7 @@
             :rules="['time']"
             label="Scheduled Time"
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="scheduledTime" format24h>
@@ -59,7 +59,7 @@
           </q-input>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup no-caps />
+          <q-btn v-close-popup flat label="Cancel" no-caps />
           <q-btn
             unelevated
             color="primary"

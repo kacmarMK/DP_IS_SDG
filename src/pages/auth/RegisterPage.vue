@@ -8,30 +8,30 @@
             <div>
               <q-form>
                 <q-input
-                  v-model="userRegister.name"
                   ref="nicknameRef"
+                  v-model="userRegister.name"
                   label="Username"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
                 />
                 <q-input
-                  v-model="userRegister.mail"
                   ref="mailRef"
+                  v-model="userRegister.mail"
                   label="Email"
                   type="email"
                   lazy-rules
                   :rules="mailRules"
                 />
                 <q-input
-                  v-model="userRegister.password"
                   ref="passwordRef"
+                  v-model="userRegister.password"
                   label="Password"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
                 >
-                  <template v-slot:append>
+                  <template #append>
                     <q-icon
                       :name="isPwd ? 'visibility_off' : 'visibility'"
                       class="cursor-pointer"
@@ -47,8 +47,8 @@
                   size="1rem"
                   no-caps
                   unelevated
-                  @click.prevent="register"
                   :loading="isSubmitting"
+                  @click.prevent="register"
                 />
               </q-form>
               <div class="column items-center q-my-lg links">
@@ -96,7 +96,7 @@ const nameRules = [
 const mailRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your email',
   (val: string) => {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return emailRegex.test(val) || 'Please enter a valid email address';
   },
 ];

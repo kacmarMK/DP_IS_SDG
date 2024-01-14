@@ -27,14 +27,14 @@
         rows-per-page-label="Collections per page"
         row-key="uid"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="mdi-hub-outline" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
 
-        <template v-slot:header="props">
+        <template #header="props">
           <q-tr :props="props">
             <q-th auto-width />
             <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -43,7 +43,7 @@
             <q-th auto-width />
           </q-tr>
         </template>
-        <template v-slot:body="props">
+        <template #body="props">
           <q-tr :props="props" no-hover>
             <q-td auto-width>
               <q-btn
@@ -52,8 +52,8 @@
                 dense
                 unelevated
                 flat
-                @click="props.expand = !props.expand"
                 :icon="props.expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                @click="props.expand = !props.expand"
               />
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
@@ -81,27 +81,27 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
-                @click="
-                  collectionToUpdate = props.row;
-                  editCollectionDialog = true;
-                "
                 icon="mdi-pencil"
                 color="grey-color"
                 flat
                 round
+                @click="
+                  collectionToUpdate = props.row;
+                  editCollectionDialog = true;
+                "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Edit
                 </q-tooltip>
               </q-btn>
               <q-btn
-                @click="
-                  collectionToUpdate = props.row;
-                  deleteCollectionDialog = true;
-                "
                 icon="mdi-trash-can-outline"
                 color="grey-color"
                 flat
                 round
+                @click="
+                  collectionToUpdate = props.row;
+                  deleteCollectionDialog = true;
+                "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   Delete
                 </q-tooltip>
@@ -113,8 +113,8 @@
               <q-slide-transition :duration="250">
                 <div v-show="props.expand">
                   <ModulesTable
-                    class="q-pa-md"
                     v-model="props.row"
+                    class="q-pa-md"
                     @update:model-value="updateCollection"
                   />
                 </div>
@@ -126,24 +126,24 @@
     </div>
     <CreateCollectionDialog
       v-model="createCollectionDialog"
-      @onCreate="getCollections"
+      @on-create="getCollections"
     />
     <DeleteConfirmationDialog
       v-if="collectionToUpdate"
       v-model="deleteCollectionDialog"
-      :itemUid="collectionToUpdate.uid"
-      :deleteFunction="CollectionService.deleteCollection"
-      @onDeleted="getCollections"
+      :item-uid="collectionToUpdate.uid"
+      :delete-function="CollectionService.deleteCollection"
       title="Delete Collection"
       description="Are you sure you want to delete this collection?"
       success-message="Collection deleted successfully!"
       failed-message="Deleting collection failed!"
+      @on-deleted="getCollections"
     />
     <EditCollectionDialog
       v-if="collectionToUpdate"
       v-model="editCollectionDialog"
       :collection="collectionToUpdate"
-      @onUpdate="getCollections"
+      @on-update="getCollections"
     />
   </q-page>
 </template>

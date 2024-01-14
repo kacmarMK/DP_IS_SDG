@@ -58,7 +58,7 @@
         </div>
         <JobControls
           class="col-grow"
-          :runningJob="runningJob"
+          :running-job="runningJob"
           @action-performed="getRunningJob"
         />
       </div>
@@ -153,7 +153,7 @@ const currentProgress = computed(() => {
 
 //Refresh job every N seconds
 const refreshInterval = 10; // in seconds
-const intervalId = ref<NodeJS.Timeout>();
+const intervalId = ref();
 onMounted(() => {
   intervalId.value = setInterval(getRunningJob, refreshInterval * 1000);
 });

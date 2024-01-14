@@ -32,8 +32,8 @@
         />
       </div>
       <div
-        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
         v-if="device"
+        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
       >
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
           <device-info-card
@@ -51,16 +51,16 @@
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
           <sensor-selection-tree
             v-if="dataPointTagTree"
-            :data-point-tag-tree="dataPointTagTree"
             v-model:tickedNodes="tickedNodes"
+            :data-point-tag-tree="dataPointTagTree"
             class="shadow container q-pa-lg full-height"
           ></sensor-selection-tree>
         </div>
         <div class="col-12">
           <data-point-chart
-            class="bg-white shadow q-pa-lg"
-            :dataPointTags="device.dataPointTags"
             v-model:tickedNodes="tickedNodes"
+            class="bg-white shadow q-pa-lg"
+            :data-point-tags="device.dataPointTags"
             @refresh="refreshDevice()"
           ></data-point-chart>
         </div>
