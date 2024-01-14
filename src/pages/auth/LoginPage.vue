@@ -73,7 +73,6 @@ import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { useAuthStore } from '@/stores/auth-store';
-import { handleError } from '@/utils/error-handler';
 import { isFormValid } from '@/utils/form-validation';
 
 const router = useRouter();
@@ -110,7 +109,7 @@ async function login() {
     toast.success('Login successful!');
     router.push('/');
   } catch (error) {
-    handleError(error, 'Login failed!');
+    toast.error('Login failed!');
   } finally {
     isSubmitting.value = false;
   }
