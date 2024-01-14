@@ -85,7 +85,17 @@ module.exports = configure(function (/* ctx */) {
       },
       // viteVuePluginOptions: {},
 
-      vitePlugins: [['@intlify/unplugin-vue-i18n/vite', {}]],
+      vitePlugins: [
+        [
+          '@intlify/unplugin-vue-i18n/vite',
+          {
+            include: [path.resolve(__dirname, './src/i18n/**')],
+            jitCompilation: true,
+            dropMessageCompiler: true,
+            fullInstall: false,
+          },
+        ],
+      ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

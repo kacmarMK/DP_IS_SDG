@@ -95,4 +95,10 @@ module.exports = {
       },
     ],
   },
+  settings: {
+    'vue-i18n': {
+      localeDir: './src/i18n/*.json',
+      messageSyntaxVersion: '^9.8.0',
+    },
+  },
 };

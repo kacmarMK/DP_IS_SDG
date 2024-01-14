@@ -34,10 +34,10 @@
       </q-item>
     </template>
     <template #selected-item="scope">
-      <template v-if="isCustomTimeRangeSelected"
-        >{{ customTimeRangeSelected.from }} -
-        {{ customTimeRangeSelected.to }}</template
-      >
+      <template v-if="isCustomTimeRangeSelected">
+        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+        {{ customTimeRangeSelected.from }} - {{ customTimeRangeSelected.to }}
+      </template>
       <template v-else-if="scope.opt.name">
         {{ scope.opt.title }}
       </template>

@@ -36,7 +36,7 @@
               <q-item clickable to="/account">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="person_outline" />
-                  <div>Account</div>
+                  <div>{{ t('account') }}</div>
                 </div>
               </q-item>
               <!-- <q-item clickable to="/settings">
@@ -49,7 +49,7 @@
               <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-logout" />
-                  <div>Logout</div>
+                  <div>{{ t('logout') }}</div>
                 </div>
               </q-item>
             </q-list>
@@ -70,10 +70,20 @@
           />
         </router-link>
         <div class="links">
-          <side-menu-button to="/" :exact="true" label="Home" icon="mdi-home" />
+          <side-menu-button
+            to="/"
+            :exact="true"
+            :label="t('home')"
+            icon="mdi-home"
+          />
+          <side-menu-button
+            to="/devices"
+            :label="t('devices')"
+            icon="mdi-cellphone-link"
+          />
           <side-menu-button
             to="/collections"
-            label="Collections"
+            :label="t('collections')"
             icon="mdi-hub-outline"
           />
           <!-- <side-menu-button
@@ -81,25 +91,24 @@
             label="Team"
             icon="mdi-account-group"
           /> -->
-          <side-menu-button
-            to="/devices"
-            label="Devices"
-            icon="mdi-cellphone-link"
-          />
           <!-- <side-menu-button
             to="/notifications"
             label="Notifications"
             icon="mdi-bell"
           /> -->
-          <side-menu-button to="/jobs" label="Jobs" icon="mdi-list-status" />
+          <side-menu-button
+            to="/jobs"
+            :label="t('jobs')"
+            icon="mdi-list-status"
+          />
           <side-menu-button
             to="/recipes"
-            label="Recipes"
+            :label="t('recipes')"
             icon="mdi-book-multiple-outline"
           />
           <side-menu-button
             to="/commands"
-            label="Commands"
+            :label="t('commands')"
             icon="mdi-code-tags"
           />
         </div>
@@ -116,6 +125,9 @@ import { ref } from 'vue';
 import SideMenuButton from '@/components/core/SideMenuButton.vue';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'local' });
 
 const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
@@ -124,3 +136,18 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<i18n lang="json">
+{
+  "en": {
+    "account": "Account",
+    "logout": "Logout",
+    "home": "Home"
+  },
+  "sk": {
+    "account": "Účet",
+    "logout": "Odhlásiť sa",
+    "home": "Domov"
+  }
+}
+</i18n>

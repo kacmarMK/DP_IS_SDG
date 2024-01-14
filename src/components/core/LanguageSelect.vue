@@ -40,7 +40,7 @@ const { locale } = useI18n({ useScope: 'global' });
 const options = [
   { value: 'en', icon: 'fi-gb', label: 'English' },
   { value: 'sk', icon: 'fi-sk', label: 'Slovenčina' },
-  { value: 'cz', icon: 'fi-cz', label: 'Čestina' },
+  // { value: 'cs', icon: 'fi-cz', label: 'Čestina' },
 ];
 </script>
 

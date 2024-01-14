@@ -1,0 +1,19 @@
+{
+  "open": "Otvoriť",
+  "edit": "Upraviť",
+  "delete": "Vymazať",
+  "save": "Uložiť",
+  "cancel": "Zrušiť",
+  "next": "Ďalej",
+  "collections": "Kolekcie",
+  "devices": "Zariadenia",
+  "recipes": "Recepty",
+  "commands": "Príkazy",
+  "jobs": "Úlohy",
+  "name": "Názov",
+  "type": "Typ",
+  "version": "Verzia",
+  "firmware": "Firmvér",
+  "mac_address": "MAC adresa",
+  "init_api_key": "Inicializačný API kľúč"
+}
