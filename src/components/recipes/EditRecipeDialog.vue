@@ -2,21 +2,21 @@
   <q-dialog v-model="store.editDialog">
     <q-card style="min-width: 350px" class="q-pa-">
       <q-card-section>
-        <div class="text-h6">Edit command</div>
+        <div class="text-h6">Edit recipe</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input label="Name" v-model="store.editingCommand.name" />
+        <q-input label="Name" v-model="store.editingRecipe.name" />
         <!--<q-input label="Parameters" v-model="store.commandCreate.params" />TODO-->
         <q-select
           label="Device Type"
-          v-model="store.editingCommand.deviceType"
+          v-model="store.editingRecipe.deviceType"
           :options="Object.values(DeviceTypeEnum)"
         >
         </q-select>
         <q-checkbox
           class="q-mt-lg"
-          v-model="store.editingCommand.deactivated"
+          v-model="store.editingRecipe.deactivated"
           dense
           label="Deactivated"
           color="secondary"
@@ -30,8 +30,8 @@
           style="background: #164924; color: white"
           label="Save"
           no-caps
-          @click="store.editCommand"
-          :loading="store.isEditingCommand"
+          @click="store.editRecipe"
+          :loading="store.isEditingRecipe"
         />
       </q-card-actions>
     </q-card>
@@ -40,10 +40,10 @@
 
 <script setup lang="ts">
 import DeviceTypeEnum from 'src/models/DeviceType';
-import { useCommandsStore } from '../stores/commands-store';
+import { useRecipesStore } from '../../stores/recipes-store';
 
-const store = useCommandsStore();
-store.getCommands();
+const store = useRecipesStore();
+store.getRecipes();
 </script>
 
 <style lang="scss" scoped></style>

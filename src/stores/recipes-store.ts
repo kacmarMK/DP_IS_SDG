@@ -46,6 +46,58 @@ export const useRecipesStore = defineStore('recipes', () => {
     }
   }
 
+  const editDialog = ref(false);
+  const isEditingRecipe = ref(false);
+  const editingRecipe = ref<RecipeFrame>({
+    name: '',
+    commands: [],
+    subRecipes: [],
+    deviceType: undefined,
+    subRecipe: false,
+    createdAt: 0,
+    deactivated: false,
+  });
+  const editRecipeId = ref<string>();
+  async function editRecipe() {
+    const editingRecipeId = editRecipeId.value;
+    if (!editingRecipeId) {
+      return;
+    }
+    try {
+      isEditingRecipe.value = true;
+      await recipeService.updateRecipe(editingRecipe.value, editingRecipeId);
+      toast.success('Recipe updated!');
+      getRecipes();
+      editDialog.value = false;
+    } catch (error) {
+      console.log(error);
+      toast.error('Recipe update failed!');
+    } finally {
+      isEditingRecipe.value = false;
+    }
+  }
+
+  const deleteDialog = ref(false);
+  const isDeletingRecipe = ref(false);
+  const deletingRecipe = ref<Recipe>();
+  async function deleteRecipe() {
+    const deletingRecipeId = deletingRecipe.value?.id;
+    if (!deletingRecipeId) {
+      return;
+    }
+    try {
+      isDeletingRecipe.value = true;
+      await recipeService.deleteRecipeById(deletingRecipeId);
+      toast.success('Recipe deleted!');
+      getRecipes();
+      deleteDialog.value = false;
+    } catch (error) {
+      console.log(error);
+      toast.error('Recipe deletion failed!');
+    } finally {
+      isDeletingRecipe.value = false;
+    }
+  }
   return {
     recipes,
     isLoadingRecipes,
@@ -54,5 +106,14 @@ export const useRecipesStore = defineStore('recipes', () => {
     recipeCreate,
     isCreatingRecipe,
     createRecipe,
+    editDialog,
+    isEditingRecipe,
+    editingRecipe,
+    editRecipeId,
+    editRecipe,
+    deleteDialog,
+    isDeletingRecipe,
+    deletingRecipe,
+    deleteRecipe,
   };
 });

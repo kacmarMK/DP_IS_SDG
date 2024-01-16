@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { useCommandsStore } from '../stores/commands-store';
+import { useCommandsStore } from '../../stores/commands-store';
 
 const store = useCommandsStore();
 store.getCommands();

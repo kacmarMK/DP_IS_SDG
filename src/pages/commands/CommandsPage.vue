@@ -74,8 +74,8 @@
 import { QTableProps } from 'quasar';
 import { useCommandsStore } from '@/stores/commands-store';
 import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
-import EditCommandDialog from '@/components/EditCommandDialog.vue';
-import DeleteCommandDialog from '@/components/DeleteCommandDialog.vue';
+import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
+import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
 
 const store = useCommandsStore();
 store.getCommands();

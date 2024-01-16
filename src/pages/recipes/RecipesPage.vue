@@ -31,9 +31,42 @@
             {{ message }}
           </div>
         </template>
+        <template v-slot:body-cell-actions="props">
+          <q-td auto-width :props="props">
+            <q-btn
+              @click.stop="
+                store.editDialog = true;
+                //store.editingCommand = props.row;
+                store.editRecipeId = props.row.value?.id;
+              "
+              icon="mdi-pencil"
+              color="grey-color"
+              flat
+              round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Edit
+              </q-tooltip>
+            </q-btn>
+            <q-btn
+              @click.stop="
+                store.deleteDialog = true;
+                store.deletingRecipe = props.row;
+              "
+              icon="mdi-trash-can-outline"
+              color="grey-color"
+              flat
+              round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                Delete
+              </q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
       </q-table>
     </div>
     <create-recipe-dialog />
+    <edit-recipe-dialog />
+    <delete-recipe-dialog />
   </q-page>
 </template>
 
@@ -41,6 +74,8 @@
 import { QTableProps } from 'quasar';
 import { useRecipesStore } from '@/stores/recipes-store';
 import CreateRecipeDialog from '@/components/recipes/CreateRecipeDialog.vue';
+import EditRecipeDialog from '@/components/recipes/EditRecipeDialog.vue';
+import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 
 const store = useRecipesStore();
 store.getRecipes();
@@ -87,6 +122,13 @@ const columns: QTableProps['columns'] = [
     field: 'deactivated',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'actions',
+    label: '',
+    field: '',
+    align: 'center',
+    sortable: false,
   },
 ];
 </script>
