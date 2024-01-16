@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="to" :exact="exact">
+  <router-link :to="to" :exact="false" :class="{ active: subIsActive() }">
     <q-btn
       no-caps
       flat
@@ -14,17 +14,37 @@
   ></router-link>
 </template>
 
-<script>
-export default {
-  props: {
-    label: String,
-    icon: String,
-    to: String,
-    exact: {
-      type: Boolean,
-      default: false,
-    },
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+
+const props = defineProps({
+  label: {
+    type: String,
+    required: true,
   },
+  icon: {
+    type: String,
+    required: true,
+  },
+  to: {
+    type: String,
+    required: true,
+  },
+  exact: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const route = useRoute();
+
+const subIsActive = () => {
+  if (props.to === '/' && route.path !== '/') {
+    return false;
+  }
+
+  const paths = Array.isArray(props.to) ? props.to : [props.to];
+  return paths.some((path) => route.path.indexOf(path) === 0);
 };
 </script>
 
@@ -39,7 +59,7 @@ export default {
   }
 }
 
-.router-link-exact-active {
+.active {
   .q-btn {
     background-color: #edf1fc;
     color: $primary;

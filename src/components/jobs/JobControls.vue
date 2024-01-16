@@ -1,23 +1,23 @@
 <template>
   <div class="row q-col-gutter-sm items-center justify-center">
-    <div class="col-12 col-sm-3" v-if="!runningJob.paused">
+    <div v-if="!runningJob.paused" class="col-12 col-sm-3">
       <JobControlButton
         label="Pause"
         color="grey-color"
         icon="mdi-pause"
         :loading="pausingJob"
-        @click="pauseJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="pauseJob"
       ></JobControlButton>
     </div>
-    <div class="col-12 col-sm-3" v-else>
+    <div v-else class="col-12 col-sm-3">
       <JobControlButton
         label="Resume"
         color="primary"
         icon="mdi-play"
         :loading="resumingJob"
-        @click="resumeJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="resumeJob"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -26,8 +26,8 @@
         color="green-9"
         icon="mdi-skip-next"
         :loading="skipStepLoading"
-        @click="skipStep"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="skipStep"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -36,8 +36,8 @@
         color="primary"
         icon="mdi-skip-forward"
         :loading="skipCycleLoading"
-        @click="skipCycle"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
+        @click="skipCycle"
       ></JobControlButton>
     </div>
     <div class="col-12 col-sm-3">
@@ -46,8 +46,8 @@
         color="red"
         icon="mdi-stop"
         :loading="stoppingJob"
-        @click="stopJob"
         :disable="runningJob.toCancel == true"
+        @click="stopJob"
       ></JobControlButton>
     </div>
   </div>
@@ -60,6 +60,7 @@ import { Job } from '@/models/Job';
 import { PropType, ref, Ref } from 'vue';
 import jobService from '@/services/JobService';
 import JobControlButton from './JobControlButton.vue';
+import { handleError } from '@/utils/error-handler';
 
 const props = defineProps({
   runningJob: {
@@ -75,7 +76,7 @@ async function performJobAction(
   action: { (jobId: string): Promise<Job> },
   successMessage: string,
   errorMessage: string,
-  loadingRef: Ref<boolean>
+  loadingRef: Ref<boolean>,
 ) {
   if (!props.runningJob) return;
   try {
@@ -84,7 +85,7 @@ async function performJobAction(
     toast.success(successMessage);
     emit('action-performed');
   } catch (e) {
-    toast.error(errorMessage);
+    handleError(e, errorMessage);
   } finally {
     loadingRef.value = false;
   }
@@ -96,7 +97,7 @@ async function stopJob() {
     jobService.cancelJob,
     'Job stopped',
     'Error stopping job',
-    stoppingJob
+    stoppingJob,
   );
 }
 
@@ -106,7 +107,7 @@ async function pauseJob() {
     jobService.pauseJob,
     'Job paused',
     'Error pausing job',
-    pausingJob
+    pausingJob,
   );
 }
 
@@ -116,7 +117,7 @@ async function resumeJob() {
     jobService.continueJob,
     'Job resumed',
     'Error resuming job',
-    resumingJob
+    resumingJob,
   );
 }
 
@@ -126,7 +127,7 @@ async function skipStep() {
     jobService.skipStep,
     'Skipped step',
     'Error skipping step',
-    skipStepLoading
+    skipStepLoading,
   );
 }
 
@@ -136,7 +137,7 @@ async function skipCycle() {
     jobService.skipCycle,
     'Skipped cycle',
     'Error skipping cycle',
-    skipCycleLoading
+    skipCycleLoading,
   );
 }
 </script>

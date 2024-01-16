@@ -8,30 +8,30 @@
             <div>
               <q-form>
                 <q-input
-                  v-model="userRegister.name"
                   ref="nicknameRef"
+                  v-model="userRegister.name"
                   label="Username"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
                 />
                 <q-input
-                  v-model="userRegister.mail"
                   ref="mailRef"
+                  v-model="userRegister.mail"
                   label="Email"
                   type="email"
                   lazy-rules
                   :rules="mailRules"
                 />
                 <q-input
-                  v-model="userRegister.password"
                   ref="passwordRef"
+                  v-model="userRegister.password"
                   label="Password"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
                 >
-                  <template v-slot:append>
+                  <template #append>
                     <q-icon
                       :name="isPwd ? 'visibility_off' : 'visibility'"
                       class="cursor-pointer"
@@ -47,8 +47,8 @@
                   size="1rem"
                   no-caps
                   unelevated
-                  @click.prevent="register"
                   :loading="isSubmitting"
+                  @click.prevent="register"
                 />
               </q-form>
               <div class="column items-center q-my-lg links">
@@ -72,6 +72,8 @@ import { UserRegister } from '@/models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
+import { handleError } from '@/utils/error-handler';
+import { isFormValid } from '@/utils/form-validation';
 
 const router = useRouter();
 
@@ -94,7 +96,7 @@ const nameRules = [
 const mailRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your email',
   (val: string) => {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return emailRegex.test(val) || 'Please enter a valid email address';
   },
 ];
@@ -102,35 +104,17 @@ const passwordRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your password',
 ];
 
-function isFormInvalid(): boolean {
-  const inputRefs = [nicknameRef, passwordRef, mailRef];
-  let hasError = false;
-
-  for (const ref of inputRefs) {
-    const input = ref.value;
-    if (input) {
-      input.validate();
-      if (input.hasError) {
-        hasError = true;
-      }
-    }
-  }
-  return hasError;
-}
-
 async function register() {
-  if (isFormInvalid()) {
+  if (!isFormValid([nicknameRef.value, mailRef.value, passwordRef.value])) {
     return;
   }
-
   try {
     isSubmitting.value = true;
     await authService.register(userRegister.value);
     toast.success('Registration successful!');
     router.push('/');
   } catch (error) {
-    console.log(error);
-    toast.error('Registration failed!');
+    handleError(error, 'Registration failed!');
   } finally {
     isSubmitting.value = false;
   }

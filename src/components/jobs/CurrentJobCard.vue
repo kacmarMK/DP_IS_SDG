@@ -5,6 +5,7 @@
         <div class="text-weight-medium text-h6 col-shrink">Job</div>
         <q-space></q-space>
         <q-btn
+          v-if="runningJob"
           dense
           size="14px"
           icon="mdi-open-in-new"
@@ -57,7 +58,7 @@
         </div>
         <JobControls
           class="col-grow"
-          :runningJob="runningJob"
+          :running-job="runningJob"
           @action-performed="getRunningJob"
         />
       </div>
@@ -75,12 +76,15 @@
         />
       </div>
     </div>
-    <StartJobDialog v-model="openDialog" @job-started="getRunningJob" />
+    <StartJobDialog
+      v-model="openDialog"
+      :device="props.device"
+      @job-started="getRunningJob"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useDevicesStore } from '@/stores/devices-store';
 import StartJobDialog from '@/components/jobs/StartJobDialog.vue';
 import { computed, ref, onMounted, onUnmounted, PropType } from 'vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
@@ -88,8 +92,13 @@ import { Job } from '@/models/Job';
 import jobService from '@/services/JobService';
 import JobControls from './JobControls.vue';
 import JobStatusBadges from './JobStatusBadges.vue';
+import { Device } from '@/models/Device';
 
 const props = defineProps({
+  device: {
+    type: Object as PropType<Device>,
+    required: true,
+  },
   initialJobs: {
     type: Array as PropType<Job[]>,
     required: true,
@@ -97,7 +106,6 @@ const props = defineProps({
 });
 
 const openDialog = ref(false);
-const store = useDevicesStore();
 const runningJob = ref<Job | undefined>(findActiveJob(props.initialJobs));
 
 function findActiveJob(jobs: Job[]) {
@@ -114,17 +122,17 @@ function findActiveJob(jobs: Job[]) {
   return jobs.find(
     (job) =>
       job.currentStatus == JobStatusEnum.JOB_PROCESSING ||
-      job.currentStatus == JobStatusEnum.JOB_PENDING
+      job.currentStatus == JobStatusEnum.JOB_PENDING,
   );
 }
 
 async function getRunningJob() {
-  if (store.device) {
+  if (props.device) {
     try {
-      const jobs: Job[] = await jobService.getJobsOnDevice(store.device.uid);
+      const jobs: Job[] = await jobService.getJobsOnDevice(props.device.uid);
       runningJob.value = findActiveJob(jobs);
     } catch (error) {
-      console.log('No running job found');
+      console.log(error);
     }
   }
 }
@@ -145,7 +153,7 @@ const currentProgress = computed(() => {
 
 //Refresh job every N seconds
 const refreshInterval = 10; // in seconds
-const intervalId = ref<NodeJS.Timeout>();
+const intervalId = ref();
 onMounted(() => {
   intervalId.value = setInterval(getRunningJob, refreshInterval * 1000);
 });
@@ -156,4 +164,3 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped></style>
-src/models/JobStatusEnum

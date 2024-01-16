@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="openDialog" v-if="jobToRun">
+  <q-dialog v-if="jobToRun" v-model="openDialog">
     <q-card style="min-width: 350px" class="q-pa-sm">
       <q-card-section>
         <div class="text-h6">Run Job</div>
@@ -8,9 +8,9 @@
       <q-form>
         <q-card-section class="q-pt-none column q-gutter-md">
           <q-select
-            label="Recipe"
             ref="recipeRef"
             v-model="jobToRun.recipeId"
+            label="Recipe"
             :options="recipesAvailable"
             option-value="id"
             option-label="name"
@@ -21,9 +21,9 @@
           >
           </q-select>
           <q-input
-            label="Repetitions"
             ref="repetitionsRef"
             v-model="jobToRun.repetitions"
+            label="Repetitions"
             type="number"
             lazy-rules
             :rules="repetitionRules"
@@ -45,7 +45,7 @@
             :rules="['time']"
             label="Scheduled Time"
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="scheduledTime" format24h>
@@ -59,7 +59,7 @@
           </q-input>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup no-caps />
+          <q-btn v-close-popup flat label="Cancel" no-caps />
           <q-btn
             unelevated
             color="primary"
@@ -75,8 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useDevicesStore } from '@/stores/devices-store';
+import { PropType, computed, ref } from 'vue';
 import recipeService from '@/services/RecipeService';
 import jobService from '@/services/JobService';
 import { Recipe } from '@/models/Recipe';
@@ -84,9 +83,19 @@ import { QInput } from 'quasar';
 import { JobToRun } from '@/models/Job';
 import { toast } from 'vue3-toastify';
 import { parse } from 'date-fns';
+import { handleError } from '@/utils/error-handler';
+import { Device } from '@/models/Device';
 
-const store = useDevicesStore();
-const props = defineProps(['modelValue']);
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    required: true,
+  },
+  device: {
+    type: Object as PropType<Device>,
+    required: true,
+  },
+});
 const emit = defineEmits(['update:modelValue', 'jobStarted']);
 
 const openDialog = computed({
@@ -103,10 +112,10 @@ const jobToRun = ref<JobToRun>();
 const recipesAvailable = ref<Recipe[]>([]);
 const selectedRecipe = ref<Recipe | null>(null);
 async function getRecipes() {
-  if (!store.device) return;
+  if (!props.device) return;
   try {
     recipesAvailable.value = await recipeService.getFullRecipesByDeviceType(
-      store.device.type
+      props.device.type,
     );
   } catch (e) {
     console.log(e);
@@ -115,7 +124,7 @@ async function getRecipes() {
 getRecipes();
 
 async function runJob() {
-  if (!jobToRun.value || !store.device) return;
+  if (!jobToRun.value || !props.device) return;
   try {
     jobToRun.value.scheduledDays = selectedDays.value;
 
@@ -128,9 +137,8 @@ async function runJob() {
     openDialog.value = false;
     toast.success('Job started');
     emit('jobStarted');
-  } catch (e) {
-    toast.error('Error running job');
-    console.log(e);
+  } catch (error) {
+    handleError(error, 'Error running job');
   }
 }
 
@@ -153,17 +161,26 @@ const selectedDays = computed(() => {
 const scheduledTime = ref();
 
 function resetDialog() {
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const formattedTime = `${now.getHours().toString().padStart(2, '0')}:${now
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}`;
+
   jobToRun.value = {
     recipeId: '',
-    deviceId: store.device?.uid ?? '',
+    deviceId: props.device?.uid ?? '',
     repetitions: 1,
-    scheduledDays: selectedDays.value,
-    scheduledHour: 0,
-    scheduledMinute: 0,
+    scheduledDays: [day],
+    scheduledHour: now.getHours(),
+    scheduledMinute: now.getMinutes(),
   };
   dayButtons.value.forEach((button) => (button.onOff = false));
-  scheduledTime.value = null;
+  scheduledTime.value = formattedTime;
   selectedRecipe.value = null;
+
+  dayButtons.value[day - 1].onOff = true;
 }
 resetDialog();
 

@@ -1,0 +1,19 @@
+{
+  "open": "Open",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "cancel": "Cancel",
+  "next": "Next",
+  "collections": "Collections",
+  "devices": "Devices",
+  "recipes": "Recipes",
+  "commands": "Commands",
+  "jobs": "Jobs",
+  "name": "Name",
+  "type": "Type",
+  "version": "Version",
+  "firmware": "Firmware",
+  "mac_address": "MAC Address",
+  "init_api_key": "Init API Key"
+}

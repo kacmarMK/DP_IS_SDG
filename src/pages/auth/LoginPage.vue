@@ -8,22 +8,22 @@
             <div>
               <q-form>
                 <q-input
-                  v-model="userLogin.name"
                   ref="nameRef"
+                  v-model="userLogin.name"
                   label="Username"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
                 />
                 <q-input
-                  v-model="userLogin.password"
                   ref="passwordRef"
+                  v-model="userLogin.password"
                   label="Password"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
                 >
-                  <template v-slot:append>
+                  <template #append>
                     <q-icon
                       :name="isPwd ? 'visibility_off' : 'visibility'"
                       class="cursor-pointer"
@@ -31,12 +31,12 @@
                     />
                   </template>
                 </q-input>
-                <q-checkbox
+                <!-- <q-checkbox
                   v-model="rememberMe"
                   class="q-mb-md"
                   dense
                   label="Remember me"
-                />
+                /> -->
                 <q-btn
                   class="q-my-md full-width"
                   color="primary"
@@ -45,8 +45,8 @@
                   size="1rem"
                   no-caps
                   unelevated
-                  @click.prevent="login"
                   :loading="isSubmitting"
+                  @click.prevent="login"
                 />
               </q-form>
               <div class="column items-center q-my-lg links">
@@ -68,19 +68,21 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import authService from '@/services/AuthService';
 import { UserLogin } from '@/models/User';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
+import { useAuthStore } from '@/stores/auth-store';
+import { isFormValid } from '@/utils/form-validation';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const userLogin = ref<UserLogin>({
   name: '',
   password: '',
 });
-const rememberMe = ref(false);
+// const rememberMe = ref(false);
 const isPwd = ref(true);
 const isSubmitting = ref(false);
 
@@ -96,34 +98,17 @@ const passwordRules = [
   (val: string) => (val && val.length > 0) || 'Please enter your password',
 ];
 
-function isFormInvalid(): boolean {
-  const inputRefs = [nameRef, passwordRef];
-  let hasError = false;
-
-  for (const ref of inputRefs) {
-    const input = ref.value;
-    if (input) {
-      input.validate();
-      if (input.hasError) {
-        hasError = true;
-      }
-    }
-  }
-  return hasError;
-}
-
 async function login() {
-  if (isFormInvalid()) {
+  if (!isFormValid([nameRef.value, passwordRef.value])) {
     return;
   }
 
   try {
     isSubmitting.value = true;
-    await authService.login(userLogin.value);
+    await authStore.login(userLogin.value);
     toast.success('Login successful!');
     router.push('/');
   } catch (error) {
-    console.log(error);
     toast.error('Login failed!');
   } finally {
     isSubmitting.value = false;

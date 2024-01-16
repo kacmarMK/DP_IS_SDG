@@ -15,14 +15,14 @@
         loading-label="Loading Jobs..."
         rows-per-page-label="Jobs per page"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="mdi-list-status" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td auto-width :props="props">
             <q-badge
               :color="statusColors[props.row.currentStatus as JobStatusEnum]"
@@ -32,7 +32,7 @@
             </q-badge>
           </q-td>
         </template>
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
               icon="mdi-open-in-new"
@@ -55,19 +55,28 @@
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
 import { ref } from 'vue';
-import jobService from '@/services/JobService';
+import deviceService from '@/services/DeviceService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
+import { JobDevice } from '@/models/Job';
+import { handleError } from '@/utils/error-handler';
 
-const jobs = ref<Job[]>([]);
+const jobs = ref<JobDevice[]>([]);
 
 const isLoadingJobs = ref(false);
 async function getJobs() {
   try {
     isLoadingJobs.value = true;
-    jobs.value = await jobService.getAllJobs();
+    const devices = await deviceService.getDevices();
+    jobs.value = devices.flatMap((device) =>
+      device.jobs.map((job) => ({
+        ...job,
+        deviceName: device.name,
+      })),
+    );
   } catch (error) {
-    console.error(error);
+    console.log('ahoj');
+    handleError(error, 'Loading jobs failed!');
   } finally {
     isLoadingJobs.value = false;
   }
@@ -76,8 +85,15 @@ getJobs();
 
 const columns: QTableProps['columns'] = [
   {
-    name: 'name',
-    label: 'Name',
+    name: 'device',
+    label: 'Device',
+    field: 'deviceName',
+    sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'recipe',
+    label: 'Recipe',
     field: 'name',
     sortable: true,
     align: 'left',
@@ -127,7 +143,7 @@ const columns: QTableProps['columns'] = [
     name: 'status',
     label: 'Status',
     field: '',
-    sortable: false,
+    sortable: true,
     align: 'center',
   },
   {

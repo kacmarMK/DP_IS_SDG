@@ -21,6 +21,10 @@ interface Job {
   scheduledMinute: number;
 }
 
+interface JobDevice extends Job {
+  deviceName: string;
+}
+
 interface JobStatus {
   uid: string;
   jobId: string;
@@ -43,4 +47,4 @@ interface JobToRun {
   scheduledMinute: number;
 }
 
-export type { Job, JobStatus, JobToRun };
+export type { Job, JobStatus, JobToRun, JobDevice };

@@ -15,14 +15,14 @@
         loading-label="Loading Jobs..."
         rows-per-page-label="Jobs per page"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="mdi-list-status" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template #body-cell-status="props">
           <q-td auto-width :props="props">
             <q-badge
               :color="statusColors[props.row.currentStatus as JobStatusEnum]"
@@ -33,7 +33,7 @@
           </q-td>
         </template>
 
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
               icon="mdi-open-in-new"

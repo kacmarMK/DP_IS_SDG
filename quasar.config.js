@@ -8,12 +8,11 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require('quasar/wrappers');
-const path = require('path');
+import { configure } from 'quasar/wrappers';
+import path from 'node:path';
+import 'dotenv/config';
 
-module.exports = configure(function (/* ctx */) {
-  require('dotenv').config();
-
+export default configure((/* ctx */) => {
   return {
     eslint: {
       // fix: true,
@@ -25,12 +24,12 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
-    // preFetch: true,
+    preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'ofetch', 'toastify', 'apexcharts'],
+    boot: ['i18n', 'toastify', 'apexcharts'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -74,35 +73,32 @@ module.exports = configure(function (/* ctx */) {
       // polyfillModulePreload: true,
       // distDir
 
-      extendViteConf(viteConf, { isServer, isClient }) {
+      extendViteConf(viteConf) {
         Object.assign(viteConf.resolve.alias, {
           '@': path.join(__dirname, './src'),
         });
+        viteConf.define.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = 'true';
+        viteConf.build.cssMinify = 'lightningcss';
       },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
         [
-          '@intlify/vite-plugin-vue-i18n',
+          '@intlify/unplugin-vue-i18n/vite',
           {
-            // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-            // compositionOnly: false,
-
-            // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
-            // you need to set `runtimeOnly: false`
-            // runtimeOnly: false,
-
-            // you need to set i18n resource including paths !
-            include: path.resolve(__dirname, './src/i18n/**'),
+            include: [path.resolve(__dirname, './src/i18n/**')],
+            jitCompilation: true,
+            dropMessageCompiler: true,
+            fullInstall: false,
+          },
+        ],
+        [
+          'vite-svg-loader',
+          {
+            defaultImport: 'component',
           },
         ],
       ],
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
-    devServer: {
-      // https: true
-      open: true, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -137,8 +133,8 @@ module.exports = configure(function (/* ctx */) {
     //   rootComponent: 'src/App.vue',
     //   router: 'src/router/index',
     //   store: 'src/store/index',
-    //   registerServiceWorker: 'src-pwa/register-service-worker',
-    //   serviceWorker: 'src-pwa/custom-service-worker',
+    //   pwaRegisterServiceWorker: 'src-pwa/register-service-worker',
+    //   pwaServiceWorker: 'src-pwa/custom-service-worker',
     //   pwaManifestFile: 'src-pwa/manifest.json',
     //   electronMain: 'src-electron/electron-main',
     //   electronPreload: 'src-electron/electron-preload'
@@ -146,8 +142,8 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
-      // ssrPwaHtmlFilename: 'offline.html', // do NOT use index.html as name!
-      // will mess up SSR
+      prodPort: 3000, // The default port that the production server should use
+      // (gets superseded if process.env.PORT is specified at runtime)
 
       // extendSSRWebserverConf (esbuildConf) {},
       // extendPackageJson (json) {},
@@ -157,7 +153,6 @@ module.exports = configure(function (/* ctx */) {
       // manualStoreHydration: true,
       // manualPostHydrationTrigger: true,
 
-      prodPort: 3000, // The default port that the production server should use
       // (gets superseded if process.env.PORT is specified at runtime)
 
       middlewares: [
@@ -167,16 +162,15 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: 'generateSW', // or 'injectManifest'
-      injectPwaMetaTags: true,
-      swFilename: 'sw.js',
-      manifestFilename: 'manifest.json',
-      useCredentialsForManifestTag: false,
-      // useFilenameHashes: true,
-      // extendGenerateSWOptions (cfg) {}
-      // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
-      // extendPWACustomSWConf (esbuildConf) {}
+      workboxMode: 'GenerateSW',
+      // swFilename: 'sw.js',
+      // manifestFilename: 'manifest.json'
+      // extendManifestJson (json) {},
+      // useCredentialsForManifestTag: true,
+      // injectPwaMetaTags: false,
+      // extendPWACustomSWConf (esbuildConf) {},
+      // extendGenerateSWOptions (cfg) {},
+      // extendInjectManifestOptions (cfg) {}
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
@@ -231,6 +225,7 @@ module.exports = configure(function (/* ctx */) {
           changeOrigin: true,
         },
       },
+      open: true,
     },
   };
 });

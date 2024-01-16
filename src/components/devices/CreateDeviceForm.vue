@@ -1,53 +1,53 @@
 <template>
   <q-card style="min-width: 350px" class="q-pa-sm q-pa-md-lg shadow">
-    <q-stepper v-model="createStep" ref="stepper" animated vertical header-nav>
-      <q-step :name="1" title="Device info" icon="mdi-pencil">
+    <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav>
+      <q-step :name="1" :title="t('device_info')" icon="mdi-pencil">
         <div class="q-pa-sm row q-col-gutter-lg">
           <q-input
-            class="col-12 col-md-6"
-            label="Name"
             v-model="deviceInput.name"
+            class="col-12 col-md-6"
+            :label="t('name')"
           />
           <q-input
-            class="col-12 col-md-6"
-            label="Mac"
             v-model="deviceInput.mac"
+            class="col-12 col-md-6"
+            :label="t('mac_address')"
           />
           <q-select
-            class="col-12 col-md-6"
-            label="Type"
             v-model="deviceInput.type"
+            class="col-12 col-md-6"
+            :label="t('type')"
             :options="Object.values(DeviceTypeEnum)"
           >
           </q-select>
           <q-input
-            class="col-12 col-md-6"
-            label="Init API Key"
             v-model="deviceInput.initApiKey"
+            class="col-12 col-md-6"
+            :label="t('init_api_key')"
           />
           <q-input
-            class="col-12 col-md-6"
-            label="Firmware"
             v-model="deviceInput.firmware"
+            class="col-12 col-md-6"
+            :label="t('firmware')"
           />
           <q-input
-            class="col-12 col-md-6"
-            label="Version"
             v-model="deviceInput.version"
+            class="col-12 col-md-6"
+            :label="t('version')"
           />
         </div>
         <q-card-actions align="left" class="text-primary q-mt-sm">
           <q-btn
             unelevated
             color="primary"
-            label="Next"
+            :label="t('next')"
             padding="7px 40px"
             no-caps
             @click="if (createStep == 1) createStep = 2;"
           />
         </q-card-actions>
       </q-step>
-      <q-step :name="2" title="Add sensors" icon="mdi-thermostat">
+      <q-step :name="2" :title="t('add_sensors')" icon="mdi-thermostat">
         <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
           <div class="data-point-container q-my-md">
             <div class="row items-center justify-end">
@@ -62,24 +62,24 @@
             </div>
             <div class="row q-col-gutter-lg">
               <q-input
-                class="col-12 col-md-6"
-                label="Name"
                 v-model="dataPointTag.name"
+                class="col-12 col-md-6"
+                :label="t('name')"
               />
               <q-input
+                v-model="dataPointTag.tag"
                 class="col-12 col-md-6"
                 label="Tag"
-                v-model="dataPointTag.tag"
               />
               <q-input
-                class="col-12 col-md-6"
-                label="Unit"
                 v-model="dataPointTag.unit"
+                class="col-12 col-md-6"
+                :label="t('unit')"
               />
               <q-input
-                class="col-12 col-md-6"
-                label="Decimal"
                 v-model="dataPointTag.decimal"
+                class="col-12 col-md-6"
+                :label="t('decimal')"
               />
             </div>
           </div>
@@ -98,24 +98,24 @@
             </div>
             <div class="row q-col-gutter-lg">
               <q-input
-                class="col-12 col-md-6"
-                label="Name"
                 v-model="dataPointTag.name"
+                class="col-12 col-md-6"
+                :label="t('name')"
               />
               <q-input
+                v-model="dataPointTag.tag"
                 class="col-12 col-md-6"
                 label="Tag"
-                v-model="dataPointTag.tag"
               />
               <q-input
-                class="col-12 col-md-6"
-                label="Unit"
                 v-model="dataPointTag.unit"
+                class="col-12 col-md-6"
+                :label="t('unit')"
               />
               <q-input
-                class="col-12 col-md-6"
-                label="Decimal"
                 v-model="dataPointTag.decimal"
+                class="col-12 col-md-6"
+                :label="t('decimal')"
               />
             </div>
           </div>
@@ -128,17 +128,17 @@
             color="primary"
             no-caps
             padding="12px 30px"
-            label="Add sensor"
+            :label="t('add_sensor')"
             @click="addLocalDataPointTag"
           />
           <q-btn
             unelevated
             color="primary"
-            label="Save"
+            :label="t('save')"
             padding="7px 35px"
-            @click="submitForm"
             :loading="submittingForm"
             no-caps
+            @click="submitForm"
           />
         </div>
       </q-step>
@@ -155,13 +155,20 @@ import { toast } from 'vue3-toastify';
 import deviceService from '@/services/DeviceService';
 import dataPointTagService from '@/services/DataPointTagService';
 import { useRouter } from 'vue-router';
+import { handleError } from '@/utils/error-handler';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'local' });
 
 const props = defineProps({
   isEditing: {
     type: Boolean,
     default: false,
   },
-  editingDeviceId: String,
+  editingDeviceId: {
+    type: String,
+    default: null,
+  },
 });
 
 const router = useRouter();
@@ -191,11 +198,10 @@ async function getEditingDevice() {
     };
     remoteDataPointTags.value = editingDevice.dataPointTags;
     originalRemoteDataPointTags.value = cloneDataPointTags(
-      editingDevice.dataPointTags
+      editingDevice.dataPointTags,
     );
   } catch (error) {
-    console.log(error);
-    toast.error('Getting device failed!');
+    handleError(error, t('loading_device_failed'));
   }
 }
 getEditingDevice();
@@ -206,11 +212,10 @@ async function deleteRemoteDataPointTag(id: string) {
   try {
     await dataPointTagService.deleteDataPointTag(id);
     remoteDataPointTags.value = remoteDataPointTags.value.filter(
-      (dataPointTag) => dataPointTag.uid !== id
+      (dataPointTag) => dataPointTag.uid !== id,
     );
   } catch (error) {
-    console.log(error);
-    toast.error('Deleting data point tag failed!');
+    handleError(error, t('deleting_tag_failed'));
   }
 }
 
@@ -220,7 +225,7 @@ function cloneDataPointTags(tags: DataPointTag[]) {
 
 const localDataPointTags = ref<DataPointTagInput[]>([]);
 function addLocalDataPointTag() {
-  localDataPointTags.value.push(<DataPointTagInput>{
+  localDataPointTags.value.push({
     tag: '',
     name: '',
     unit: '',
@@ -235,13 +240,11 @@ async function createDataPointTags(): Promise<DataPointTag[]> {
 
   for (const dataPointTag of localDataPointTags.value) {
     try {
-      const createdDataPointTag = await dataPointTagService.createDataPointTag(
-        dataPointTag
-      );
+      const createdDataPointTag =
+        await dataPointTagService.createDataPointTag(dataPointTag);
       dataPointTags.push(createdDataPointTag);
     } catch (error) {
-      console.log(error);
-      toast.error('Creating data point tag failed!');
+      handleError(error, t('creating_tag_failed'));
     }
   }
   return dataPointTags;
@@ -253,8 +256,7 @@ async function createDevice(): Promise<Device | undefined> {
     createdDevice = await deviceService.createDevice(deviceInput.value);
     createStep.value = 1;
   } catch (error) {
-    console.log(error);
-    toast.error('Creating device failed!');
+    handleError(error, t('creating_device_failed'));
   }
   return createdDevice;
 }
@@ -266,12 +268,11 @@ async function updateDevice(): Promise<Device | undefined> {
   try {
     editedDevice = await deviceService.updateDevice(
       deviceInput.value,
-      props.editingDeviceId
+      props.editingDeviceId,
     );
     createStep.value = 1;
   } catch (error) {
-    console.log(error);
-    toast.error('Updating device failed!');
+    handleError(error, t('update_device_failed'));
   }
   return editedDevice;
 }
@@ -298,18 +299,17 @@ async function submitForm() {
     try {
       await dataPointTagService.addDataPointTagToDevice(
         device.uid,
-        dataPointTag.uid
+        dataPointTag.uid,
       );
     } catch (error) {
-      console.log(error);
-      toast.error('Adding data point tag to device failed!');
+      handleError(error, t('adding_tag_to_device_failed'));
     }
   }
 
   //Update remoteDataPointTags
   for (const dataPointTag of remoteDataPointTags.value) {
     const originalTag = originalRemoteDataPointTags.value.find(
-      (tag) => tag.uid === dataPointTag.uid
+      (tag) => tag.uid === dataPointTag.uid,
     );
 
     //Update only if tag has changed
@@ -323,11 +323,10 @@ async function submitForm() {
         };
         await dataPointTagService.updateDataPointTag(
           updatedDataPointTag,
-          dataPointTag.uid
+          dataPointTag.uid,
         );
       } catch (error) {
-        console.log(error);
-        toast.error('Updating data point tag failed!');
+        handleError(error, t('update_tag_failed'));
       }
     }
   }
@@ -335,14 +334,15 @@ async function submitForm() {
   submittingForm.value = false;
 
   if (props.isEditing) {
-    toast.success('Device updated!');
+    toast.success(t('device_updated'));
   } else {
-    toast.success('Device created!');
+    toast.success(t('device_created'));
   }
 
   router.push(`/devices/${device.uid}`);
 }
 </script>
+
 <style lang="scss" scoped>
 .data-point-container {
   border: 1px solid #ccc;
@@ -350,3 +350,40 @@ async function submitForm() {
   padding: 1rem 2.5rem 4rem 2.5rem;
 }
 </style>
+
+<i18n lang="json">
+{
+  "en": {
+    "device_info": "Device info",
+    "add_sensors": "Add sensors",
+    "add_sensor": "Add sensor",
+    "unit": "Unit",
+    "decimal": "Decimal",
+    "loading_device_failed": "Loading device failed!",
+    "deleting_tag_failed": "Deleting data point tag failed!",
+    "creating_tag_failed": "Creating data point tag failed!",
+    "creating_device_failed": "Creating device failed!",
+    "update_device_failed": "Updating device failed!",
+    "adding_tag_to_device_failed": "Adding data point tag to device failed!",
+    "update_tag_failed": "Updating data point tag failed!",
+    "device_created": "Device created!",
+    "device_updated": "Device updated!"
+  },
+  "sk": {
+    "device_info": "Informácie o zariadení",
+    "add_sensors": "Pridať senzory",
+    "add_sensor": "Pridať senzor",
+    "unit": "Jednotka",
+    "decimal": "Desatinné miesta",
+    "loading_device_failed": "Načítanie zariadenia zlyhalo!",
+    "deleting_tag_failed": "Zmazanie senzora zlyhalo!",
+    "creating_tag_failed": "Vytváranie senzora zlyhalo!",
+    "creating_device_failed": "Vytváranie zariadenia zlyhalo!",
+    "update_device_failed": "Aktualizácia zariadenia zlyhala!",
+    "adding_tag_to_device_failed": "Pridanie senzora k zariadeniu zlyhalo!",
+    "update_tag_failed": "Aktualizácia senzora zlyhala!",
+    "device_created": "Zariadenie bolo vytvorené!",
+    "device_updated": "Zariadenie bolo aktualizované!"
+  }
+}
+</i18n>

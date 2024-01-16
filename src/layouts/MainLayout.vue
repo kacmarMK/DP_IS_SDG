@@ -26,28 +26,30 @@
             <q-list style="min-width: 150px" class="text-secondary">
               <q-item>
                 <q-item-section class="q-py-xs">
-                  <div class="text-weight-medium">Username</div>
-                  <div class="text-grey-color">placeholder@gmail.com</div>
+                  <div class="text-weight-medium">
+                    {{ authStore.user?.name }}
+                  </div>
+                  <div class="text-grey-color">{{ authStore.user?.mail }}</div>
                 </q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable to="/profile">
+              <q-item clickable to="/account">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="person_outline" />
-                  <div>Profile</div>
+                  <div>{{ t('account') }}</div>
                 </div>
               </q-item>
-              <q-item clickable to="/settings">
+              <!-- <q-item clickable to="/settings">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-cog-outline" />
                   <div>Settings</div>
                 </div>
-              </q-item>
+              </q-item> -->
               <q-separator />
-              <q-item clickable to="/login">
+              <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-logout" />
-                  <div>Logout</div>
+                  <div>{{ t('logout') }}</div>
                 </div>
               </q-item>
             </q-list>
@@ -68,31 +70,45 @@
           />
         </router-link>
         <div class="links">
-          <side-menu-button to="/" :exact="true" label="Home" icon="mdi-home" />
+          <side-menu-button
+            to="/"
+            :exact="true"
+            :label="t('home')"
+            icon="mdi-home"
+          />
+          <side-menu-button
+            to="/devices"
+            :label="t('devices')"
+            icon="mdi-cellphone-link"
+          />
+          <side-menu-button
+            to="/collections"
+            :label="t('collections')"
+            icon="mdi-hub-outline"
+          />
           <!-- <side-menu-button
             to="/company"
             label="Team"
             icon="mdi-account-group"
           /> -->
-          <side-menu-button
-            to="/devices"
-            label="Devices"
-            icon="mdi-cellphone-link"
-          />
           <!-- <side-menu-button
             to="/notifications"
             label="Notifications"
             icon="mdi-bell"
           /> -->
           <side-menu-button
-            to="/recipes"
-            label="Recipes"
-            icon="mdi-book-multiple"
+            to="/jobs"
+            :label="t('jobs')"
+            icon="mdi-list-status"
           />
-          <side-menu-button to="/jobs" label="Jobs" icon="mdi-list-status" />
+          <side-menu-button
+            to="/recipes"
+            :label="t('recipes')"
+            icon="mdi-book-multiple-outline"
+          />
           <side-menu-button
             to="/commands"
-            label="Commands"
+            :label="t('commands')"
             icon="mdi-code-tags"
           />
         </div>
@@ -108,9 +124,30 @@
 import { ref } from 'vue';
 import SideMenuButton from '@/components/core/SideMenuButton.vue';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
+import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'local' });
+
+const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<i18n lang="json">
+{
+  "en": {
+    "account": "Account",
+    "logout": "Logout",
+    "home": "Home"
+  },
+  "sk": {
+    "account": "Účet",
+    "logout": "Odhlásiť sa",
+    "home": "Domov"
+  }
+}
+</i18n>

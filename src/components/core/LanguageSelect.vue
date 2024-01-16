@@ -1,6 +1,6 @@
 <template>
   <q-select
-    v-model="lang"
+    v-model="locale"
     :options="options"
     borderless
     dense
@@ -8,20 +8,21 @@
     option-label="label"
     emit-value
     map-options
+    @update:model-value="localeStorage = $event"
   >
-    <template v-slot:option="scope">
+    <template #option="scope">
       <q-item v-bind="scope.itemProps">
         <q-item-section avatar class="items-center">
-          <div class="fi option-flag" :class="scope.opt.icon"></div>
+          <component :is="scope.opt.icon" class="option-flag" />
         </q-item-section>
         <q-item-section>
           <q-item-label>{{ scope.opt.label }}</q-item-label>
         </q-item-section>
       </q-item>
     </template>
-    <template v-slot:selected-item="scope">
+    <template #selected-item="scope">
       <div class="row items-center">
-        <span class="fi selected-flag" :class="scope.opt.icon"></span>
+        <component :is="scope.opt.icon" class="selected-flag" />
         <div class="q-ml-sm">{{ scope.opt.label }}</div>
       </div>
     </template>
@@ -29,15 +30,18 @@
 </template>
 
 <script setup lang="ts">
-import '/node_modules/flag-icons/css/flag-icons.min.css';
-import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useStorage } from '@vueuse/core';
+import SKFlag from '@/assets/flags/sk.svg';
+import GBFlag from '@/assets/flags/gb.svg';
 
-const lang = ref('gb');
+const localeStorage = useStorage('locale', 'en');
+const { locale } = useI18n({ useScope: 'global' });
 
 const options = [
-  { value: 'gb', icon: 'fi-gb', label: 'English' },
-  { value: 'sk', icon: 'fi-sk', label: 'Slovenčina' },
-  { value: 'cz', icon: 'fi-cz', label: 'Čestina' },
+  { value: 'en', icon: GBFlag, label: 'English' },
+  { value: 'sk', icon: SKFlag, label: 'Slovenčina' },
+  // { value: 'cs', icon: 'CZFlag', label: 'Čestina' },
 ];
 </script>
 
@@ -48,7 +52,6 @@ const options = [
 }
 
 .selected-flag {
-  width: 16px;
-  height: 16px;
+  height: 13px;
 }
 </style>
