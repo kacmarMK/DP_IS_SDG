@@ -45,7 +45,8 @@ export const useCommandsStore = defineStore('commands', () => {
 
   const editDialog = ref(false);
   const isEditingCommand = ref(false);
-  const editingCommand = ref<CommandFrame>({
+  const editedCommand = ref<Command>({
+    id: '',
     name: '',
     params: [], // TODO
     deviceType: undefined,
@@ -54,15 +55,11 @@ export const useCommandsStore = defineStore('commands', () => {
   });
   const editCommandId = ref<string>();
   async function editCommand() {
-    const editingCommandId = editCommandId.value;
-    if (!editingCommandId) {
-      return;
-    }
     try {
       isEditingCommand.value = true;
       await commandService.updateCommand(
-        editingCommand.value,
-        editingCommandId
+        editedCommand.value,
+        editedCommand.value.id,
       );
       toast.success('Command updated!');
       getCommands();
@@ -107,7 +104,7 @@ export const useCommandsStore = defineStore('commands', () => {
     createCommand,
     editDialog,
     isEditingCommand,
-    editingCommand,
+    editedCommand,
     editCommandId,
     editCommand,
     deleteDialog,

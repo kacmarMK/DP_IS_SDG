@@ -40,7 +40,7 @@
               round
               @click.stop="
                 store.editDialog = true;
-                //store.editingCommand = props.row;
+                store.editedCommand = props.row;
                 store.editCommandId = props.row.value?.id;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
@@ -89,23 +89,9 @@ const columns: QTableProps['columns'] = [
     align: 'left',
   },
   {
-    name: 'params',
-    label: 'Parameters',
-    field: 'params',
-    sortable: false,
-    align: 'left',
-  },
-  {
     name: 'deviceType',
-    label: 'Device Type',
+    label: 'Device',
     field: 'deviceType',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'deactivated',
-    label: 'Command Deactivated?',
-    field: 'deactivated',
     sortable: true,
     align: 'left',
   },

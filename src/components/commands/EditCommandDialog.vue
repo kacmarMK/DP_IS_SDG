@@ -6,16 +6,16 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="store.editingCommand.name" label="Name" />
+        <q-input v-model="store.editedCommand.name" label="Name" />
         <!--<q-input label="Parameters" v-model="store.commandCreate.params" />TODO-->
         <q-select
-          v-model="store.editingCommand.deviceType"
+          v-model="store.editedCommand.deviceType"
           label="Device Type"
           :options="Object.values(DeviceTypeEnum)"
         >
         </q-select>
         <q-checkbox
-          v-model="store.editingCommand.deactivated"
+          v-model="store.editedCommand.deactivated"
           class="q-mt-lg"
           dense
           label="Deactivated"
