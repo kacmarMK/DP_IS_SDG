@@ -3,7 +3,10 @@
     <div>
       <div class="top-row row items-center">
         <router-link to="/devices">
-          <p class="main-text text-accent">{{ t('devices') }} >&nbsp;</p>
+          <p class="main-text text-accent">
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+            {{ t('devices') }} >&nbsp;
+          </p>
         </router-link>
         <p class="main-text">{{ t('add') }}</p>
       </div>

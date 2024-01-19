@@ -21,14 +21,6 @@
           label="Account"
           no-caps
         />
-        <q-route-tab
-          :to="{ path: '/account/users' }"
-          style="min-width: 130px"
-          name="usermanagement"
-          icon="mdi-account-group"
-          label="User Management"
-          no-caps
-        />
       </q-tabs>
     </q-card>
     <router-view />

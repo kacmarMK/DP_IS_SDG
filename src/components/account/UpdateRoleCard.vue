@@ -1,20 +1,14 @@
 <template>
   <q-card class="shadow q-pa-lg">
-    <q-input
-      v-model="currentMail"
-      label="Current Email"
-      readonly
-      disable
-    ></q-input>
     <q-form ref="qform" autocomplete="off">
-      <q-input
-        ref="mailRef"
-        v-model="newEmail"
+      <q-select
+        v-model="newRole"
         autocomplete="off"
-        label="New Email"
-        type="email"
-        :rules="mailRules"
-      ></q-input>
+        label="Role"
+        :options="availableRoles"
+        map-options
+        emit-value
+      ></q-select>
       <q-btn
         class="float-right q-mt-lg"
         style="min-width: 95px"
@@ -22,22 +16,24 @@
         unelevated
         type="submit"
         label="Save"
-        :loading="changingEmail"
+        :loading="changingRole"
         no-caps
-        @click.prevent="updateEmail"
+        @click.prevent="updateRole"
       ></q-btn>
     </q-form>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, computed, ref } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import AuthService from '@/services/AuthService';
 import { User, UserUpdate } from '@/models/User';
 import { toast } from 'vue3-toastify';
 import { QForm, QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
+import { Role } from '@/models/Role';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   user: {
@@ -48,49 +44,46 @@ const props = defineProps({
 
 const emit = defineEmits(['update']);
 
+const { t } = useI18n();
+
 const mailRef = ref<QInput>();
 const qform = ref<QForm>();
-const currentMail = ref(props.user.mail);
-const newEmail = ref('');
-const changingEmail = ref(false);
+const changingRole = ref(false);
 
-const mailRules = [
-  (val: string) =>
-    (val && val.length > 0) || 'Please enter a valid email address',
-  (val: string) => {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return emailRegex.test(val) || 'Please enter a valid email address';
-  },
+const availableRoles = [
+  { label: t('role.admin'), value: Role.ADMIN },
+  { label: t('role.user'), value: Role.USER },
 ];
 
-async function updateEmail() {
+const currentRole = computed(() => {
+  return props.user.authorities?.at(0)?.authority;
+});
+
+const newRole = ref<Role>(currentRole.value ?? Role.USER);
+
+async function updateRole() {
   if (!isFormValid([mailRef.value])) {
     return;
   }
 
   const updateUser: UserUpdate = {
-    mail: newEmail.value,
+    authorities: [
+      {
+        authority: newRole.value,
+      },
+    ],
   };
 
   try {
-    changingEmail.value = true;
+    changingRole.value = true;
     await AuthService.updateUser(updateUser, props.user.uid);
-    toast.success('Email updated');
-    newEmail.value = '';
+    toast.success('Role updated');
     qform.value?.reset();
     emit('update');
   } catch (err) {
-    handleError(err, 'Failed to update email');
+    handleError(err, 'Failed to update role');
   } finally {
-    changingEmail.value = false;
+    changingRole.value = false;
   }
 }
-
-watch(
-  () => props.user,
-  () => {
-    currentMail.value = props.user.mail;
-  },
-  { immediate: true },
-);
 </script>

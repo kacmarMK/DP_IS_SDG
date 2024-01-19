@@ -18,11 +18,17 @@ const routes: RouteRecordRaw[] = [
             path: '',
             component: () => import('pages/account/AccountEditPage.vue'),
           },
-          {
-            path: 'users',
-            component: () => import('pages/account/UserManagementPage.vue'),
-          },
         ],
+      },
+      {
+        path: 'user-management',
+        component: () => import('pages/account/UserManagementPage.vue'),
+        meta: { requiresAdmin: true },
+      },
+      {
+        path: 'user-management/:id',
+        component: () => import('pages/account/UserManagementEditPage.vue'),
+        meta: { requiresAdmin: true },
       },
       {
         path: '/devices',
@@ -31,6 +37,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/devices/create',
         component: () => import('pages/devices/CreateDevicePage.vue'),
+        meta: { requiresAdmin: true },
       },
       {
         path: '/devices/:id',
@@ -43,6 +50,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/devices/:id/edit',
         component: () => import('pages/devices/UpdateDevicePage.vue'),
+        meta: { requiresAdmin: true },
       },
       {
         path: '/jobs',

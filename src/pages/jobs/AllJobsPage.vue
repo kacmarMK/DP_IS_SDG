@@ -75,7 +75,6 @@ async function getJobs() {
       })),
     );
   } catch (error) {
-    console.log('ahoj');
     handleError(error, 'Loading jobs failed!');
   } finally {
     isLoadingJobs.value = false;

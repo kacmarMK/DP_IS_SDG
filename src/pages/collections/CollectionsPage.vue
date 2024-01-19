@@ -5,6 +5,7 @@
         <p class="main-text">Collections</p>
         <q-space></q-space>
         <q-btn
+          v-if="authStore.isAdmin"
           class="shadow"
           color="primary"
           unelevated
@@ -81,6 +82,7 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
+                v-if="authStore.isAdmin"
                 icon="mdi-pencil"
                 color="grey-color"
                 flat
@@ -94,6 +96,7 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
+                v-if="authStore.isAdmin"
                 icon="mdi-trash-can-outline"
                 color="grey-color"
                 flat
@@ -158,9 +161,13 @@ import CreateCollectionDialog from '@/components/collections/CreateCollectionDia
 import EditCollectionDialog from '@/components/collections/EditCollectionDialog.vue';
 import ModulesTable from '@/components/modules/ModulesTable.vue';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
+import { useAuthStore } from '@/stores/auth-store';
+
+const authStore = useAuthStore();
 
 const collections = ref<Collection[]>([]);
 const isLoadingCollections = ref(false);
+
 async function getCollections() {
   try {
     isLoadingCollections.value = true;

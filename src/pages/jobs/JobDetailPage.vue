@@ -14,7 +14,7 @@
         ></job-status-badges>
         <q-space></q-space>
         <job-controls
-          v-if="job"
+          v-if="job && authStore.isAdmin"
           class="col-grow"
           :running-job="job"
           @action-performed="getJob"
@@ -99,8 +99,10 @@ import jobService from '@/services/JobService';
 import JobControls from '@/components/jobs/JobControls.vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import JobStatusBadges from '@/components/jobs/JobStatusBadges.vue';
+import { useAuthStore } from '@/stores/auth-store';
 
 const route = useRoute();
+const authStore = useAuthStore();
 
 const job = ref<Job>();
 

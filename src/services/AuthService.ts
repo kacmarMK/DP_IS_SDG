@@ -1,5 +1,6 @@
-import { User, UserLogin, UserRegister, UserUpdate } from 'src/models/User';
+import { User, UserLogin, UserRegister, UserUpdate } from '@/models/User';
 import { api } from '@/utils/api';
+import { Role } from '@/models/Role';
 
 class AuthService {
   async login(userLogin: UserLogin): Promise<string> {
@@ -12,8 +13,8 @@ class AuthService {
     return jwt;
   }
 
-  async register(userRegister: UserRegister): Promise<User> {
-    const user: User = await api<User>('user/create/user', {
+  async register(userRegister: UserRegister, role: Role): Promise<User> {
+    const user: User = await api<User>(`user/create/${role}`, {
       method: 'POST',
       body: userRegister,
     });
@@ -25,6 +26,13 @@ class AuthService {
       method: 'GET',
     });
     return user;
+  }
+
+  async getUsers(): Promise<User[]> {
+    const users: User[] = await api<User[]>('user', {
+      method: 'GET',
+    });
+    return users;
   }
 
   async updateUser(user: UserUpdate, id: string): Promise<User> {

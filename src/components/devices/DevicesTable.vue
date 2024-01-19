@@ -41,6 +41,7 @@
             </q-tooltip>
           </q-btn>
           <q-btn
+            v-if="authStore.isAdmin"
             icon="mdi-pencil"
             color="grey-color"
             flat
@@ -51,6 +52,7 @@
             </q-tooltip>
           </q-btn>
           <q-btn
+            v-if="authStore.isAdmin"
             icon="mdi-trash-can-outline"
             color="grey-color"
             flat
@@ -63,7 +65,13 @@
               {{ t('delete') }}
             </q-tooltip>
           </q-btn>
-          <q-btn icon="mdi-dots-vertical" color="grey-color" flat round>
+          <q-btn
+            v-if="authStore.isAdmin"
+            icon="mdi-dots-vertical"
+            color="grey-color"
+            flat
+            round
+          >
             <q-menu anchor="bottom right" self="top right">
               <q-list>
                 <q-item
@@ -124,8 +132,11 @@ import DeviceService from '@/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
+import { useAuthStore } from '@/stores/auth-store';
 
 const { t } = useI18n({ useScope: 'local' });
+
+const authStore = useAuthStore();
 
 const props = defineProps({
   modelValue: {

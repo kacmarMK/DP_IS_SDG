@@ -74,6 +74,7 @@ import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { handleError } from '@/utils/error-handler';
 import { isFormValid } from '@/utils/form-validation';
+import { Role } from '@/models/Role';
 
 const router = useRouter();
 
@@ -110,7 +111,7 @@ async function register() {
   }
   try {
     isSubmitting.value = true;
-    await authService.register(userRegister.value);
+    await authService.register(userRegister.value, Role.ADMIN);
     toast.success('Registration successful!');
     router.push('/');
   } catch (error) {

@@ -4,6 +4,7 @@
       <p class="devices-text">Devices</p>
       <q-space></q-space>
       <q-btn
+        v-if="authStore.isAdmin"
         class="shadow bg-white"
         color="primary"
         unelevated
@@ -61,6 +62,7 @@
             </q-tooltip>
           </q-btn>
           <q-btn
+            v-if="authStore.isAdmin"
             icon="mdi-pencil"
             color="grey-color"
             flat
@@ -71,6 +73,7 @@
             </q-tooltip>
           </q-btn>
           <q-btn
+            v-if="authStore.isAdmin"
             icon="mdi-trash-can-outline"
             color="grey-color"
             flat
@@ -109,6 +112,7 @@ import AddDeviceToModuleDialog from './AddDeviceToModuleDialog.vue';
 import { PropType, computed, ref } from 'vue';
 import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
+import { useAuthStore } from '@/stores/auth-store';
 
 const props = defineProps({
   modelValue: {
@@ -121,6 +125,8 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['update:modelValue', 'onChange']);
+
+const authStore = useAuthStore();
 
 const devices = computed({
   get() {

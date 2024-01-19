@@ -10,10 +10,19 @@
   "recipes": "Recipes",
   "commands": "Commands",
   "jobs": "Jobs",
+  "account": "Account",
+  "logout": "Logout",
+  "home": "Home",
+  "user_management": "User Management",
   "name": "Name",
   "type": "Type",
   "version": "Version",
   "firmware": "Firmware",
   "mac_address": "MAC Address",
-  "init_api_key": "Init API Key"
+  "init_api_key": "Init API Key",
+  "username": "Username",
+  "created_on": "Created On",
+  "access": "Access",
+  "role.admin": "Admin",
+  "role.user": "User"
 }

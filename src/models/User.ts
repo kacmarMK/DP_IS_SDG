@@ -1,8 +1,11 @@
+import { GrantedAuthority } from './JwtPayload';
+
 interface User {
   uid: string;
   name?: string;
   mail?: string;
   password?: string;
+  authorities?: GrantedAuthority[];
 }
 
 interface UserLogin {
@@ -20,6 +23,7 @@ interface UserUpdate {
   name?: string;
   mail?: string;
   password?: string;
+  authorities?: GrantedAuthority[];
 }
 
-export type { User, UserLogin, UserRegister, UserUpdate };
+export type { User, GrantedAuthority, UserLogin, UserRegister, UserUpdate };

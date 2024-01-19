@@ -5,6 +5,7 @@
         <p class="modules-text">Modules</p>
         <q-space></q-space>
         <q-btn
+          v-if="authStore.isAdmin"
           class="shadow bg-white"
           color="primary"
           unelevated
@@ -80,6 +81,7 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
+                v-if="authStore.isAdmin"
                 icon="mdi-pencil"
                 color="grey-color"
                 flat
@@ -93,6 +95,7 @@
                 </q-tooltip>
               </q-btn>
               <q-btn
+                v-if="authStore.isAdmin"
                 icon="mdi-trash-can-outline"
                 color="grey-color"
                 flat
@@ -162,6 +165,7 @@ import DevicesInModuleTable from '@/components/modules/DevicesInModuleTable.vue'
 import { handleError } from '@/utils/error-handler';
 import { Module } from '@/models/Module';
 import ModuleService from '@/services/ModuleService';
+import { useAuthStore } from '@/stores/auth-store';
 
 const props = defineProps({
   modelValue: {
@@ -169,8 +173,9 @@ const props = defineProps({
     required: true,
   },
 });
-
 const emit = defineEmits(['update:modelValue']);
+
+const authStore = useAuthStore();
 
 const collection = computed({
   get() {

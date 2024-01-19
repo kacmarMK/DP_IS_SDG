@@ -13,7 +13,7 @@
           :to="`/jobs/${runningJob?.uid}`"
           flat
           round
-          ><q-tooltip :offset="[0, 4]"> Show details </q-tooltip>
+          ><q-tooltip :offset="[0, 4]">Show details</q-tooltip>
         </q-btn>
       </div>
       <div
@@ -57,6 +57,7 @@
           </div>
         </div>
         <JobControls
+          v-if="authStore.isAdmin"
           class="col-grow"
           :running-job="runningJob"
           @action-performed="getRunningJob"
@@ -93,6 +94,7 @@ import jobService from '@/services/JobService';
 import JobControls from './JobControls.vue';
 import JobStatusBadges from './JobStatusBadges.vue';
 import { Device } from '@/models/Device';
+import { useAuthStore } from '@/stores/auth-store';
 
 const props = defineProps({
   device: {
@@ -104,6 +106,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const authStore = useAuthStore();
 
 const openDialog = ref(false);
 const runningJob = ref<Job | undefined>(findActiveJob(props.initialJobs));

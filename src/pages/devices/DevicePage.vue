@@ -21,6 +21,7 @@
           icon="mdi-list-status"
         />
         <q-btn
+          v-if="authStore.isAdmin"
           class="shadow q-ml-md"
           color="primary"
           unelevated
@@ -82,10 +83,15 @@ import { Device } from '@/models/Device';
 import { deviceToDataPointTagNode } from '@/utils/data-point-tag-nodes';
 import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue';
 import CurrentJobCard from '@/components/jobs/CurrentJobCard.vue';
+import { useAuthStore } from '@/stores/auth-store';
+
 const route = useRoute();
+const authStore = useAuthStore();
+
 const device = ref<Device | null>(null);
 const isLoadingDevice = ref(false);
 const isRefreshingDevice = ref(false);
+
 async function getDevice(uid: string) {
   try {
     isLoadingDevice.value = true;

@@ -5,12 +5,14 @@ import AuthService from '@/services/AuthService';
 import { computed, nextTick, ref, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'vue3-toastify';
+import { Role } from '@/models/Role';
+import { JwtPayload } from '@/models/JwtPayload';
 
 export const useAuthStore = defineStore('authStore', () => {
   const jwt = useStorage('jwt', '');
   const user = ref<User | null>(null);
 
-  const isAuthenticated = computed(() => jwt.value !== '');
+  const isAuthenticated = computed(() => !!jwt.value);
 
   async function login(user: UserLogin) {
     const res = await AuthService.login(user);
@@ -38,7 +40,7 @@ export const useAuthStore = defineStore('authStore', () => {
   const userId = computed(() => {
     if (!jwt.value) return null;
 
-    const decodedToken = jwtDecode(jwt.value);
+    const decodedToken = jwtDecode(jwt.value) as JwtPayload;
     return decodedToken.sub;
   });
 
@@ -51,6 +53,15 @@ export const useAuthStore = defineStore('authStore', () => {
     if (!decodedToken.exp) return true;
 
     return decodedToken.exp < currentTime;
+  });
+
+  const isAdmin = computed(() => {
+    if (!jwt.value) return false;
+    const decodedToken = jwtDecode(jwt.value) as JwtPayload;
+    const isAdmin = decodedToken.authorities.some(
+      (authority) => authority.authority === Role.ADMIN,
+    );
+    return isAdmin;
   });
 
   watch(
@@ -70,6 +81,7 @@ export const useAuthStore = defineStore('authStore', () => {
     user,
     userId,
     refreshUser,
+    isAdmin,
   };
 });
 

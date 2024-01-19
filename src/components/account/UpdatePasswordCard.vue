@@ -2,6 +2,7 @@
   <q-card class="shadow q-pa-lg">
     <q-form autocomplete="off">
       <q-input
+        v-if="requireOldPassword"
         ref="currentPwRef"
         v-model="oldPassword"
         autocomplete="off"
@@ -50,16 +51,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth-store';
+import { PropType, ref } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import AuthService from '@/services/AuthService';
-import { UserUpdate } from '@/models/User';
+import { User, UserUpdate } from '@/models/User';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
 
-const authStore = useAuthStore();
+const props = defineProps({
+  user: {
+    type: Object as PropType<User>,
+    required: true,
+  },
+  requireOldPassword: {
+    type: Boolean,
+    default: true,
+  },
+});
+const emit = defineEmits(['update']);
 
 const currentPwRef = ref<QInput>();
 const newPwRef = ref<QInput>();
@@ -76,19 +86,20 @@ const currentPasswordRules = [
   (val: string) =>
     (val && val.length > 0) || 'Please enter your current password',
   (val: string) =>
-    val === authStore.user?.password || 'Please enter your current password',
+    val === props.user?.password || 'Please enter your current password',
 ];
 
 const newPasswordRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your new password',
+  (val: string) => (val && val.length > 0) || 'Please enter a new password',
 ];
 
 async function updatePassword() {
-  if (!authStore.userId) {
-    return;
+  const form = [newPwRef.value];
+  if (props.requireOldPassword) {
+    form.push(currentPwRef.value);
   }
 
-  if (!isFormValid([currentPwRef.value, newPwRef.value])) {
+  if (!isFormValid(form)) {
     return;
   }
 
@@ -98,9 +109,9 @@ async function updatePassword() {
 
   try {
     changingPassword.value = true;
-    await AuthService.updateUser(updateUser, authStore.userId);
+    await AuthService.updateUser(updateUser, props.user.uid);
     toast.success('Password changed!');
-    authStore.refreshUser();
+    emit('update');
   } catch (err) {
     handleError(err, 'Changing password failed');
   } finally {

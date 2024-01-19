@@ -111,6 +111,12 @@
             :label="t('commands')"
             icon="mdi-code-tags"
           />
+          <side-menu-button
+            v-if="authStore.isAdmin"
+            to="/user-management"
+            :label="t('user_management')"
+            icon="mdi-account-group"
+          />
         </div>
       </div>
     </q-drawer>
@@ -127,7 +133,7 @@ import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n({ useScope: 'local' });
+const { t } = useI18n();
 
 const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
@@ -136,18 +142,3 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
-
-<i18n lang="json">
-{
-  "en": {
-    "account": "Account",
-    "logout": "Logout",
-    "home": "Home"
-  },
-  "sk": {
-    "account": "Účet",
-    "logout": "Odhlásiť sa",
-    "home": "Domov"
-  }
-}
-</i18n>

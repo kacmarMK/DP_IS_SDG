@@ -8,6 +8,7 @@ import {
 
 import routes from './routes';
 import { authGuard } from './authGuard';
+import { adminGuard } from './adminGuard';
 
 /*
  * If not building with SSR mode, you can
@@ -36,7 +37,12 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const requiresAuth = to.matched.some((r) => r.meta.requiresAuth);
+    const requiresAdmin = to.matched.some((r) => r.meta.requiresAdmin);
+
+    if (requiresAdmin) {
+      adminGuard(to, from, next);
+    } else if (requiresAuth) {
       authGuard(to, from, next);
     } else {
       next();

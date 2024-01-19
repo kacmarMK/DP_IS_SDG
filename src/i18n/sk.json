@@ -10,10 +10,19 @@
   "recipes": "Recepty",
   "commands": "Príkazy",
   "jobs": "Úlohy",
+  "account": "Účet",
+  "logout": "Odhlásiť sa",
+  "home": "Domov",
+  "user_management": "Správa používateľov",
   "name": "Názov",
   "type": "Typ",
   "version": "Verzia",
   "firmware": "Firmvér",
   "mac_address": "MAC adresa",
-  "init_api_key": "Inicializačný API kľúč"
+  "init_api_key": "Inicializačný API kľúč",
+  "username": "Používateľské meno",
+  "created_on": "Vytvorené dňa",
+  "access": "Prístup",
+  "role.admin": "Administrátor",
+  "role.user": "Používateľ"
 }
