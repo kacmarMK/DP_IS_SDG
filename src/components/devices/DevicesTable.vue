@@ -6,9 +6,9 @@
       :loading="props.loading"
       flat
       :rows-per-page-options="[10, 20, 50]"
-      :no-data-label="t('no_data_label')"
-      :loading-label="t('loading_label')"
-      :rows-per-page-label="t('rows_per_page_label')"
+      :no-data-label="t('table.no_data_label')"
+      :loading-label="t('table.loading_label')"
+      :rows-per-page-label="t('table.rows_per_page_label')"
     >
       <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -17,27 +17,27 @@
         </div>
       </template>
 
-      <template #body-cell-name="props">
-        <q-td :props="props">
+      <template #body-cell-name="propsCell">
+        <q-td :props="propsCell">
           <router-link
-            :to="`/devices/${props.row.uid}`"
+            :to="`/devices/${propsCell.row.uid}`"
             class="text-black text-weight-regular"
           >
-            {{ props.row.name }}
+            {{ propsCell.row.name }}
           </router-link>
         </q-td>
       </template>
 
-      <template #body-cell-actions="props">
-        <q-td auto-width :props="props">
+      <template #body-cell-actions="propsActions">
+        <q-td auto-width :props="propsActions">
           <q-btn
             icon="mdi-open-in-new"
             color="grey-color"
             flat
             round
-            :to="`/devices/${props.row.uid}`"
+            :to="`/devices/${propsActions.row.uid}`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              {{ t('open') }}
+              {{ t('global.open') }}
             </q-tooltip>
           </q-btn>
           <q-btn
@@ -46,9 +46,9 @@
             color="grey-color"
             flat
             round
-            :to="`/devices/${props.row.uid}/edit`"
+            :to="`/devices/${propsActions.row.uid}/edit`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              {{ t('edit') }}
+              {{ t('global.edit') }}
             </q-tooltip>
           </q-btn>
           <q-btn
@@ -59,10 +59,10 @@
             round
             @click.stop="
               deleteDialog = true;
-              deviceToDelete = props.row;
+              deviceToDelete = propsActions.row;
             "
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              {{ t('delete') }}
+              {{ t('global.delete') }}
             </q-tooltip>
           </q-btn>
           <q-btn
@@ -77,11 +77,11 @@
                 <q-item
                   v-close-popup
                   clickable
-                  @click="initExpireTimeWindow(props.row.uid)"
+                  @click="initExpireTimeWindow(propsActions.row.uid)"
                 >
                   <div class="row items-center q-gutter-sm">
                     <q-icon color="grey-9" size="24px" name="mdi-timer" />
-                    <div>{{ t('init_window') }}</div>
+                    <div>{{ t('device.init_window') }}</div>
                   </div>
                 </q-item>
                 <q-item
@@ -89,12 +89,12 @@
                   clickable
                   @click="
                     shareDialog = true;
-                    deviceToShare = props.row;
+                    deviceToShare = propsActions.row;
                   "
                 >
                   <div class="row items-center q-gutter-sm">
                     <q-icon color="grey-9" size="24px" name="mdi-share" />
-                    <div>{{ t('share_device') }}</div>
+                    <div>{{ t('device.share_device') }}</div>
                   </div>
                 </q-item>
               </q-list>
@@ -108,10 +108,10 @@
       v-model="deleteDialog"
       :item-uid="deviceToDelete.uid"
       :delete-function="DeviceService.deleteDevice"
-      title="Delete Device"
-      description="Are you sure you want to delete this device?"
-      success-message="Device deleted successfully!"
-      failed-message="Deleting device failed!"
+      :title="t('device.delete_device')"
+      :description="t('device.delete_device_desc')"
+      :success-message="t('device.toasts.device.delete_success')"
+      :failed-message="t('device.toasts.device.delete_failed')"
       @on-deleted="deviceDeleted"
     />
     <ShareDeviceDialog
@@ -134,7 +134,7 @@ import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth-store';
 
-const { t } = useI18n({ useScope: 'local' });
+const { t } = useI18n();
 
 const authStore = useAuthStore();
 
@@ -174,51 +174,51 @@ const deviceToShare = ref<Device>();
 async function initExpireTimeWindow(deviceUid: string) {
   try {
     await DeviceService.initExpireTime(deviceUid);
-    toast.success('1min window initialized successfully!');
+    toast.success(t('device.toasts.window.init_success'));
   } catch (error) {
-    handleError(error, 'Initializing expire time window failed!');
+    handleError(error, t('device.toasts.window.init_failed'));
   }
 }
 
 const getPermissions = (device: Device) => {
   if (DeviceService.isOwner(device)) {
-    return t('owner');
+    return t('global.owner');
   }
-  return t('shared');
+  return t('global.shared');
 };
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: t('name'),
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'type',
-    label: t('type'),
+    label: t('device.type'),
     field: 'type',
     sortable: true,
     align: 'left',
   },
   {
     name: 'version',
-    label: t('version'),
+    label: t('device.version'),
     field: 'version',
     sortable: true,
     align: 'left',
   },
   {
     name: 'firmware',
-    label: t('firmware'),
+    label: t('device.firmware'),
     field: 'firmware',
     sortable: true,
     align: 'left',
   },
   {
     name: 'permissions',
-    label: t('permissions'),
+    label: t('global.permissions'),
     field(row) {
       return getPermissions(row);
     },
@@ -232,32 +232,7 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>
 
 <style lang="scss" scoped></style>
-
-<i18n lang="json">
-{
-  "en": {
-    "permissions": "Permissions",
-    "no_data_label": "No Devices Yet",
-    "loading_label": "Loading Devices...",
-    "rows_per_page_label": "Devices per page",
-    "init_window": "Initialize 1min window",
-    "share_device": "Share device",
-    "owner": "Owner",
-    "shared": "Shared"
-  },
-  "sk": {
-    "permissions": "Oprávnenia",
-    "no_data_label": "Zatiaľ žiadne zariadenia",
-    "loading_label": "Načítavam zariadenia...",
-    "rows_per_page_label": "Zariadení na stránke",
-    "init_window": "Inicializovať 1min okno",
-    "share_device": "Zdieľať zariadenie",
-    "owner": "Vlastník",
-    "shared": "Zdieľané"
-  }
-}
-</i18n>

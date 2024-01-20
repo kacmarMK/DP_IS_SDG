@@ -36,7 +36,7 @@
               <q-item clickable to="/account">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="person_outline" />
-                  <div>{{ t('account') }}</div>
+                  <div>{{ t('global.account') }}</div>
                 </div>
               </q-item>
               <!-- <q-item clickable to="/settings">
@@ -49,7 +49,7 @@
               <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" name="mdi-logout" />
-                  <div>{{ t('logout') }}</div>
+                  <div>{{ t('account.logout') }}</div>
                 </div>
               </q-item>
             </q-list>
@@ -73,17 +73,17 @@
           <side-menu-button
             to="/"
             :exact="true"
-            :label="t('home')"
+            :label="t('global.home')"
             icon="mdi-home"
           />
           <side-menu-button
             to="/devices"
-            :label="t('devices')"
+            :label="t('device.title', 2)"
             icon="mdi-cellphone-link"
           />
           <side-menu-button
             to="/collections"
-            :label="t('collections')"
+            :label="t('collection.title', 2)"
             icon="mdi-hub-outline"
           />
           <!-- <side-menu-button
@@ -98,23 +98,23 @@
           /> -->
           <side-menu-button
             to="/jobs"
-            :label="t('jobs')"
+            :label="t('job.title', 2)"
             icon="mdi-list-status"
           />
           <side-menu-button
             to="/recipes"
-            :label="t('recipes')"
+            :label="t('global.recipes')"
             icon="mdi-book-multiple-outline"
           />
           <side-menu-button
             to="/commands"
-            :label="t('commands')"
+            :label="t('global.commands')"
             icon="mdi-code-tags"
           />
           <side-menu-button
             v-if="authStore.isAdmin"
             to="/user-management"
-            :label="t('user_management')"
+            :label="t('global.user_management')"
             icon="mdi-account-group"
           />
         </div>

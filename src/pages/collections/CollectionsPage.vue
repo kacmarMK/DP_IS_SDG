@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Collections</p>
+        <p class="main-text">{{ t('collection.title', 2) }}</p>
         <q-space></q-space>
         <q-btn
           v-if="authStore.isAdmin"
@@ -11,7 +11,7 @@
           unelevated
           no-caps
           size="15px"
-          label="Create Collection"
+          :label="t('collection.create_collection')"
           icon="mdi-plus"
           @click="createCollectionDialog = true"
         />
@@ -23,9 +23,9 @@
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Collections Yet"
-        loading-label="Loading Collections..."
-        rows-per-page-label="Collections per page"
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
+        :rows-per-page-label="t('table.rows_per_page_label')"
         row-key="uid"
       >
         <template #no-data="{ message }">
@@ -78,7 +78,7 @@
                 round
                 :to="`/collections/${props.row.uid}`"
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Open
+                  {{ t('global.open') }}
                 </q-tooltip>
               </q-btn>
               <q-btn
@@ -92,7 +92,7 @@
                   editCollectionDialog = true;
                 "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Edit
+                  {{ t('global.edit') }}
                 </q-tooltip>
               </q-btn>
               <q-btn
@@ -106,7 +106,7 @@
                   deleteCollectionDialog = true;
                 "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Delete
+                  {{ t('global.delete') }}
                 </q-tooltip>
               </q-btn>
             </q-td>
@@ -136,10 +136,10 @@
       v-model="deleteCollectionDialog"
       :item-uid="collectionToUpdate.uid"
       :delete-function="CollectionService.deleteCollection"
-      title="Delete Collection"
-      description="Are you sure you want to delete this collection?"
-      success-message="Collection deleted successfully!"
-      failed-message="Deleting collection failed!"
+      :title="t('collection.delete_collection')"
+      :description="t('collection.delete_collection_desc')"
+      :success-message="t('collection.toasts.delete_success')"
+      :failed-message="t('collection.toasts.delete_failed')"
       @on-deleted="getCollections"
     />
     <EditCollectionDialog
@@ -154,7 +154,7 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Collection } from '@/models/Collection';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import CollectionService from '@/services/CollectionService';
 import CreateCollectionDialog from '@/components/collections/CreateCollectionDialog.vue';
@@ -162,6 +162,9 @@ import EditCollectionDialog from '@/components/collections/EditCollectionDialog.
 import ModulesTable from '@/components/modules/ModulesTable.vue';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const authStore = useAuthStore();
 
@@ -173,7 +176,7 @@ async function getCollections() {
     isLoadingCollections.value = true;
     collections.value = await CollectionService.getCollections();
   } catch (error) {
-    handleError(error, 'Loading collections failed!');
+    handleError(error, t('collection.toasts.load_failed'));
   } finally {
     isLoadingCollections.value = false;
   }
@@ -191,22 +194,22 @@ const deleteCollectionDialog = ref(false);
 const editCollectionDialog = ref(false);
 const collectionToUpdate = ref<Collection>();
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: 'Name',
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'modules',
-    label: 'Modules',
+    label: t('module.title', 2),
     field: (row) => row.modules.length || 0,
     sortable: true,
     align: 'right',
   },
-];
+]);
 </script>
 
 <style lang="scss" scoped>

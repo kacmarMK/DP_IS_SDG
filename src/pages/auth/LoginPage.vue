@@ -4,13 +4,13 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">Login</h1>
+            <h1 class="text-center q-my-md">{{ t('auth.login.title') }}</h1>
             <div>
               <q-form>
                 <q-input
                   ref="nameRef"
                   v-model="userLogin.name"
-                  label="Username"
+                  :label="t('account.username')"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
@@ -18,7 +18,7 @@
                 <q-input
                   ref="passwordRef"
                   v-model="userLogin.password"
-                  label="Password"
+                  :label="t('account.password')"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
@@ -40,7 +40,7 @@
                 <q-btn
                   class="q-my-md full-width"
                   color="primary"
-                  label="Login"
+                  :label="t('auth.login.login_btn')"
                   type="submit"
                   size="1rem"
                   no-caps
@@ -49,14 +49,15 @@
                   @click.prevent="login"
                 />
               </q-form>
-              <div class="column items-center q-my-lg links">
+              <div class="column items-center q-my-md links">
                 <div class="q-mb-md">
-                  <span>Don't have an account?</span>
-                  <router-link to="/register" class="q-ml-sm"
-                    >Sign Up</router-link
-                  >
+                  <span>{{ t('auth.login.no_account') }}</span>
+                  <router-link to="/register" class="q-ml-sm">
+                    {{ t('auth.login.sign_up') }}
+                  </router-link>
                 </div>
-                <router-link to="/password/reset">Forgot password?</router-link>
+                <language-select />
+                <!-- <router-link to="/password/reset">Forgot password?</router-link> -->
               </div>
             </div>
           </div>
@@ -74,6 +75,10 @@ import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { useAuthStore } from '@/stores/auth-store';
 import { isFormValid } from '@/utils/form-validation';
+import LanguageSelect from '@/components/core/LanguageSelect.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -91,11 +96,13 @@ const nameRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
 const nameRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your username',
+  (val: string) =>
+    (val && val.length > 0) || t('auth.login.rules.username_required'),
 ];
 
 const passwordRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your password',
+  (val: string) =>
+    (val && val.length > 0) || t('auth.login.rules.password_required'),
 ];
 
 async function login() {
@@ -106,10 +113,10 @@ async function login() {
   try {
     isSubmitting.value = true;
     await authStore.login(userLogin.value);
-    toast.success('Login successful!');
+    toast.success(t('auth.login.toasts.login_success'));
     router.push('/');
   } catch (error) {
-    toast.error('Login failed!');
+    toast.error('auth.login.toasts.login_failed');
   } finally {
     isSubmitting.value = false;
   }

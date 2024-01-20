@@ -6,8 +6,6 @@ export default boot(({ app }) => {
   const i18n = createI18n({
     legacy: false,
     locale: localStorage.getItem('locale') || 'en',
-    fallbackWarn: false,
-    missingWarn: false,
     messages,
   });
 

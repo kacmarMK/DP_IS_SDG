@@ -36,7 +36,7 @@ import SKFlag from '@/assets/flags/sk.svg';
 import GBFlag from '@/assets/flags/gb.svg';
 
 const localeStorage = useStorage('locale', 'en');
-const { locale } = useI18n({ useScope: 'global' });
+const { locale } = useI18n();
 
 const options = [
   { value: 'en', icon: GBFlag, label: 'English' },

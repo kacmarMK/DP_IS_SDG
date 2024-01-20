@@ -49,14 +49,14 @@
         </q-td>
       </template>
 
-      <template #body-cell-actions="props">
+      <template #body-cell-actions="propsActions">
         <q-td auto-width :props="props" no-hover>
           <q-btn
             icon="mdi-open-in-new"
             color="grey-color"
             flat
             round
-            :to="`/devices/${props.row.uid}`"
+            :to="`/devices/${propsActions.row.uid}`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               Open
             </q-tooltip>
@@ -67,7 +67,7 @@
             color="grey-color"
             flat
             round
-            :to="`/devices/${props.row.uid}/edit`"
+            :to="`/devices/${propsActions.row.uid}/edit`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               Edit
             </q-tooltip>
@@ -80,7 +80,7 @@
             round
             @click.stop="
               deleteDialog = true;
-              deviceToDelete = props.row;
+              deviceToDelete = propsActions.row;
             "
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               Delete
@@ -148,7 +148,7 @@ function deviceDeleted() {
 
 const addDeviceDialog = ref(false);
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
     label: 'Name',
@@ -184,7 +184,7 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>
 
 <style lang="scss" scoped>

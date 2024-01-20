@@ -10,10 +10,16 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn v-close-popup flat color="grey-9" label="Cancel" no-caps />
+        <q-btn
+          v-close-popup
+          flat
+          color="grey-9"
+          :label="t('global.cancel')"
+          no-caps
+        />
         <q-btn
           unelevated
-          label="Delete"
+          :label="t('global.delete')"
           color="red"
           :loading="isDeleteInProgress"
           no-caps
@@ -27,7 +33,10 @@
 <script setup lang="ts">
 import { handleError } from '@/utils/error-handler';
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { toast } from 'vue3-toastify';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -44,19 +53,19 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: 'Delete',
+    required: true,
   },
   description: {
     type: String,
-    default: 'Are you sure you want to delete this item?',
+    required: true,
   },
   successMessage: {
     type: String,
-    default: 'Deleted successfully!',
+    required: true,
   },
   failedMessage: {
     type: String,
-    default: 'Deleting failed!',
+    required: true,
   },
 });
 

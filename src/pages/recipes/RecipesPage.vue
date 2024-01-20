@@ -25,37 +25,37 @@
         loading-label="Loading Recipes..."
         rows-per-page-label="Recipes per page"
       >
-        <template v-slot:no-data="{ message }">
+        <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon name="data_object" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
-        <template v-slot:body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
+              icon="mdi-pencil"
+              color="grey-color"
+              flat
+              round
               @click.stop="
                 store.editDialog = true;
                 //store.editingCommand = props.row;
                 store.editRecipeId = props.row.value?.id;
               "
-              icon="mdi-pencil"
-              color="grey-color"
-              flat
-              round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Edit
               </q-tooltip>
             </q-btn>
             <q-btn
-              @click.stop="
-                store.deleteDialog = true;
-                store.deletingRecipe = props.row;
-              "
               icon="mdi-trash-can-outline"
               color="grey-color"
               flat
               round
+              @click.stop="
+                store.deleteDialog = true;
+                store.deletingRecipe = props.row;
+              "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 Delete
               </q-tooltip>
@@ -76,11 +76,12 @@ import { useRecipesStore } from '@/stores/recipes-store';
 import CreateRecipeDialog from '@/components/recipes/CreateRecipeDialog.vue';
 import EditRecipeDialog from '@/components/recipes/EditRecipeDialog.vue';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
+import { computed } from 'vue';
 
 const store = useRecipesStore();
 store.getRecipes();
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
     label: 'Name',
@@ -130,6 +131,6 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>
 <style lang="scss" scoped></style>

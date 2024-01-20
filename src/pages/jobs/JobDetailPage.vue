@@ -2,10 +2,14 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row items-center">
-        <p class="main-text">Job</p>
+        <p class="main-text">{{ t('job.title') }}</p>
+        <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <p v-if="job" class="job-name text-weight-medium">({{ job.name }})</p>
         <q-badge class="q-pa-xs q-ml-sm" color="primary">
-          Cycle: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{
+            job?.noOfReps
+          }}
         </q-badge>
         <job-status-badges
           v-if="job"
@@ -27,8 +31,8 @@
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No steps"
-        loading-label="Loading Job..."
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
         hide-bottom
       >
         <template #no-data="{ message }">
@@ -61,6 +65,7 @@
                   "
                 >
                   <div class="current-step-progress">
+                    <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
                     {{ currentStepCycle }}/{{ props.row.cycles }}
                   </div>
                 </q-circular-progress>
@@ -100,6 +105,9 @@ import JobControls from '@/components/jobs/JobControls.vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import JobStatusBadges from '@/components/jobs/JobStatusBadges.vue';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -172,36 +180,36 @@ const steps = computed(() => {
   return groupedCommands;
 });
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'progress',
-    label: 'Progress',
+    label: t('job.progress'),
     field: '',
     sortable: false,
     align: 'center',
   },
   {
     name: 'step',
-    label: 'Step',
+    label: t('job.step'),
     field: 'step',
     sortable: false,
     align: 'center',
   },
   {
     name: 'cycles',
-    label: 'Cycles',
+    label: t('job.cycle', 2),
     field: 'cycles',
     sortable: false,
     align: 'center',
   },
   {
     name: 'name',
-    label: 'Command',
+    label: t('command.title'),
     field: 'name',
     sortable: false,
     align: 'left',
   },
-];
+]);
 
 //Refresh job every N seconds
 const refreshInterval = 10; // in seconds

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-weight-medium text-h6">Sensors</div>
+    <div class="text-weight-medium text-h6">{{ t('device.sensors') }}</div>
     <div v-if="dataPointTagTree.children" class="column q-mt-sm q-gutter-y-sm">
       <q-tree
         v-model:ticked="tickedNodes"
@@ -9,7 +9,7 @@
         node-key="uid"
         label-key="name"
         tick-strategy="leaf"
-        no-nodes-label="No sensors available"
+        :no-nodes-label="t('device.no_sensors')"
         default-expand-all
         :class="noChildren ? 'no-children' : ''"
       >
@@ -20,6 +20,7 @@
             @click="prop.ticked = !prop.ticked"
             @mousedown.prevent
           >
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
             {{ prop.node.name }} ({{ prop.node.dataPointTag.unit }})
           </div>
           <div v-else>
@@ -35,6 +36,9 @@
 import { DataPointTagNode } from '@/models/DataPointTagNode';
 import { computed } from 'vue';
 import { PropType, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   dataPointTagTree: {

@@ -2,15 +2,14 @@
   <q-dialog v-if="jobToRun" v-model="openDialog">
     <q-card style="min-width: 350px" class="q-pa-sm">
       <q-card-section>
-        <div class="text-h6">Run Job</div>
+        <div class="text-h6">{{ t('job.run_job') }}</div>
       </q-card-section>
-
       <q-form>
         <q-card-section class="q-pt-none column q-gutter-md">
           <q-select
             ref="recipeRef"
             v-model="jobToRun.recipeId"
-            label="Recipe"
+            :label="t('recipe.title')"
             :options="recipesAvailable"
             option-value="id"
             option-label="name"
@@ -23,17 +22,17 @@
           <q-input
             ref="repetitionsRef"
             v-model="jobToRun.repetitions"
-            label="Repetitions"
+            :label="t('job.repetitions')"
             type="number"
             lazy-rules
             :rules="repetitionRules"
           />
-          <div>Schedule</div>
+          <div>{{ t('job.schedule') }}</div>
           <q-btn-group unelevated>
             <q-btn
               v-for="(button, index) in dayButtons"
               :key="index"
-              :label="button.label"
+              :label="button.label.toUpperCase()"
               :color="button.onOff ? 'primary' : 'grey'"
               @click="dayButtons[index].onOff = !dayButtons[index].onOff"
             ></q-btn>
@@ -43,14 +42,19 @@
             mask="time"
             fill-mask="-"
             :rules="['time']"
-            label="Scheduled Time"
+            :label="t('job.scheduled_time')"
           >
             <template #append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="scheduledTime" format24h>
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
+                      <q-btn
+                        v-close-popup
+                        :label="t('global.close')"
+                        color="primary"
+                        flat
+                      />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -59,11 +63,11 @@
           </q-input>
         </q-card-section>
         <q-card-actions align="right" class="text-primary">
-          <q-btn v-close-popup flat label="Cancel" no-caps />
+          <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
           <q-btn
             unelevated
             color="primary"
-            label="Run Job"
+            :label="t('job.run_job')"
             padding="6px 20px"
             no-caps
             @click="runJob"
@@ -85,6 +89,9 @@ import { toast } from 'vue3-toastify';
 import { parse } from 'date-fns';
 import { handleError } from '@/utils/error-handler';
 import { Device } from '@/models/Device';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -135,21 +142,21 @@ async function runJob() {
 
     await jobService.runJobFromRecipe(jobToRun.value);
     openDialog.value = false;
-    toast.success('Job started');
+    toast.success(t('job.toasts.start_success'));
     emit('jobStarted');
   } catch (error) {
-    handleError(error, 'Error running job');
+    handleError(error, t('job.toasts.start_failed'));
   }
 }
 
 const dayButtons = ref([
-  { label: 'Mon', value: 1, onOff: false },
-  { label: 'Tue', value: 2, onOff: false },
-  { label: 'Wed', value: 3, onOff: false },
-  { label: 'Thu', value: 4, onOff: false },
-  { label: 'Fri', value: 5, onOff: false },
-  { label: 'Sat', value: 6, onOff: false },
-  { label: 'Sun', value: 7, onOff: false },
+  { label: t('days_short.mon'), value: 1, onOff: false },
+  { label: t('days_short.tue'), value: 2, onOff: false },
+  { label: t('days_short.wed'), value: 3, onOff: false },
+  { label: t('days_short.thu'), value: 4, onOff: false },
+  { label: t('days_short.fri'), value: 5, onOff: false },
+  { label: t('days_short.sat'), value: 6, onOff: false },
+  { label: t('days_short.sun'), value: 7, onOff: false },
 ]);
 
 const selectedDays = computed(() => {
@@ -187,13 +194,13 @@ resetDialog();
 //Input validation
 const repetitionsRef = ref<QInput>();
 const repetitionRules = [
-  (val: number) => (val && val > 0) || 'Repetitions must be greater than 0',
+  (val: number) => (val && val > 0) || t('job.rules.repetitions_min'),
 ];
 
 const recipeRef = ref<QInput>();
 const recipeRules = [
   (val: string) => {
-    if (!val) return 'Recipe is required';
+    if (!val) return t('job.rules.recipe_required');
     return true;
   },
 ];

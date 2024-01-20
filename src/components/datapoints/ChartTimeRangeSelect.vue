@@ -9,7 +9,7 @@
     outlined
     dense
     map-options
-    :model-value="selectedTimeRange"
+    :model-value="timeRanges[selectedTimeRangeIndex]"
     @update:model-value="setPredefinedTimeRange"
   >
     <template #prepend>
@@ -18,7 +18,7 @@
     <template #after-options>
       <q-item clickable>
         <q-item-section>
-          <q-item-label>Custom</q-item-label>
+          <q-item-label>{{ t('time_range.custom') }}</q-item-label>
         </q-item-section>
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-date
@@ -47,52 +47,56 @@
 
 <script setup lang="ts">
 import { format, subSeconds } from 'date-fns';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { PredefinedTimeRange } from '@/models/TimeRange';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const emit = defineEmits(['update:modelValue']);
 defineExpose({
   emitUpdate,
 });
 
-const timeRanges: PredefinedTimeRange[] = [
+const timeRanges = computed(() => [
   {
-    title: 'Last 10 Minutes',
-    name: '10m',
-    time: 600,
+    title: t('time_range.predefined.last_30min'),
+    name: '30m',
+    time: 1800,
   },
   {
-    title: 'Last 1 Hour',
+    title: t('time_range.predefined.last_1h'),
     name: '1h',
     time: 3600,
   },
   {
-    title: 'Last 6 Hours',
+    title: t('time_range.predefined.last_6h'),
     name: '6h',
     time: 21600,
   },
   {
-    title: 'Last 12 Hours',
+    title: t('time_range.predefined.last_12h'),
     name: '12h',
     time: 43200,
   },
   {
-    title: 'Last 24 Hours',
+    title: t('time_range.predefined.last_24h'),
     name: '24h',
     time: 86400,
   },
   {
-    title: 'Last Week',
+    title: t('time_range.predefined.last_week'),
     name: '1w',
     time: 604800,
   },
   {
-    title: 'Last Month',
+    title: t('time_range.predefined.last_month'),
     name: '1m',
     time: 2592000,
   },
-];
-const selectedTimeRange = ref(timeRanges[1]);
+]);
+
+const selectedTimeRangeIndex = ref(1);
 const customTimeRangeSelected = ref({
   from: new Date(),
   to: new Date(),
@@ -106,7 +110,9 @@ function setCustomTimeRange(val: { from: Date; to: Date }) {
 }
 
 function setPredefinedTimeRange(val: PredefinedTimeRange) {
-  selectedTimeRange.value = val;
+  selectedTimeRangeIndex.value = timeRanges.value.findIndex(
+    (r) => r.name === val.name,
+  );
   isCustomTimeRangeSelected.value = false;
   emitUpdate();
 }
@@ -122,7 +128,9 @@ function emitUpdate() {
   } else {
     const now = new Date();
     newVal = {
-      from: formatDate(subSeconds(now, selectedTimeRange.value.time)),
+      from: formatDate(
+        subSeconds(now, timeRanges.value[selectedTimeRangeIndex.value].time),
+      ),
       to: formatDate(now),
     };
   }

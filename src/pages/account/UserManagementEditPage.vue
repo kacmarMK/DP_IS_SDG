@@ -5,7 +5,7 @@
         <router-link to="/user-management">
           <p class="main-text text-accent">
             <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            {{ t('user_management') }} >&nbsp;
+            {{ t('global.user_management') }} >&nbsp;
           </p>
         </router-link>
         <p v-if="user" class="main-text">{{ user.mail }}</p>
@@ -66,7 +66,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-const { t } = useI18n({ useScope: 'local' });
+const { t } = useI18n();
 const route = useRoute();
 
 const user = ref<User>();

@@ -6,17 +6,17 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input label="Name" v-model="store.editingRecipe.name" />
+        <q-input v-model="store.editingRecipe.name" label="Name" />
         <!--<q-input label="Parameters" v-model="store.commandCreate.params" />TODO-->
         <q-select
-          label="Device Type"
           v-model="store.editingRecipe.deviceType"
+          label="Device Type"
           :options="Object.values(DeviceTypeEnum)"
         >
         </q-select>
         <q-checkbox
-          class="q-mt-lg"
           v-model="store.editingRecipe.deactivated"
+          class="q-mt-lg"
           dense
           label="Deactivated"
           color="secondary"
@@ -24,14 +24,14 @@
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup no-caps />
+        <q-btn v-close-popup flat label="Cancel" no-caps />
         <q-btn
           unelevated
           style="background: #164924; color: white"
           label="Save"
           no-caps
-          @click="store.editRecipe"
           :loading="store.isEditingRecipe"
+          @click="store.editRecipe"
         />
       </q-card-actions>
     </q-card>

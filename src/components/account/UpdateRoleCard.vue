@@ -51,8 +51,8 @@ const qform = ref<QForm>();
 const changingRole = ref(false);
 
 const availableRoles = [
-  { label: t('role.admin'), value: Role.ADMIN },
-  { label: t('role.user'), value: Role.USER },
+  { label: t('account.role.admin'), value: Role.ADMIN },
+  { label: t('account.role.user'), value: Role.USER },
 ];
 
 const currentRole = computed(() => {

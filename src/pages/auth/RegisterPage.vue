@@ -4,13 +4,13 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">Register</h1>
+            <h1 class="text-center q-my-md">{{ t('auth.register.title') }}</h1>
             <div>
               <q-form>
                 <q-input
                   ref="nicknameRef"
                   v-model="userRegister.name"
-                  label="Username"
+                  :label="t('account.username')"
                   type="text"
                   lazy-rules
                   :rules="nameRules"
@@ -18,7 +18,7 @@
                 <q-input
                   ref="mailRef"
                   v-model="userRegister.mail"
-                  label="Email"
+                  :label="t('account.email')"
                   type="email"
                   lazy-rules
                   :rules="mailRules"
@@ -26,7 +26,7 @@
                 <q-input
                   ref="passwordRef"
                   v-model="userRegister.password"
-                  label="Password"
+                  :label="t('account.password')"
                   :type="isPwd ? 'password' : 'text'"
                   lazy-rules
                   :rules="passwordRules"
@@ -42,7 +42,7 @@
                 <q-btn
                   class="q-my-md full-width"
                   color="primary"
-                  label="Register"
+                  :label="t('auth.register.register_btn')"
                   type="submit"
                   size="1rem"
                   no-caps
@@ -53,9 +53,12 @@
               </q-form>
               <div class="column items-center q-my-lg links">
                 <div class="q-mb-md">
-                  <span>Already have an account?</span>
-                  <router-link to="/login" class="q-ml-sm">Log in</router-link>
+                  <span>{{ t('auth.register.have_account') }}</span>
+                  <router-link to="/login" class="q-ml-sm">
+                    {{ t('auth.register.login') }}
+                  </router-link>
                 </div>
+                <language-select />
               </div>
             </div>
           </div>
@@ -75,7 +78,10 @@ import { QInput } from 'quasar';
 import { handleError } from '@/utils/error-handler';
 import { isFormValid } from '@/utils/form-validation';
 import { Role } from '@/models/Role';
+import LanguageSelect from '@/components/core/LanguageSelect.vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const router = useRouter();
 
 const userRegister = ref<UserRegister>({

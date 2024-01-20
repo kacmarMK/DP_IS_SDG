@@ -5,8 +5,10 @@
         <router-link
           class="main-text text-accent text-weight-medium z-fab"
           to="/devices"
-          >Devices ></router-link
         >
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          {{ t('device.title', 2) }} >
+        </router-link>
         <p class="main-text z-fab">&nbsp;{{ device?.name }}</p>
         <q-space></q-space>
         <q-btn
@@ -17,7 +19,7 @@
           unelevated
           no-caps
           size="15px"
-          label="Jobs"
+          :label="t('job.title', 2)"
           icon="mdi-list-status"
         />
         <q-btn
@@ -27,7 +29,7 @@
           unelevated
           no-caps
           size="15px"
-          label="Edit Device"
+          :label="t('global.edit')"
           icon="mdi-pencil"
           :to="`/devices/${device?.uid}/edit`"
         />
@@ -84,6 +86,9 @@ import { deviceToDataPointTagNode } from '@/utils/data-point-tag-nodes';
 import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue';
 import CurrentJobCard from '@/components/jobs/CurrentJobCard.vue';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const authStore = useAuthStore();
@@ -101,7 +106,7 @@ async function getDevice(uid: string) {
     device.value = await deviceService.getDevice(uid);
     dataPointTagTree.value = deviceToDataPointTagNode(device.value);
   } catch (error) {
-    handleError(error, 'Loading device failed!');
+    handleError(error, t('device.toasts.device.loading_failed'));
   } finally {
     isLoadingDevice.value = false;
   }
@@ -116,7 +121,7 @@ async function refreshDevice() {
     isRefreshingDevice.value = true;
     device.value = await deviceService.getDevice(device.value.uid);
   } catch (error) {
-    handleError(error, 'Refreshing device failed!');
+    handleError(error, t('device.toasts.device.loading_failed'));
   } finally {
     isRefreshingDevice.value = false;
   }

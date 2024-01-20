@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Job History</p>
+        <p class="main-text">{{ t('job.job_history') }}</p>
       </div>
       <q-table
         :rows="jobs"
@@ -11,9 +11,9 @@
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Jobs Yet"
-        loading-label="Loading Jobs..."
-        rows-per-page-label="Jobs per page"
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
+        :rows-per-page-label="t('table.rows_per_page_label')"
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -41,7 +41,7 @@
               round
               :to="`/jobs/${props.row.uid}`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                Open
+                {{ t('global.open') }}
               </q-tooltip>
             </q-btn>
           </q-td>
@@ -54,16 +54,19 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import deviceService from '@/services/DeviceService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import { JobDevice } from '@/models/Job';
 import { handleError } from '@/utils/error-handler';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const jobs = ref<JobDevice[]>([]);
-
 const isLoadingJobs = ref(false);
+
 async function getJobs() {
   try {
     isLoadingJobs.value = true;
@@ -75,31 +78,31 @@ async function getJobs() {
       })),
     );
   } catch (error) {
-    handleError(error, 'Loading jobs failed!');
+    handleError(error, t('job.toasts.load_failed'));
   } finally {
     isLoadingJobs.value = false;
   }
 }
 getJobs();
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'device',
-    label: 'Device',
+    label: t('device.title'),
     field: 'deviceName',
     sortable: true,
     align: 'left',
   },
   {
     name: 'recipe',
-    label: 'Recipe',
+    label: t('recipe.title'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'started_at',
-    label: 'Started at',
+    label: t('job.started_at'),
     field: 'createdAt',
     sortable: true,
     align: 'left',
@@ -107,7 +110,7 @@ const columns: QTableProps['columns'] = [
   },
   {
     name: 'finished_at',
-    label: 'Finished at',
+    label: t('job.finished_at'),
     field: 'finishedAt',
     sortable: true,
     align: 'left',
@@ -120,27 +123,27 @@ const columns: QTableProps['columns'] = [
   },
   {
     name: 'step',
-    label: 'Step',
+    label: t('job.step'),
     field: (row) => row.status?.currentStep || 1,
     sortable: true,
     align: 'left',
     format: (val: string, row: Job) => {
-      return `${val} of ${row.noOfCmds}`;
+      return t('global.n_of_m', [val, row.noOfCmds]);
     },
   },
   {
     name: 'cycle',
-    label: 'Cycle',
+    label: t('job.cycle'),
     field: (row) => row.status?.currentCycle || 1,
     sortable: true,
     align: 'left',
     format: (val: number, row: Job) => {
-      return `${val} of ${row.noOfReps}`;
+      return t('global.n_of_m', [val, row.noOfReps]);
     },
   },
   {
     name: 'status',
-    label: 'Status',
+    label: t('job.status'),
     field: '',
     sortable: true,
     align: 'center',
@@ -152,7 +155,7 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>
 
 <style lang="scss" scoped></style>

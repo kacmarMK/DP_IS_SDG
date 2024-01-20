@@ -76,11 +76,12 @@ import { useCommandsStore } from '@/stores/commands-store';
 import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
 import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
 import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
+import { computed } from 'vue';
 
 const store = useCommandsStore();
 store.getCommands();
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
     label: 'Name',
@@ -102,6 +103,6 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>
 <style lang="scss" scoped></style>

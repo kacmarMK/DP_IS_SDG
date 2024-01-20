@@ -1,7 +1,7 @@
 <template>
   <div id="chart">
     <div class="row items-center justify-start q-mb-md q-gutter-x-md">
-      <p class="text-weight-medium text-h6">Chart</p>
+      <p class="text-weight-medium text-h6">{{ t('chart.title') }}</p>
       <q-space></q-space>
       <chart-time-range-select
         ref="timeRangeSelect"
@@ -16,7 +16,9 @@
         class="options-dropdown"
       >
         <template #label>
-          <div class="text-grey-10 text-weight-regular">Options</div>
+          <div class="text-grey-10 text-weight-regular">
+            {{ t('global.options') }}
+          </div>
         </template>
         <template #default>
           <q-list>
@@ -26,7 +28,7 @@
               @click="download(csvConfig)(generateCSVData())"
             >
               <q-item-section>
-                <q-item-label>Export CSV</q-item-label>
+                <q-item-label>{{ t('chart.export_csv') }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list></template
@@ -37,7 +39,7 @@
         outline
         unelevated
         no-caps
-        label="Refresh"
+        :label="t('global.refresh')"
         padding="0.5rem 1rem"
         icon="mdi-refresh"
         @click="refreshDevice()"
@@ -65,6 +67,9 @@ import { mkConfig, generateCsv, download } from 'export-to-csv';
 import { format } from 'date-fns';
 import { DataPointTag } from '@/models/DataPointTag';
 import { now } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   dataPointTags: {

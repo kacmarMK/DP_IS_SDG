@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">{{ t('user_management') }}</p>
+        <p class="main-text">{{ t('global.user_management') }}</p>
       </div>
       <q-table
         :rows="users"
@@ -30,7 +30,7 @@
               flat
               round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                {{ t('edit') }}
+                {{ t('global.edit') }}
               </q-tooltip>
             </q-btn>
           </q-td>
@@ -45,7 +45,7 @@ import { GrantedAuthority, User } from '@/models/User';
 import AuthService from '@/services/AuthService';
 import { handleError } from '@/utils/error-handler';
 import { QTableProps } from 'quasar';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { format } from 'date-fns';
 
@@ -65,10 +65,10 @@ async function getUsers() {
   }
 }
 getUsers();
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'Username',
-    label: t('username'),
+    label: t('account.username'),
     field: 'name',
     sortable: true,
     align: 'left',
@@ -82,7 +82,7 @@ const columns: QTableProps['columns'] = [
   },
   {
     name: 'Created on',
-    label: t('created_on'),
+    label: t('global.created_on'),
     field: 'createdAt',
     sortable: true,
     align: 'left',
@@ -92,7 +92,7 @@ const columns: QTableProps['columns'] = [
   },
   {
     name: 'access',
-    label: t('access'),
+    label: t('account.access'),
     field: 'authorities',
     align: 'center',
     sortable: false,
@@ -102,10 +102,10 @@ const columns: QTableProps['columns'] = [
       );
       const roles: string[] = [];
       if (authorities.includes('admin')) {
-        roles.push(t('role.admin'));
+        roles.push(t('account.role.admin'));
       }
       if (authorities.includes('user')) {
-        roles.push(t('role.user'));
+        roles.push(t('account.role.user'));
       }
       return roles.join(', ');
     },
@@ -117,5 +117,5 @@ const columns: QTableProps['columns'] = [
     align: 'center',
     sortable: false,
   },
-];
+]);
 </script>

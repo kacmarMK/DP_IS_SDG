@@ -2,7 +2,9 @@
   <div>
     <div class="column full-height">
       <div class="row items-center">
-        <div class="text-weight-medium text-h6 col-shrink">Job</div>
+        <div class="text-weight-medium text-h6 col-shrink">
+          {{ t('job.title') }}
+        </div>
         <q-space></q-space>
         <q-btn
           v-if="runningJob"
@@ -13,7 +15,7 @@
           :to="`/jobs/${runningJob?.uid}`"
           flat
           round
-          ><q-tooltip :offset="[0, 4]">Show details</q-tooltip>
+          ><q-tooltip :offset="[0, 4]">{{ t('global.details') }}</q-tooltip>
         </q-btn>
       </div>
       <div
@@ -31,6 +33,7 @@
             track-color="grey-3"
             class="q-mr-md"
           >
+            <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
             {{ (currentProgress * 100).toFixed(0) }}%
           </q-circular-progress>
           <div
@@ -41,18 +44,22 @@
               {{ runningJob.name }}
             </div>
             <div>
-              Step: {{ runningJob.status?.currentStep || 1 }} of
-              {{ runningJob.noOfCmds }}
-              <span>
-                ({{
-                  runningJob.commands[(runningJob.status?.currentStep || 1) - 1]
-                    .name
-                }})
-              </span>
+              {{
+                t('job.step_of', [
+                  runningJob.status?.currentStep || 1,
+                  runningJob.noOfCmds,
+                ])
+              }}
+              <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+              <span>({{ currentCommandName }})</span>
             </div>
             <div>
-              Cycle: {{ runningJob.status?.currentCycle || 1 }} of
-              {{ runningJob.noOfReps }}
+              {{
+                t('job.cycle_of', [
+                  runningJob.status?.currentCycle || 1,
+                  runningJob.noOfReps,
+                ])
+              }}
             </div>
           </div>
         </div>
@@ -64,7 +71,7 @@
         />
       </div>
       <div v-else class="column items-center justify-center col-grow">
-        <div class="q-mb-sm">No running job</div>
+        <div class="q-mb-sm">{{ t('job.no_running_job') }}</div>
         <q-btn
           class="shadow"
           color="grey-color"
@@ -72,7 +79,7 @@
           unelevated
           no-caps
           size="15px"
-          label="Run New Job"
+          :label="t('job.run_job')"
           @click.stop="openDialog = true"
         />
       </div>
@@ -95,6 +102,9 @@ import JobControls from './JobControls.vue';
 import JobStatusBadges from './JobStatusBadges.vue';
 import { Device } from '@/models/Device';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   device: {
@@ -153,6 +163,14 @@ const currentProgress = computed(() => {
     return Math.min(current / total, 1);
   }
   return 0;
+});
+
+const currentCommandName = computed(() => {
+  if (runningJob.value && runningJob.value.status) {
+    const { status, commands } = runningJob.value;
+    return commands[(status.currentStep || 1) - 1].name ?? '';
+  }
+  return '';
 });
 
 //Refresh job every N seconds

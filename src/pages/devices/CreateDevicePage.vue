@@ -5,10 +5,10 @@
         <router-link to="/devices">
           <p class="main-text text-accent">
             <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            {{ t('devices') }} >&nbsp;
+            {{ t('device.title', 2) }} >&nbsp;
           </p>
         </router-link>
-        <p class="main-text">{{ t('add') }}</p>
+        <p class="main-text">{{ t('global.add') }}</p>
       </div>
       <create-device-form class="q-mt-md" />
     </div>
@@ -19,18 +19,7 @@
 import CreateDeviceForm from '@/components/devices/CreateDeviceForm.vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n({ useScope: 'local' });
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>
-
-<i18n lang="json">
-{
-  "en": {
-    "add": "Add"
-  },
-  "sk": {
-    "add": "Pridať"
-  }
-}
-</i18n>

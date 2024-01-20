@@ -4,10 +4,10 @@
       {{ props.job.currentStatus }}
     </q-badge>
     <q-badge v-if="props.job.toCancel" color="red" class="q-pa-xs q-ml-sm">
-      STOPPING
+      {{ t('job.stopping').toUpperCase() }}
     </q-badge>
     <q-badge v-if="props.job.paused" color="accent" class="q-pa-xs q-ml-sm">
-      PAUSED
+      {{ t('job.paused').toUpperCase() }}
     </q-badge>
   </div>
 </template>
@@ -16,6 +16,9 @@
 import { Job } from '@/models/Job';
 import { statusColors } from '@/utils/colors';
 import { PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   job: {

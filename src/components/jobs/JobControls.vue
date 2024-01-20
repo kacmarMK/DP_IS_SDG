@@ -2,7 +2,7 @@
   <div class="row q-col-gutter-sm items-center justify-center">
     <div v-if="!runningJob.paused" class="col-12 col-sm-3">
       <JobControlButton
-        label="Pause"
+        :label="t('job.controls.pause')"
         color="grey-color"
         icon="mdi-pause"
         :loading="pausingJob"
@@ -12,7 +12,7 @@
     </div>
     <div v-else class="col-12 col-sm-3">
       <JobControlButton
-        label="Resume"
+        :label="t('job.controls.resume')"
         color="primary"
         icon="mdi-play"
         :loading="resumingJob"
@@ -22,7 +22,7 @@
     </div>
     <div class="col-12 col-sm-3">
       <JobControlButton
-        label="Skip Step"
+        :label="t('job.controls.skip_step')"
         color="green-9"
         icon="mdi-skip-next"
         :loading="skipStepLoading"
@@ -32,7 +32,7 @@
     </div>
     <div class="col-12 col-sm-3">
       <JobControlButton
-        label="Skip Cycle"
+        :label="t('job.controls.skip_cycle')"
         color="primary"
         icon="mdi-skip-forward"
         :loading="skipCycleLoading"
@@ -42,7 +42,7 @@
     </div>
     <div class="col-12 col-sm-3">
       <JobControlButton
-        label="Stop"
+        :label="t('job.controls.stop')"
         color="red"
         icon="mdi-stop"
         :loading="stoppingJob"
@@ -61,6 +61,9 @@ import { PropType, ref, Ref } from 'vue';
 import jobService from '@/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 import { handleError } from '@/utils/error-handler';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   runningJob: {
@@ -95,8 +98,8 @@ const stoppingJob = ref(false);
 async function stopJob() {
   await performJobAction(
     jobService.cancelJob,
-    'Job stopped',
-    'Error stopping job',
+    t('job.toasts.stop_success'),
+    t('job.toasts.stop_failed'),
     stoppingJob,
   );
 }
@@ -105,8 +108,8 @@ const pausingJob = ref(false);
 async function pauseJob() {
   await performJobAction(
     jobService.pauseJob,
-    'Job paused',
-    'Error pausing job',
+    t('job.toasts.pause_success'),
+    t('job.toasts.pause_failed'),
     pausingJob,
   );
 }
@@ -115,8 +118,8 @@ const resumingJob = ref(false);
 async function resumeJob() {
   await performJobAction(
     jobService.continueJob,
-    'Job resumed',
-    'Error resuming job',
+    t('job.toasts.resume_success'),
+    t('job.toasts.resume_failed'),
     resumingJob,
   );
 }
@@ -125,8 +128,8 @@ const skipStepLoading = ref(false);
 async function skipStep() {
   await performJobAction(
     jobService.skipStep,
-    'Skipped step',
-    'Error skipping step',
+    t('job.toasts.skip_step_success'),
+    t('job.toasts.skip_step_failed'),
     skipStepLoading,
   );
 }
@@ -135,8 +138,8 @@ const skipCycleLoading = ref(false);
 async function skipCycle() {
   await performJobAction(
     jobService.skipCycle,
-    'Skipped cycle',
-    'Error skipping cycle',
+    t('job.toasts.skip_cycle_success'),
+    t('job.toasts.skip_cycle_failed'),
     skipCycleLoading,
   );
 }

@@ -1,28 +1,225 @@
 {
-  "open": "Open",
-  "edit": "Edit",
-  "delete": "Delete",
-  "save": "Save",
-  "cancel": "Cancel",
-  "next": "Next",
-  "collections": "Collections",
-  "devices": "Devices",
-  "recipes": "Recipes",
-  "commands": "Commands",
-  "jobs": "Jobs",
-  "account": "Account",
-  "logout": "Logout",
-  "home": "Home",
-  "user_management": "User Management",
-  "name": "Name",
-  "type": "Type",
-  "version": "Version",
-  "firmware": "Firmware",
-  "mac_address": "MAC Address",
-  "init_api_key": "Init API Key",
-  "username": "Username",
-  "created_on": "Created On",
-  "access": "Access",
-  "role.admin": "Admin",
-  "role.user": "User"
+  "global": {
+    "open": "Open",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "add": "Add",
+    "details": "Details",
+    "hello": "Hello",
+    "info": "Info",
+    "name": "Name",
+    "options": "Options",
+    "refresh": "Refresh",
+    "recipes": "Recipes",
+    "commands": "Commands",
+    "account": "Account",
+    "user_management": "User Management",
+    "home": "Home",
+    "created_on": "Created On",
+    "owner": "Owner",
+    "shared": "Shared",
+    "permissions": "Permissions",
+    "n_of_m": "{0} of {1}"
+  },
+  "table": {
+    "no_data_label": "No data available",
+    "loading_label": "Loading...",
+    "rows_per_page_label": "Rows per page:"
+  },
+  "days_short": {
+    "mon": "mon",
+    "tue": "tue",
+    "wed": "wed",
+    "thu": "thu",
+    "fri": "fri",
+    "sat": "sat",
+    "sun": "sun"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "login_btn": "Login",
+      "no_account": "Don't have an account?",
+      "sign_up": "Sign Up",
+      "toasts": {
+        "login_failed": "Login failed!",
+        "login_success": "Login successful!"
+      },
+      "rules": {
+        "username_required": "Please enter your username",
+        "password_required": "Please enter your password"
+      }
+    },
+    "register": {
+      "title": "Register",
+      "register_btn": "Register",
+      "have_account": "Already have an account?",
+      "login": "Log in"
+    }
+  },
+  "account": {
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "logout": "Logout",
+    "access": "Access",
+    "role": {
+      "admin": "Admin",
+      "user": "User"
+    }
+  },
+  "not_found": {
+    "nothing_here": "Oops. Nothing here...",
+    "go_home": "Go Home"
+  },
+  "device": {
+    "title": "Device | Devices",
+    "add_device": "Add device",
+    "type": "Type",
+    "version": "Version",
+    "firmware": "Firmware",
+    "mac_address": "MAC Address",
+    "api_key": "API Key",
+    "device_info": "Device info",
+    "sensors": "Sensors",
+    "add_sensors": "Add sensors",
+    "add_sensor": "Add sensor",
+    "no_sensors": "No sensors available",
+    "unit": "Unit",
+    "decimal": "Decimal",
+    "init_window": "Initialize 1min window",
+    "share_device": "Share device",
+    "shared_with": "Shared with",
+    "delete_device": "Delete device",
+    "delete_device_desc": "Are you sure you want to delete this device?",
+    "toasts": {
+      "tag": {
+        "delete_failed": "Deleting data point tag failed!",
+        "create_failed": "Creating data point tag failed!",
+        "update_failed": "Updating data point tag failed!",
+        "add_tag_to_device_failed": "Adding data point tag to device failed!"
+      },
+      "device": {
+        "loading_failed": "Loading device failed!",
+        "create_failed": "Creating device failed!",
+        "update_failed": "Updating device failed!",
+        "create_success": "Device created!",
+        "update_success": "Device updated!",
+        "delete_success": "Device deleted!",
+        "delete_failed": "Deleting device failed!"
+      },
+      "window": {
+        "init_failed": "1min window initialization failed!",
+        "init_success": "1min window initialized successfully!"
+      },
+      "share": {
+        "share_success": "Device shared successfully!",
+        "share_failed": "Sharing device failed!",
+        "already_shared": "Device is already shared with this user!",
+        "user_remove_success": "User removed from device!",
+        "user_remove_failed": "Removing user from device failed!",
+        "shared_users_load_failed": "Loading shared users failed!"
+      }
+    }
+  },
+  "chart": {
+    "title": "Chart",
+    "export_csv": "Export CSV"
+  },
+  "time_range": {
+    "title": "Time range",
+    "custom": "Custom",
+    "predefined": {
+      "last_30min": "Last 30 minutes",
+      "last_1h": "Last hour",
+      "last_6h": "Last 6 hours",
+      "last_12h": "Last 12 hours",
+      "last_24h": "Last 24 hours",
+      "last_week": "Last week",
+      "last_month": "Last month"
+    }
+  },
+  "job": {
+    "title": "Job | Jobs",
+    "job_history": "Job history",
+    "run_job": "Run job",
+    "no_running_job": "No running job",
+    "step": "Step",
+    "step_of": "Step {0} of {1}",
+    "cycle": "Cycle | Cycles",
+    "cycle_of": "Cycle {0} of {1}",
+    "paused": "Paused",
+    "stopping": "Stopping",
+    "repetitions": "Repetitions",
+    "schedule": "Schedule",
+    "scheduled_time": "Scheduled time",
+    "started_at": "Started at",
+    "finished_at": "Finished at",
+    "status": "Status",
+    "progress": "Progress",
+    "controls": {
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop",
+      "skip_step": "Skip step",
+      "skip_cycle": "Skip cycle"
+    },
+    "toasts": {
+      "stop_success": "Job stopped!",
+      "stop_failed": "Stopping job failed!",
+      "pause_success": "Job paused!",
+      "pause_failed": "Pausing job failed!",
+      "resume_success": "Job resumed!",
+      "resume_failed": "Resuming job failed!",
+      "skip_step_success": "Job step skipped!",
+      "skip_step_failed": "Skipping job step failed!",
+      "skip_cycle_success": "Job cycle skipped!",
+      "skip_cycle_failed": "Skipping job cycle failed!",
+      "start_success": "Job started!",
+      "start_failed": "Starting job failed!",
+      "load_failed": "Loading job failed!"
+    },
+    "rules": {
+      "repetitions_min": "Repetitions must be greater than 0!",
+      "recipe_required": "Recipe is required!"
+    }
+  },
+  "recipe": {
+    "title": "Recipe | Recipes"
+  },
+  "command": {
+    "title": "Command | Commands"
+  },
+  "collection": {
+    "title": "Collection | Collections",
+    "create_collection": "Create collection",
+    "delete_collection": "Delete Collection",
+    "delete_collection_desc": "Are you sure you want to delete this collection?",
+    "edit_collection": "Edit collection",
+    "toasts": {
+      "load_failed": "Loading collections failed!",
+      "create_success": "Collection created!",
+      "create_failed": "Creating collection failed!",
+      "update_success": "Collection updated!",
+      "update_failed": "Updating collection failed!",
+      "delete_success": "Collection deleted!",
+      "delete_failed": "Deleting collection failed!"
+    }
+  },
+  "module": {
+    "title": "Module | Modules",
+    "toasts": {
+      "load_failed": "Loading modules failed!",
+      "create_success": "Module created!",
+      "create_failed": "Creating module failed!",
+      "update_success": "Module updated!",
+      "update_failed": "Updating module failed!",
+      "delete_success": "Module deleted!",
+      "delete_failed": "Deleting module failed!"
+    }
+  }
 }

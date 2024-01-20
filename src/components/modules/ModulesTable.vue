@@ -205,7 +205,7 @@ async function getCollection() {
   }
 }
 
-const columns: QTableProps['columns'] = [
+const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
     label: 'Name',
@@ -220,7 +220,7 @@ const columns: QTableProps['columns'] = [
     sortable: true,
     align: 'right',
   },
-];
+]);
 </script>
 
 <style lang="scss" scoped>

@@ -2,23 +2,27 @@
   <q-dialog v-model="isDialogVisible">
     <q-card style="min-width: 350px" class="q-pa-">
       <q-card-section>
-        <div class="text-h6">Share device</div>
+        <div class="text-h6">{{ t('device.share_device') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
         <q-input v-model="emailToShare" autofocus label="E-mail" />
         <q-btn
           unelevated
           color="primary"
-          label="Share Device"
+          :label="t('device.share_device')"
           no-caps
           :loading="shareInProgress"
           @click="shareDevice"
         />
         <div>
-          <div class="text-shared q-my-md">Shared with</div>
+          <div class="text-shared q-my-md">{{ t('device.shared_with') }}</div>
           <q-list bordered separator>
             <q-item>
-              <q-item-section>{{ device.user.mail }} (Owner)</q-item-section>
+              <div class="row justify-center items-center">
+                <div>{{ device.user.mail }}</div>
+                <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+                <div>&nbsp; ({{ t('global.owner') }})</div>
+              </div>
             </q-item>
             <q-item v-for="user in sharedWithUsers" :key="user.uid">
               <q-item-section>{{ user.mail }}</q-item-section>
@@ -36,7 +40,7 @@
         </div>
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat label="Cancel" no-caps />
+        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -50,6 +54,9 @@ import { toast } from 'vue3-toastify';
 import { Device } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { User } from '@/models/User';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -77,7 +84,7 @@ const sharedWithUsers = ref<User[]>([]);
 const shareInProgress = ref(false);
 async function shareDevice() {
   if (isAlreadySharedWithUser.value) {
-    toast.error('Device is already shared with this user');
+    toast.error(t('device.toasts.share.already_shared'));
     return;
   }
   try {
@@ -85,9 +92,9 @@ async function shareDevice() {
     await DeviceService.shareDevice(props.device.uid, emailToShare.value);
     getSharedUsers();
     emailToShare.value = '';
-    toast.success('Device shared successfully');
+    toast.success(t('device.toasts.share.share_success'));
   } catch (error) {
-    handleError(error, 'Sharing device failed!');
+    handleError(error, t('device.toasts.share.share_failed'));
   } finally {
     shareInProgress.value = false;
   }
@@ -100,9 +107,9 @@ async function removeSharedUser(user: User) {
       (u) => u.uid !== user.uid,
     );
     getSharedUsers();
-    toast.success('User removed successfully');
+    toast.success(t('device.toasts.share.user_remove_success'));
   } catch (error) {
-    handleError(error, 'Removing user failed!');
+    handleError(error, t('device.toasts.share.user_remove_failed'));
   }
 }
 
@@ -112,7 +119,7 @@ async function getSharedUsers() {
       props.device.uid,
     );
   } catch (error) {
-    handleError(error, 'Getting shared with users failed!');
+    handleError(error, t('device.toasts.share.shared_users_load_failed'));
   }
 }
 getSharedUsers();
