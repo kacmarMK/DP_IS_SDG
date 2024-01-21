@@ -2,7 +2,7 @@
   <div>
     <div>
       <div class="q-mb-md row">
-        <p class="modules-text">Modules</p>
+        <p class="modules-text">{{ t('module.label', 2) }}</p>
         <q-space></q-space>
         <q-btn
           v-if="authStore.isAdmin"
@@ -12,7 +12,7 @@
           outline
           no-caps
           size="15px"
-          label="Create Module"
+          :label="t('module.create_module')"
           icon="mdi-plus"
           @click="createModuleDialog = true"
         />
@@ -23,8 +23,9 @@
         flat
         class="outline shadow"
         hide-pagination
-        no-data-label="No modules Yet"
-        loading-label="Loading modules..."
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
+        :rows-per-page-label="t('table.rows_per_page_label')"
         row-key="uid"
       >
         <template #no-data="{ message }">
@@ -34,17 +35,17 @@
           </div>
         </template>
 
-        <template #header="props">
-          <q-tr :props="props">
+        <template #header="props2">
+          <q-tr :props="props2">
             <q-th auto-width />
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th v-for="col in props2.cols" :key="col.name" :props="props2">
               {{ col.label }}
             </q-th>
             <q-th auto-width />
           </q-tr>
         </template>
-        <template #body="props">
-          <q-tr :props="props" no-hover>
+        <template #body="props2">
+          <q-tr :props="props2" no-hover>
             <q-td auto-width>
               <q-btn
                 color="secondary"
@@ -52,14 +53,14 @@
                 dense
                 unelevated
                 flat
-                :icon="props.expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                @click="props.expand = !props.expand"
+                :icon="props2.expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                @click="props2.expand = !props2.expand"
               />
             </q-td>
-            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <q-td v-for="col in props2.cols" :key="col.name" :props="props2">
               <template v-if="col.name === 'name'">
                 <router-link
-                  :to="`/modules/${props.row.uid}`"
+                  :to="`/modules/${props2.row.uid}`"
                   class="text-black text-weight-regular"
                 >
                   {{ col.value }}
@@ -75,9 +76,9 @@
                 color="grey-color"
                 flat
                 round
-                :to="`/modules/${props.row.uid}`"
+                :to="`/modules/${props2.row.uid}`"
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Open
+                  {{ t('global.open') }}
                 </q-tooltip>
               </q-btn>
               <q-btn
@@ -87,11 +88,11 @@
                 flat
                 round
                 @click="
-                  moduleToUpdate = props.row;
+                  moduleToUpdate = props2.row;
                   editModuleDialog = true;
                 "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Edit
+                  {{ t('global.edit') }}
                 </q-tooltip>
               </q-btn>
               <q-btn
@@ -101,11 +102,11 @@
                 flat
                 round
                 @click="
-                  moduleToUpdate = props.row;
+                  moduleToUpdate = props2.row;
                   deleteModuleDialog = true;
                 "
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                  Delete
+                  {{ t('global.delete') }}
                 </q-tooltip>
               </q-btn>
             </q-td>
@@ -114,12 +115,12 @@
           <q-tr class="bg-grey-1 no-height" :props="props">
             <q-td colspan="100%" class="no-height" no-hover>
               <q-slide-transition :duration="250">
-                <div v-show="props.expand">
+                <div v-show="props2.expand">
                   <DevicesInModuleTable
-                    v-model="props.row.devices"
-                    :module="props.row"
+                    v-model="props2.row.devices"
+                    :module="props2.row"
                     class="q-pa-md"
-                    @on-change="getCollection"
+                    @on-change="emit('onUpdate')"
                   />
                 </div>
               </q-slide-transition>
@@ -131,24 +132,24 @@
     <CreateModuleDialog
       v-model="createModuleDialog"
       :collection="collection"
-      @on-create="getCollection"
+      @on-create="emit('onUpdate')"
     />
     <DeleteConfirmationDialog
       v-if="moduleToUpdate"
       v-model="deleteModuleDialog"
       :item-uid="moduleToUpdate.uid"
       :delete-function="ModuleService.deleteModule"
-      title="Delete Module"
-      description="Are you sure you want to delete this module?"
-      success-message="Module deleted successfully!"
-      failed-message="Deleting module failed!"
-      @on-deleted="onModuleDeleted"
+      :title="t('module.delete_module')"
+      :description="t('module.delete_module_desc')"
+      :success-message="t('module.toasts.delete_success')"
+      :failed-message="t('module.toasts.delete_failed')"
+      @on-deleted="emit('onUpdate')"
     />
     <EditModuleDialog
       v-if="moduleToUpdate"
       v-model="editModuleDialog"
       :module="moduleToUpdate"
-      @on-update="getCollection"
+      @on-update="emit('onUpdate')"
     />
   </div>
 </template>
@@ -160,12 +161,13 @@ import { PropType, computed, ref } from 'vue';
 import CreateModuleDialog from './CreateModuleDialog.vue';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import EditModuleDialog from './EditModuleDialog.vue';
-import CollectionService from '@/services/CollectionService';
 import DevicesInModuleTable from '@/components/modules/DevicesInModuleTable.vue';
-import { handleError } from '@/utils/error-handler';
 import { Module } from '@/models/Module';
 import ModuleService from '@/services/ModuleService';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -173,7 +175,7 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'onUpdate']);
 
 const authStore = useAuthStore();
 
@@ -190,32 +192,18 @@ const createModuleDialog = ref(false);
 const deleteModuleDialog = ref(false);
 const editModuleDialog = ref(false);
 const moduleToUpdate = ref<Module>();
-async function onModuleDeleted() {
-  await getCollection();
-}
-
-async function getCollection() {
-  try {
-    const updatedCollection = await CollectionService.getCollection(
-      collection.value.uid,
-    );
-    collection.value = updatedCollection;
-  } catch (error) {
-    handleError(error, 'Getting collection failed!');
-  }
-}
 
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: 'Name',
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'devices',
-    label: 'Devices',
+    label: t('device.label', 2),
     field: (row) => row.devices.length || 0,
     sortable: true,
     align: 'right',

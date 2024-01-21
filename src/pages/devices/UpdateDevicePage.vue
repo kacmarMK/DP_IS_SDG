@@ -3,9 +3,10 @@
     <div>
       <div class="top-row row items-center">
         <router-link :to="`/devices/${route.params.id.toString()}`">
-          <p class="main-text text-accent">Device ></p>
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          <p class="main-text text-accent">{{ t('device.label') }} ></p>
         </router-link>
-        <p class="main-text">&nbsp;Edit</p>
+        <p class="main-text">&nbsp;{{ t('global.edit') }}</p>
       </div>
       <create-device-form
         :is-editing="true"
@@ -18,8 +19,10 @@
 
 <script setup lang="ts">
 import CreateDeviceForm from '@/components/devices/CreateDeviceForm.vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
+const { t } = useI18n();
 const route = useRoute();
 </script>
 

@@ -4,7 +4,7 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">{{ t('auth.register.title') }}</h1>
+            <h1 class="text-center q-my-md">{{ t('auth.register.label') }}</h1>
             <div>
               <q-form>
                 <q-input
@@ -98,17 +98,17 @@ const mailRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
 const nameRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your name',
+  (val: string) => (val && val.length > 0) || t('auth.rules.username_required'),
 ];
 const mailRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your email',
+  (val: string) => (val && val.length > 0) || t('auth.rules.email_required'),
   (val: string) => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    return emailRegex.test(val) || 'Please enter a valid email address';
+    return emailRegex.test(val) || t('auth.rules.email_invalid');
   },
 ];
 const passwordRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter your password',
+  (val: string) => (val && val.length > 0) || t('auth.rules.password_required'),
 ];
 
 async function register() {
@@ -118,10 +118,10 @@ async function register() {
   try {
     isSubmitting.value = true;
     await authService.register(userRegister.value, Role.ADMIN);
-    toast.success('Registration successful!');
+    toast.success(t('auth.register.toasts.register_success'));
     router.push('/');
   } catch (error) {
-    handleError(error, 'Registration failed!');
+    handleError(error, t('auth.register.toasts.register_failed'));
   } finally {
     isSubmitting.value = false;
   }

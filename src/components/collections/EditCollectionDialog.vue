@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-sm">
       <q-card-section>
         <div class="text-h6">{{ t('collection.edit_collection') }}</div>
       </q-card-section>
@@ -78,9 +78,9 @@ async function updateCollection() {
     );
     isDialogVisible.value = false;
     emit('onUpdate');
-    toast.success('Collection updated!');
+    toast.success(t('collection.toasts.update_success'));
   } catch (error) {
-    handleError(error, 'Updating collection failed!');
+    handleError(error, t('collection.toasts.update_failed'));
   } finally {
     updatingCollection.value = false;
   }

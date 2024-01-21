@@ -4,7 +4,7 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">{{ t('auth.login.title') }}</h1>
+            <h1 class="text-center q-my-md">{{ t('auth.login.label') }}</h1>
             <div>
               <q-form>
                 <q-input
@@ -96,13 +96,11 @@ const nameRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
 const nameRules = [
-  (val: string) =>
-    (val && val.length > 0) || t('auth.login.rules.username_required'),
+  (val: string) => (val && val.length > 0) || t('auth.rules.username_required'),
 ];
 
 const passwordRules = [
-  (val: string) =>
-    (val && val.length > 0) || t('auth.login.rules.password_required'),
+  (val: string) => (val && val.length > 0) || t('auth.rules.password_required'),
 ];
 
 async function login() {
@@ -116,7 +114,7 @@ async function login() {
     toast.success(t('auth.login.toasts.login_success'));
     router.push('/');
   } catch (error) {
-    toast.error('auth.login.toasts.login_failed');
+    toast.error(t('auth.login.toasts.login_failed'));
   } finally {
     isSubmitting.value = false;
   }

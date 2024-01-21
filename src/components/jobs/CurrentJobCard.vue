@@ -3,7 +3,7 @@
     <div class="column full-height">
       <div class="row items-center">
         <div class="text-weight-medium text-h6 col-shrink">
-          {{ t('job.title') }}
+          {{ t('job.label') }}
         </div>
         <q-space></q-space>
         <q-btn

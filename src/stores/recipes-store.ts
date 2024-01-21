@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
-import { Recipe, RecipeFrame } from 'src/models/Recipe';
+import { Recipe, RecipeFrame } from '@/models/Recipe';
 import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
-import recipeService from 'src/services/RecipeService';
+import recipeService from '@/services/RecipeService';
+import { useI18n } from 'vue-i18n';
 
 export const useRecipesStore = defineStore('recipes', () => {
+  const { t } = useI18n();
   const recipes = ref<Recipe[]>([]);
   const isLoadingRecipes = ref(false);
   async function getRecipes() {
@@ -13,7 +15,7 @@ export const useRecipesStore = defineStore('recipes', () => {
       recipes.value = await recipeService.getRecipes('none', 'none');
     } catch (error) {
       console.log(error);
-      toast.error('Loading of recipes failed.');
+      toast.error(t('recipe.toasts.load_failed'));
     } finally {
       isLoadingRecipes.value = false;
     }
@@ -35,12 +37,12 @@ export const useRecipesStore = defineStore('recipes', () => {
     try {
       isCreatingRecipe.value = true;
       await recipeService.createRecipe(recipeCreate.value);
-      toast.success('Recipe created.');
+      toast.success(t('recipe.toasts.create_success'));
       getRecipes();
       createDialog.value = false;
     } catch (error) {
       console.log(error);
-      toast.error('Recipe creation failed.');
+      toast.error(t('recipe.toasts.create_failed'));
     } finally {
       isCreatingRecipe.value = false;
     }
@@ -66,12 +68,12 @@ export const useRecipesStore = defineStore('recipes', () => {
     try {
       isEditingRecipe.value = true;
       await recipeService.updateRecipe(editingRecipe.value, editingRecipeId);
-      toast.success('Recipe updated!');
+      toast.success(t('recipe.toasts.update_success'));
       getRecipes();
       editDialog.value = false;
     } catch (error) {
       console.log(error);
-      toast.error('Recipe update failed!');
+      toast.error(t('recipe.toasts.update_failed'));
     } finally {
       isEditingRecipe.value = false;
     }
@@ -88,12 +90,12 @@ export const useRecipesStore = defineStore('recipes', () => {
     try {
       isDeletingRecipe.value = true;
       await recipeService.deleteRecipeById(deletingRecipeId);
-      toast.success('Recipe deleted!');
+      toast.success(t('recipe.toasts.delete_success'));
       getRecipes();
       deleteDialog.value = false;
     } catch (error) {
       console.log(error);
-      toast.error('Recipe deletion failed!');
+      toast.error(t('recipe.toasts.delete_failed'));
     } finally {
       isDeletingRecipe.value = false;
     }

@@ -2,7 +2,7 @@
   <q-card class="shadow q-pa-lg">
     <q-input
       v-model="currentMail"
-      label="Current Email"
+      :label="t('account.current_email')"
       readonly
       disable
     ></q-input>
@@ -11,7 +11,7 @@
         ref="mailRef"
         v-model="newEmail"
         autocomplete="off"
-        label="New Email"
+        :label="t('account.new_email')"
         type="email"
         :rules="mailRules"
       ></q-input>
@@ -21,7 +21,7 @@
         color="primary"
         unelevated
         type="submit"
-        label="Save"
+        :label="t('global.save')"
         :loading="changingEmail"
         no-caps
         @click.prevent="updateEmail"
@@ -38,6 +38,9 @@ import { User, UserUpdate } from '@/models/User';
 import { toast } from 'vue3-toastify';
 import { QForm, QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   user: {
@@ -55,11 +58,10 @@ const newEmail = ref('');
 const changingEmail = ref(false);
 
 const mailRules = [
-  (val: string) =>
-    (val && val.length > 0) || 'Please enter a valid email address',
+  (val: string) => (val && val.length > 0) || t('account.rules.email_required'),
   (val: string) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return emailRegex.test(val) || 'Please enter a valid email address';
+    return emailRegex.test(val) || t('account.rules.email_invalid');
   },
 ];
 
@@ -75,12 +77,12 @@ async function updateEmail() {
   try {
     changingEmail.value = true;
     await AuthService.updateUser(updateUser, props.user.uid);
-    toast.success('Email updated');
+    toast.success(t('account.toasts.email_update_success'));
     newEmail.value = '';
     qform.value?.reset();
     emit('update');
   } catch (err) {
-    handleError(err, 'Failed to update email');
+    handleError(err, t('account.toasts.email_update_failed'));
   } finally {
     changingEmail.value = false;
   }
@@ -88,9 +90,7 @@ async function updateEmail() {
 
 watch(
   () => props.user,
-  () => {
-    currentMail.value = props.user.mail;
-  },
+  () => (currentMail.value = props.user.mail),
   { immediate: true },
 );
 </script>

@@ -91,7 +91,7 @@ module.exports = {
     '@intlify/vue-i18n/no-unused-keys': [
       'warn',
       {
-        extensions: ['.js', '.vue'],
+        extensions: ['.js', '.ts', '.vue'],
       },
     ],
     // '@intlify/vue-i18n/no-missing-keys-in-other-locales': ['error'],

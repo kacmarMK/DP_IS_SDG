@@ -3,7 +3,7 @@
     ref="dateSelect"
     class="date-picker"
     :options="timeRanges"
-    label="Time Range"
+    :label="t('time_range.label')"
     option-value="timeRange"
     option-label="title"
     outlined

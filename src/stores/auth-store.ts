@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { toast } from 'vue3-toastify';
 import { Role } from '@/models/Role';
 import { JwtPayload } from '@/models/JwtPayload';
+import { useI18n } from 'vue-i18n';
 
 export const useAuthStore = defineStore('authStore', () => {
   const jwt = useStorage('jwt', '');
@@ -23,7 +24,8 @@ export const useAuthStore = defineStore('authStore', () => {
     jwt.value = '';
     this.router.push('/login');
     if (!silent) {
-      toast.success('You have been logged out');
+      const { t } = useI18n();
+      toast.success(t('auth.toasts.logout_success'));
     }
   }
 

@@ -9,7 +9,7 @@
           <q-select
             ref="recipeRef"
             v-model="jobToRun.recipeId"
-            :label="t('recipe.title')"
+            :label="t('recipe.label')"
             :options="recipesAvailable"
             option-value="id"
             option-label="name"

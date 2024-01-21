@@ -4,7 +4,7 @@
       <q-select
         v-model="newRole"
         autocomplete="off"
-        label="Role"
+        :label="t('account.role.label')"
         :options="availableRoles"
         map-options
         emit-value
@@ -15,7 +15,7 @@
         color="primary"
         unelevated
         type="submit"
-        label="Save"
+        :label="t('global.save')"
         :loading="changingRole"
         no-caps
         @click.prevent="updateRole"
@@ -77,11 +77,11 @@ async function updateRole() {
   try {
     changingRole.value = true;
     await AuthService.updateUser(updateUser, props.user.uid);
-    toast.success('Role updated');
+    toast.success(t('account.toasts.role_change_success'));
     qform.value?.reset();
     emit('update');
   } catch (err) {
-    handleError(err, 'Failed to update role');
+    handleError(err, t('account.toasts.role_change_failed'));
   } finally {
     changingRole.value = false;
   }

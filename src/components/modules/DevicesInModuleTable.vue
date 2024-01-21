@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="q-mb-md row">
-      <p class="devices-text">Devices</p>
+      <p class="devices-text">{{ t('device.label', 2) }}</p>
       <q-space></q-space>
       <q-btn
         v-if="authStore.isAdmin"
@@ -11,7 +11,7 @@
         outline
         no-caps
         size="15px"
-        label="Add device"
+        :label="t('device.add_device')"
         icon="mdi-plus"
         @click="addDeviceDialog = true"
       />
@@ -21,8 +21,9 @@
       :columns="columns"
       flat
       hide-pagination
-      no-data-label="No Devices Yet"
-      loading-label="Loading Devices..."
+      :no-data-label="t('table.no_data_label')"
+      :loading-label="t('table.loading_label')"
+      :rows-per-page-label="t('table.rows_per_page_label')"
       class="outline shadow"
     >
       <template #no-data="{ message }">
@@ -32,25 +33,25 @@
         </div>
       </template>
 
-      <template #body-cell="props">
-        <q-td :props="props" no-hover>
-          {{ props.row[props.col.field] }}
+      <template #body-cell="propsCell">
+        <q-td :props="propsCell" no-hover>
+          {{ propsCell.row[propsCell.col.field] }}
         </q-td>
       </template>
 
-      <template #body-cell-name="props">
-        <q-td :props="props" no-hover>
+      <template #body-cell-name="propsCellName">
+        <q-td :props="propsCellName" no-hover>
           <router-link
-            :to="`/devices/${props.row.uid}`"
+            :to="`/devices/${propsCellName.row.uid}`"
             class="text-black text-weight-regular"
           >
-            {{ props.row.name }}
+            {{ propsCellName.row.name }}
           </router-link>
         </q-td>
       </template>
 
       <template #body-cell-actions="propsActions">
-        <q-td auto-width :props="props" no-hover>
+        <q-td auto-width :props="propsActions" no-hover>
           <q-btn
             icon="mdi-open-in-new"
             color="grey-color"
@@ -58,7 +59,7 @@
             round
             :to="`/devices/${propsActions.row.uid}`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              Open
+              {{ t('global.open') }}
             </q-tooltip>
           </q-btn>
           <q-btn
@@ -69,7 +70,7 @@
             round
             :to="`/devices/${propsActions.row.uid}/edit`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              Edit
+              {{ t('global.edit') }}
             </q-tooltip>
           </q-btn>
           <q-btn
@@ -83,7 +84,7 @@
               deviceToDelete = propsActions.row;
             "
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-              Delete
+              {{ t('global.delete') }}
             </q-tooltip>
           </q-btn>
         </q-td>
@@ -113,6 +114,9 @@ import { PropType, computed, ref } from 'vue';
 import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
 import { useAuthStore } from '@/stores/auth-store';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -151,28 +155,28 @@ const addDeviceDialog = ref(false);
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: 'Name',
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'type',
-    label: 'Type',
+    label: t('device.type'),
     field: 'type',
     sortable: true,
     align: 'left',
   },
   {
     name: 'version',
-    label: 'Version',
+    label: t('device.version'),
     field: 'version',
     sortable: true,
     align: 'left',
   },
   {
     name: 'firmware',
-    label: 'Firmware',
+    label: t('device.firmware'),
     field: 'firmware',
     sortable: true,
     align: 'left',

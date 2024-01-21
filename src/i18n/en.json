@@ -8,14 +8,13 @@
     "close": "Close",
     "next": "Next",
     "add": "Add",
+    "create": "Create",
     "details": "Details",
     "hello": "Hello",
     "info": "Info",
     "name": "Name",
     "options": "Options",
     "refresh": "Refresh",
-    "recipes": "Recipes",
-    "commands": "Commands",
     "account": "Account",
     "user_management": "User Management",
     "home": "Home",
@@ -28,7 +27,7 @@
   "table": {
     "no_data_label": "No data available",
     "loading_label": "Loading...",
-    "rows_per_page_label": "Rows per page:"
+    "rows_per_page_label": "Records per page:"
   },
   "days_short": {
     "mon": "mon",
@@ -41,35 +40,75 @@
   },
   "auth": {
     "login": {
-      "title": "Login",
+      "label": "Login",
       "login_btn": "Login",
       "no_account": "Don't have an account?",
       "sign_up": "Sign Up",
       "toasts": {
         "login_failed": "Login failed!",
         "login_success": "Login successful!"
-      },
-      "rules": {
-        "username_required": "Please enter your username",
-        "password_required": "Please enter your password"
       }
     },
     "register": {
-      "title": "Register",
+      "label": "Register",
       "register_btn": "Register",
       "have_account": "Already have an account?",
-      "login": "Log in"
+      "login": "Log in",
+      "toasts": {
+        "register_failed": "Register failed!",
+        "register_success": "Register successful!"
+      }
+    },
+    "toasts": {
+      "logout_success": "Logout successful!"
+    },
+    "rules": {
+      "username_required": "Please enter your username",
+      "password_required": "Please enter your password",
+      "email_required": "Please enter your email",
+      "email_invalid": "Please enter a valid email address"
     }
   },
   "account": {
+    "label": "Account",
     "username": "Username",
-    "email": "Email",
+    "email": "E-mail",
+    "current_email": "Current email",
+    "new_email": "New email",
     "password": "Password",
+    "current_password": "Current password",
+    "new_password": "New password",
     "logout": "Logout",
     "access": "Access",
     "role": {
+      "label": "Role",
       "admin": "Admin",
       "user": "User"
+    },
+    "account_settings": "Account settings",
+    "update_email": "Update email",
+    "update_email_desc": "Update your account's email address.",
+    "update_email_other_desc": "Update account's email address.",
+    "update_password": "Update password",
+    "update_password_desc": "Update your account's password.",
+    "update_password_other_desc": "Update account's password.",
+    "change_role": "Change role",
+    "change_role_desc": "Change user's role.",
+    "toasts": {
+      "get_user_failed": "Loading user failed!",
+      "email_update_success": "Email updated!",
+      "email_update_failed": "Updating email failed!",
+      "password_change_success": "Password changed!",
+      "password_change_failed": "Changing password failed!",
+      "role_change_success": "Role changed!",
+      "role_change_failed": "Changing role failed!"
+    },
+    "rules": {
+      "password_required": "Password is required!",
+      "password_current_required": "Current password is required!",
+      "password_current_wrong": "Current password is wrong!",
+      "email_required": "Email is required!",
+      "email_invalid": "Please enter a valid email address"
     }
   },
   "not_found": {
@@ -77,40 +116,40 @@
     "go_home": "Go Home"
   },
   "device": {
-    "title": "Device | Devices",
+    "label": "Device | Devices",
     "add_device": "Add device",
     "type": "Type",
+    "device_type": "Device type",
     "version": "Version",
     "firmware": "Firmware",
     "mac_address": "MAC Address",
     "api_key": "API Key",
     "device_info": "Device info",
     "sensors": "Sensors",
+    "tag": "Tag",
     "add_sensors": "Add sensors",
     "add_sensor": "Add sensor",
     "no_sensors": "No sensors available",
     "unit": "Unit",
-    "decimal": "Decimal",
+    "decimal": "Decimal places",
     "init_window": "Initialize 1min window",
     "share_device": "Share device",
     "shared_with": "Shared with",
     "delete_device": "Delete device",
     "delete_device_desc": "Are you sure you want to delete this device?",
     "toasts": {
+      "loading_failed": "Loading device failed! | Loading devices failed!",
+      "create_failed": "Creating device failed!",
+      "update_failed": "Updating device failed!",
+      "create_success": "Device created!",
+      "update_success": "Device updated!",
+      "delete_success": "Device deleted!",
+      "delete_failed": "Deleting device failed!",
       "tag": {
-        "delete_failed": "Deleting data point tag failed!",
-        "create_failed": "Creating data point tag failed!",
-        "update_failed": "Updating data point tag failed!",
-        "add_tag_to_device_failed": "Adding data point tag to device failed!"
-      },
-      "device": {
-        "loading_failed": "Loading device failed!",
-        "create_failed": "Creating device failed!",
-        "update_failed": "Updating device failed!",
-        "create_success": "Device created!",
-        "update_success": "Device updated!",
-        "delete_success": "Device deleted!",
-        "delete_failed": "Deleting device failed!"
+        "delete_failed": "Deleting sensor failed!",
+        "create_failed": "Creating sensor failed!",
+        "update_failed": "Updating sensor failed!",
+        "add_tag_to_device_failed": "Adding sensor to device failed!"
       },
       "window": {
         "init_failed": "1min window initialization failed!",
@@ -127,11 +166,11 @@
     }
   },
   "chart": {
-    "title": "Chart",
+    "label": "Chart",
     "export_csv": "Export CSV"
   },
   "time_range": {
-    "title": "Time range",
+    "label": "Time range",
     "custom": "Custom",
     "predefined": {
       "last_30min": "Last 30 minutes",
@@ -144,10 +183,11 @@
     }
   },
   "job": {
-    "title": "Job | Jobs",
+    "label": "Job | Jobs",
     "job_history": "Job history",
     "run_job": "Run job",
     "no_running_job": "No running job",
+    "not_finished": "Not finished yet",
     "step": "Step",
     "step_of": "Step {0} of {1}",
     "cycle": "Cycle | Cycles",
@@ -189,13 +229,40 @@
     }
   },
   "recipe": {
-    "title": "Recipe | Recipes"
+    "label": "Recipe | Recipes",
+    "create_recipe": "Create recipe",
+    "edit_recipe": "Edit recipe",
+    "delete_recipe": "Delete recipe",
+    "delete_recipe_desc": "Are you sure you want to delete this recipe?",
+    "subrecipe": "Subrecipe | Subrecipes",
+    "toasts": {
+      "load_failed": "Loading recipes failed!",
+      "create_success": "Recipe created!",
+      "create_failed": "Creating recipe failed!",
+      "update_success": "Recipe updated!",
+      "update_failed": "Updating recipe failed!",
+      "delete_success": "Recipe deleted!",
+      "delete_failed": "Deleting recipe failed!"
+    }
   },
   "command": {
-    "title": "Command | Commands"
+    "label": "Command | Commands",
+    "create_command": "Create command",
+    "edit_command": "Edit command",
+    "delete_command": "Delete command",
+    "delete_command_desc": "Are you sure you want to delete this command?",
+    "toasts": {
+      "load_failed": "Loading commands failed!",
+      "create_success": "Command created!",
+      "create_failed": "Creating command failed!",
+      "update_success": "Command updated!",
+      "update_failed": "Updating command failed!",
+      "delete_success": "Command deleted!",
+      "delete_failed": "Deleting command failed!"
+    }
   },
   "collection": {
-    "title": "Collection | Collections",
+    "label": "Collection | Collections",
     "create_collection": "Create collection",
     "delete_collection": "Delete Collection",
     "delete_collection_desc": "Are you sure you want to delete this collection?",
@@ -211,7 +278,13 @@
     }
   },
   "module": {
-    "title": "Module | Modules",
+    "label": "Module | Modules",
+    "create_module": "Create module",
+    "delete_module": "Delete Module",
+    "delete_module_desc": "Are you sure you want to delete this module?",
+    "edit_module": "Edit module",
+    "remove_device_from_module": "Remove device from module",
+    "remove_device_from_module_desc": "Are you sure you want to remove {0} from {1}?",
     "toasts": {
       "load_failed": "Loading modules failed!",
       "create_success": "Module created!",
@@ -219,7 +292,9 @@
       "update_success": "Module updated!",
       "update_failed": "Updating module failed!",
       "delete_success": "Module deleted!",
-      "delete_failed": "Deleting module failed!"
+      "delete_failed": "Deleting module failed!",
+      "add_device_to_module_success": "Device added to module!",
+      "add_device_to_module_failed": "Adding device to module failed!"
     }
   }
 }

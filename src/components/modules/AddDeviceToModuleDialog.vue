@@ -1,14 +1,14 @@
 <template>
   <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
-        <div class="text-h6">Add device to module</div>
+        <div class="text-h6">{{ t('device.add_device') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
         <q-select
           v-model="selectedDeviceId"
           :options="filteredDevices"
-          label="Device"
+          :label="t('device.label')"
           emit-value
           map-options
           option-value="uid"
@@ -16,11 +16,11 @@
         />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat label="Cancel" no-caps />
+        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           color="primary"
-          label="Add device"
+          :label="t('global.add')"
           no-caps
           :loading="addingInProgress"
           @click="addDevice"
@@ -39,6 +39,9 @@ import { toast } from 'vue3-toastify';
 import { Module } from '@/models/Module';
 import { useDevicesStore } from '@/stores/devices-store';
 import { Device } from '@/models/Device';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -86,11 +89,11 @@ async function addDevice() {
       props.module.uid,
       selectedDeviceId.value,
     );
-    toast.success('Device added to module');
+    toast.success(t('module.toasts.add_device_to_module_success'));
     emit('onAdded');
     isDialogVisible.value = false;
   } catch (error) {
-    handleError(error, 'Failed to add device to module');
+    handleError(error, t('module.toasts.add_device_to_module_failed'));
   } finally {
     addingInProgress.value = false;
   }

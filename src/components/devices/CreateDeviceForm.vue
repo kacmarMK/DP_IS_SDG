@@ -69,7 +69,7 @@
               <q-input
                 v-model="dataPointTag.tag"
                 class="col-12 col-md-6"
-                label="Tag"
+                :label="t('device.tag')"
               />
               <q-input
                 v-model="dataPointTag.unit"
@@ -105,7 +105,7 @@
               <q-input
                 v-model="dataPointTag.tag"
                 class="col-12 col-md-6"
-                label="Tag"
+                :label="t('device.tag')"
               />
               <q-input
                 v-model="dataPointTag.unit"
@@ -201,7 +201,7 @@ async function getEditingDevice() {
       editingDevice.dataPointTags,
     );
   } catch (error) {
-    handleError(error, t('device.toasts.device.loading_failed'));
+    handleError(error, t('device.toasts.loading_failed'));
   }
 }
 getEditingDevice();
@@ -256,7 +256,7 @@ async function createDevice(): Promise<Device | undefined> {
     createdDevice = await deviceService.createDevice(deviceInput.value);
     createStep.value = 1;
   } catch (error) {
-    handleError(error, t('device.toasts.device.create_failed'));
+    handleError(error, t('device.toasts.create_failed'));
   }
   return createdDevice;
 }
@@ -272,7 +272,7 @@ async function updateDevice(): Promise<Device | undefined> {
     );
     createStep.value = 1;
   } catch (error) {
-    handleError(error, t('device.toasts.device.update_failed'));
+    handleError(error, t('device.toasts.update_failed'));
   }
   return editedDevice;
 }
@@ -334,9 +334,9 @@ async function submitForm() {
   submittingForm.value = false;
 
   if (props.isEditing) {
-    toast.success(t('device.toasts.device.update_success'));
+    toast.success(t('device.toasts.update_success'));
   } else {
-    toast.success(t('device.toasts.device.create_success'));
+    toast.success(t('device.toasts.create_success'));
   }
 
   router.push(`/devices/${device.uid}`);

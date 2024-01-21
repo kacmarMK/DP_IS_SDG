@@ -1,18 +1,22 @@
 <template>
   <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
-        <div class="text-h6">Edit module</div>
+        <div class="text-h6">{{ t('module.edit_module') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="moduleInput.name" autofocus label="Name" />
+        <q-input
+          v-model="moduleInput.name"
+          autofocus
+          :label="t('global.name')"
+        />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat label="Cancel" no-caps />
+        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           color="primary"
-          label="Create Module"
+          :label="t('global.save')"
           no-caps
           :loading="updatingModule"
           @click="updateModule"
@@ -29,6 +33,9 @@ import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
 import { toast } from 'vue3-toastify';
 import { Module, ModuleInput } from '@/models/Module';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -66,9 +73,9 @@ async function updateModule() {
     await ModuleService.updateModule(props.module.uid, moduleInput.value);
     isDialogVisible.value = false;
     emit('onUpdate');
-    toast.success('Module updated!');
+    toast.success(t('module.toasts.update_success'));
   } catch (error) {
-    handleError(error, 'Updating module failed!');
+    handleError(error, t('module.toasts.update_failed'));
   } finally {
     updatingModule.value = false;
   }

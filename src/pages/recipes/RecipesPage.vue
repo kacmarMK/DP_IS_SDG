@@ -2,12 +2,12 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Recipes</p>
+        <p class="main-text">{{ t('recipe.label', 2) }}</p>
         <q-space></q-space>
         <q-btn
           class="shadow"
           color="secondary"
-          label="Create new recipe"
+          :label="t('recipe.create_recipe')"
           unelevated
           no-caps
           size="15px"
@@ -21,9 +21,9 @@
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Recipes Found"
-        loading-label="Loading Recipes..."
-        rows-per-page-label="Recipes per page"
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
+        :rows-per-page-label="t('table.rows_per_page_label')"
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -44,7 +44,7 @@
                 store.editRecipeId = props.row.value?.id;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                Edit
+                {{ t('global.edit') }}
               </q-tooltip>
             </q-btn>
             <q-btn
@@ -57,7 +57,7 @@
                 store.deletingRecipe = props.row;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                Delete
+                {{ t('global.delete') }}
               </q-tooltip>
             </q-btn>
           </q-td>
@@ -77,50 +77,38 @@ import CreateRecipeDialog from '@/components/recipes/CreateRecipeDialog.vue';
 import EditRecipeDialog from '@/components/recipes/EditRecipeDialog.vue';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const store = useRecipesStore();
 store.getRecipes();
 
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: 'Name',
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'cmds',
-    label: 'Commands',
+    label: t('command.label', 2),
     field: 'cmds',
     sortable: false,
     align: 'left',
   },
   {
     name: 'subRecipes',
-    label: 'Subrecipes',
+    label: t('recipe.subrecipe', 2),
     field: 'subRecipes',
     sortable: false,
     align: 'left',
   },
   {
     name: 'deviceType',
-    label: 'Device Type',
+    label: t('device.device_type'),
     field: 'deviceType',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'hasSubRecipes',
-    label: 'Has Subrecipes?',
-    field: 'hasSubRecipes',
-    sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'deactivated',
-    label: 'Command Deactivated?',
-    field: 'deactivated',
     sortable: true,
     align: 'left',
   },

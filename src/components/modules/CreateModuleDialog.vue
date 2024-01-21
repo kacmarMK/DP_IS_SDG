@@ -1,18 +1,18 @@
 <template>
   <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
-        <div class="text-h6">Create new module</div>
+        <div class="text-h6">{{ t('module.create_module') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="moduleObj.name" autofocus label="Name" />
+        <q-input v-model="moduleObj.name" autofocus :label="t('global.name')" />
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat label="Cancel" no-caps />
+        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           color="primary"
-          label="Create Collection"
+          :label="t('global.create')"
           no-caps
           :loading="creatingModule"
           @click="createModule"
@@ -30,6 +30,9 @@ import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
 import { toast } from 'vue3-toastify';
 import { ModuleInput } from '@/models/Module';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
@@ -70,9 +73,9 @@ async function createModule() {
     moduleObj.value = getEmptyModule();
     isDialogVisible.value = false;
     emit('onCreate');
-    toast.success('Module created!');
+    toast.success(t('module.toasts.create_success'));
   } catch (error) {
-    handleError(error, 'Creating module failed!');
+    handleError(error, t('module.toasts.create_failed'));
   } finally {
     creatingModule.value = false;
   }

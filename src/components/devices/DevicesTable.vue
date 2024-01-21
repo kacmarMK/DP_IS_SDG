@@ -110,8 +110,8 @@
       :delete-function="DeviceService.deleteDevice"
       :title="t('device.delete_device')"
       :description="t('device.delete_device_desc')"
-      :success-message="t('device.toasts.device.delete_success')"
-      :failed-message="t('device.toasts.device.delete_failed')"
+      :success-message="t('device.toasts.delete_success')"
+      :failed-message="t('device.toasts.delete_failed')"
       @on-deleted="deviceDeleted"
     />
     <ShareDeviceDialog

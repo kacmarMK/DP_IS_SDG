@@ -7,7 +7,7 @@
           to="/devices"
         >
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ t('device.title', 2) }} >
+          {{ t('device.label', 2) }} >
         </router-link>
         <p class="main-text z-fab">&nbsp;{{ device?.name }}</p>
         <q-space></q-space>
@@ -19,7 +19,7 @@
           unelevated
           no-caps
           size="15px"
-          :label="t('job.title', 2)"
+          :label="t('job.label', 2)"
           icon="mdi-list-status"
         />
         <q-btn
@@ -106,7 +106,7 @@ async function getDevice(uid: string) {
     device.value = await deviceService.getDevice(uid);
     dataPointTagTree.value = deviceToDataPointTagNode(device.value);
   } catch (error) {
-    handleError(error, t('device.toasts.device.loading_failed'));
+    handleError(error, t('device.toasts.loading_failed'));
   } finally {
     isLoadingDevice.value = false;
   }
@@ -121,7 +121,7 @@ async function refreshDevice() {
     isRefreshingDevice.value = true;
     device.value = await deviceService.getDevice(device.value.uid);
   } catch (error) {
-    handleError(error, t('device.toasts.device.loading_failed'));
+    handleError(error, t('device.toasts.loading_failed'));
   } finally {
     isRefreshingDevice.value = false;
   }

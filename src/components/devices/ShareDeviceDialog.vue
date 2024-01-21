@@ -1,11 +1,11 @@
 <template>
   <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-">
+    <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
         <div class="text-h6">{{ t('device.share_device') }}</div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="emailToShare" autofocus label="E-mail" />
+        <q-input v-model="emailToShare" autofocus :label="t('account.email')" />
         <q-btn
           unelevated
           color="primary"

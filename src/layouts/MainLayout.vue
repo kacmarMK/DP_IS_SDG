@@ -78,12 +78,12 @@
           />
           <side-menu-button
             to="/devices"
-            :label="t('device.title', 2)"
+            :label="t('device.label', 2)"
             icon="mdi-cellphone-link"
           />
           <side-menu-button
             to="/collections"
-            :label="t('collection.title', 2)"
+            :label="t('collection.label', 2)"
             icon="mdi-hub-outline"
           />
           <!-- <side-menu-button
@@ -98,17 +98,17 @@
           /> -->
           <side-menu-button
             to="/jobs"
-            :label="t('job.title', 2)"
+            :label="t('job.label', 2)"
             icon="mdi-list-status"
           />
           <side-menu-button
             to="/recipes"
-            :label="t('global.recipes')"
+            :label="t('recipe.label', 2)"
             icon="mdi-book-multiple-outline"
           />
           <side-menu-button
             to="/commands"
-            :label="t('global.commands')"
+            :label="t('command.label', 2)"
             icon="mdi-code-tags"
           />
           <side-menu-button

@@ -1,7 +1,7 @@
 <template>
   <div id="chart">
     <div class="row items-center justify-start q-mb-md q-gutter-x-md">
-      <p class="text-weight-medium text-h6">{{ t('chart.title') }}</p>
+      <p class="text-weight-medium text-h6">{{ t('chart.label') }}</p>
       <q-space></q-space>
       <chart-time-range-select
         ref="timeRangeSelect"

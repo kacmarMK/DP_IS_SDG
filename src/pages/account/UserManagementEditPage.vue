@@ -13,9 +13,11 @@
       <div v-if="user" class="column q-mt-lg">
         <div class="row q-mb-xl">
           <div class="col-12 col-md-5 q-mb-md">
-            <div class="text-h6 text-secondary">Change Role</div>
+            <div class="text-h6 text-secondary">
+              {{ t('account.change_role') }}
+            </div>
             <div class="text-grey-14">
-              Change the role of the account. Admins can manage other users.
+              {{ t('account.change_role_desc') }}
             </div>
           </div>
           <UpdateRoleCard
@@ -26,8 +28,12 @@
         </div>
         <div class="row q-mb-xl">
           <div class="col-12 col-md-5 q-mb-md">
-            <div class="text-h6 text-secondary">Update Email</div>
-            <div class="text-grey-14">Update account's email address.</div>
+            <div class="text-h6 text-secondary">
+              {{ t('account.update_email') }}
+            </div>
+            <div class="text-grey-14">
+              {{ t('account.update_email_other_desc') }}
+            </div>
           </div>
           <UpdateEmailCard
             :user="user"
@@ -37,10 +43,11 @@
         </div>
         <div class="row q-mb-xl">
           <div class="col-12 col-md-5 q-mb-md">
-            <div class="text-h6 text-secondary">Update Password</div>
+            <div class="text-h6 text-secondary">
+              {{ t('account.update_password') }}
+            </div>
             <div class="text-grey-14">
-              Ensure the account is using a long, random password to stay
-              secure.
+              {{ t('account.update_password_other_desc') }}
             </div>
           </div>
           <UpdatePasswordCard
@@ -75,7 +82,7 @@ async function getUser() {
   try {
     user.value = await AuthService.getUserById(route.params.id.toString());
   } catch (err) {
-    handleError(err, 'Failed to get user');
+    handleError(err, t('account.toasts.get_user_failed'));
   }
 }
 getUser();

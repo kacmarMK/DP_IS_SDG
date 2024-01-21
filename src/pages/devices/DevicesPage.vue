@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">{{ t('device.title', 2) }}</p>
+        <p class="main-text">{{ t('device.label', 2) }}</p>
         <q-space></q-space>
         <q-btn
           v-if="authStore.isAdmin"

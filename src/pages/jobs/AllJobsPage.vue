@@ -88,14 +88,14 @@ getJobs();
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'device',
-    label: t('device.title'),
+    label: t('device.label'),
     field: 'deviceName',
     sortable: true,
     align: 'left',
   },
   {
     name: 'recipe',
-    label: t('recipe.title'),
+    label: t('recipe.label'),
     field: 'name',
     sortable: true,
     align: 'left',
@@ -118,7 +118,7 @@ const columns = computed<QTableProps['columns']>(() => [
       if (val) {
         return new Date(val).toLocaleString();
       }
-      return 'Not finished yet';
+      return t('job.not_finished');
     },
   },
   {

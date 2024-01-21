@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">{{ t('collection.title', 2) }}</p>
+        <p class="main-text">{{ t('collection.label', 2) }}</p>
         <q-space></q-space>
         <q-btn
           v-if="authStore.isAdmin"
@@ -119,6 +119,7 @@
                     v-model="props.row"
                     class="q-pa-md"
                     @update:model-value="updateCollection"
+                    @on-update="getCollections"
                   />
                 </div>
               </q-slide-transition>
@@ -204,7 +205,7 @@ const columns = computed<QTableProps['columns']>(() => [
   },
   {
     name: 'modules',
-    label: t('module.title', 2),
+    label: t('module.label', 2),
     field: (row) => row.modules.length || 0,
     sortable: true,
     align: 'right',

@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Account Settings</p>
+        <p class="main-text">{{ t('account.account_settings') }}</p>
       </div>
     </div>
     <q-card class="shadow q-mb-lg">
@@ -18,7 +18,7 @@
           style="min-width: 130px"
           name="account"
           icon="mdi-account"
-          label="Account"
+          :label="t('account.label')"
           no-caps
         />
       </q-tabs>
@@ -27,5 +27,9 @@
   </q-page>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+</script>
 <style lang="scss" scoped></style>

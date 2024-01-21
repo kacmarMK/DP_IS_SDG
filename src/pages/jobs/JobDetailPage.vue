@@ -2,7 +2,7 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row items-center">
-        <p class="main-text">{{ t('job.title') }}</p>
+        <p class="main-text">{{ t('job.label') }}</p>
         <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
         <p v-if="job" class="job-name text-weight-medium">({{ job.name }})</p>
         <q-badge class="q-pa-xs q-ml-sm" color="primary">
@@ -204,7 +204,7 @@ const columns = computed<QTableProps['columns']>(() => [
   },
   {
     name: 'name',
-    label: t('command.title'),
+    label: t('command.label'),
     field: 'name',
     sortable: false,
     align: 'left',

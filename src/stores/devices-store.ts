@@ -3,8 +3,10 @@ import { Device } from 'src/models/Device';
 import { ref } from 'vue';
 import deviceService from 'src/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
+import { useI18n } from 'vue-i18n';
 
 export const useDevicesStore = defineStore('devices', () => {
+  const { t } = useI18n();
   //Devices
   const devices = ref<Device[]>([]);
   const isLoadingDevices = ref(false);
@@ -17,13 +19,11 @@ export const useDevicesStore = defineStore('devices', () => {
       ]);
       devices.value = [...ownedDevices, ...sharedDevices];
     } catch (error) {
-      handleError(error, 'Loading devices failed!');
+      handleError(error, t('device.toasts.loading_failed', 2));
     } finally {
       isLoadingDevices.value = false;
     }
   }
-
-  // Device info
 
   return {
     devices,

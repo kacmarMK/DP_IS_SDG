@@ -5,7 +5,7 @@
         <router-link to="/devices">
           <p class="main-text text-accent">
             <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-            {{ t('device.title', 2) }} >&nbsp;
+            {{ t('device.label', 2) }} >&nbsp;
           </p>
         </router-link>
         <p class="main-text">{{ t('global.add') }}</p>

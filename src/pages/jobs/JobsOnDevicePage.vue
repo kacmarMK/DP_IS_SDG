@@ -107,7 +107,7 @@ const columns = computed<QTableProps['columns']>(() => [
       if (val) {
         return new Date(val).toLocaleString();
       }
-      return 'Not finished yet';
+      return t('job.not_finished');
     },
   },
   {

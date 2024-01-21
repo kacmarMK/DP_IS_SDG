@@ -2,12 +2,12 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <p class="main-text">Commands</p>
+        <p class="main-text">{{ t('command.label', 2) }}</p>
         <q-space></q-space>
         <q-btn
           class="shadow"
           color="secondary"
-          label="Create new command"
+          :label="t('command.create_command')"
           unelevated
           no-caps
           size="15px"
@@ -21,9 +21,9 @@
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
-        no-data-label="No Commands Found"
-        loading-label="Loading Commands..."
-        rows-per-page-label="Commands per page"
+        :no-data-label="t('table.no_data_label')"
+        :loading-label="t('table.loading_label')"
+        :rows-per-page-label="t('table.rows_per_page_label')"
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -44,7 +44,7 @@
                 store.editCommandId = props.row.value?.id;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                Edit
+                {{ t('global.edit') }}
               </q-tooltip>
             </q-btn>
             <q-btn
@@ -57,7 +57,7 @@
                 store.deletingCommand = props.row;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                Delete
+                {{ t('global.delete') }}
               </q-tooltip>
             </q-btn>
           </q-td>
@@ -77,21 +77,23 @@ import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
 import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
 import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const store = useCommandsStore();
 store.getCommands();
 
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
-    label: 'Name',
+    label: t('global.name'),
     field: 'name',
     sortable: true,
     align: 'left',
   },
   {
     name: 'deviceType',
-    label: 'Device',
+    label: t('device.label'),
     field: 'deviceType',
     sortable: true,
     align: 'left',

@@ -5,8 +5,10 @@
         <router-link
           class="main-text text-accent text-weight-medium z-fab"
           to="/collections"
-          >Collection ></router-link
         >
+          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
+          {{ t('collection.label') }} >
+        </router-link>
         <p v-if="dataPointTagTree" class="main-text z-fab">
           &nbsp;{{ dataPointTagTree.name }}
         </p>
@@ -49,7 +51,9 @@ import {
 } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const route = useRoute();
 
 const tickedNodes = ref<string[]>();
@@ -64,7 +68,7 @@ async function getCollection() {
     );
     dataPointTagTree.value = collectionToDataPointTagNode(collection);
   } catch (error) {
-    handleError(error, 'Loading collection failed!');
+    handleError(error, t('collection.toasts.load_failed'));
   } finally {
     isLoadingCollection.value = false;
   }

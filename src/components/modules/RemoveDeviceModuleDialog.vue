@@ -2,18 +2,25 @@
   <q-dialog v-model="isVisible">
     <q-card>
       <q-card-section>
-        <div class="text-h6">Remove device</div>
+        <div class="text-h6">{{ t('module.remove_device_from_module') }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        Are you sure you want to remove this device from {{ module.name }}?
+        {{
+          t('module.remove_device_from_module_desc', [device.name, module.name])
+        }}
       </q-card-section>
-
       <q-card-actions align="right">
-        <q-btn v-close-popup flat color="grey-9" label="Cancel" no-caps />
+        <q-btn
+          v-close-popup
+          flat
+          color="grey-9"
+          :label="t('global.cancel')"
+          no-caps
+        />
         <q-btn
           unelevated
-          label="Delete"
+          :label="t('global.delete')"
           color="red"
           :loading="isDeleteInProgress"
           no-caps
@@ -31,6 +38,9 @@ import { handleError } from '@/utils/error-handler';
 import { ref, computed, PropType } from 'vue';
 import { toast } from 'vue3-toastify';
 import ModuleService from '@/services/ModuleService';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {

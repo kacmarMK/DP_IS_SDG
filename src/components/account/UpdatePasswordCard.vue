@@ -6,7 +6,7 @@
         ref="currentPwRef"
         v-model="oldPassword"
         autocomplete="off"
-        label="Current Password"
+        :label="t('account.current_password')"
         :type="hidePwCurrent ? 'password' : 'text'"
         lazy-rules
         :rules="currentPasswordRules"
@@ -23,7 +23,7 @@
         ref="newPwRef"
         v-model="newPassword"
         autocomplete="off"
-        label="New Password"
+        :label="t('account.new_password')"
         :type="hidePwNew ? 'password' : 'text'"
         :rules="newPasswordRules"
       >
@@ -41,7 +41,7 @@
         color="primary"
         unelevated
         type="submit"
-        label="Save"
+        :label="t('global.save')"
         :loading="changingPassword"
         no-caps
         @click.prevent="updatePassword"
@@ -58,6 +58,9 @@ import { User, UserUpdate } from '@/models/User';
 import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps({
   user: {
@@ -84,13 +87,14 @@ const changingPassword = ref(false);
 
 const currentPasswordRules = [
   (val: string) =>
-    (val && val.length > 0) || 'Please enter your current password',
+    (val && val.length > 0) || t('account.rules.password_current_required'),
   (val: string) =>
-    val === props.user?.password || 'Please enter your current password',
+    val === props.user?.password || t('account.rules.password_current_wrong'),
 ];
 
 const newPasswordRules = [
-  (val: string) => (val && val.length > 0) || 'Please enter a new password',
+  (val: string) =>
+    (val && val.length > 0) || t('account.rules.password_required'),
 ];
 
 async function updatePassword() {
@@ -110,10 +114,10 @@ async function updatePassword() {
   try {
     changingPassword.value = true;
     await AuthService.updateUser(updateUser, props.user.uid);
-    toast.success('Password changed!');
+    toast.success(t('account.toasts.password_change_success'));
     emit('update');
   } catch (err) {
-    handleError(err, 'Changing password failed');
+    handleError(err, t('account.toasts.password_change_failed'));
   } finally {
     changingPassword.value = false;
   }
