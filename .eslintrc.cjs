@@ -8,7 +8,7 @@ module.exports = {
   // Must use parserOptions instead of "parser" to allow vue-eslint-parser to keep working
   // `parser: 'vue-eslint-parser'` is already included with any 'plugin:vue/**' config and should be omitted
   parserOptions: {
-    parser: require.resolve('@typescript-eslint/parser'),
+    parser: '@typescript-eslint/parser',
     extraFileExtensions: ['.vue'],
   },
 
@@ -89,16 +89,26 @@ module.exports = {
 
     '@intlify/vue-i18n/no-dynamic-keys': 'error',
     '@intlify/vue-i18n/no-unused-keys': [
-      'error',
+      'warn',
       {
         extensions: ['.js', '.vue'],
       },
     ],
+    // '@intlify/vue-i18n/no-missing-keys-in-other-locales': ['error'],
   },
   settings: {
     'vue-i18n': {
-      localeDir: './src/i18n/*.json',
+      localeDir: 'src/i18n/*.json',
       messageSyntaxVersion: '^9.8.0',
     },
   },
+  overrides: [
+    {
+      files: ['*.json'],
+      parser: 'jsonc-eslint-parser',
+      rules: {
+        quotes: ['warn', 'double'],
+      },
+    },
+  ],
 };
