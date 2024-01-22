@@ -20,7 +20,7 @@
           no-caps
           size="15px"
           :label="t('job.label', 2)"
-          icon="mdi-list-status"
+          :icon="mdiListStatus"
         />
         <q-btn
           v-if="authStore.isAdmin"
@@ -30,7 +30,7 @@
           no-caps
           size="15px"
           :label="t('global.edit')"
-          icon="mdi-pencil"
+          :icon="mdiPencil"
           :to="`/devices/${device?.uid}/edit`"
         />
       </div>
@@ -87,6 +87,7 @@ import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue
 import CurrentJobCard from '@/components/jobs/CurrentJobCard.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import { mdiListStatus, mdiPencil } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

@@ -12,7 +12,7 @@
         no-caps
         size="15px"
         :label="t('device.add_device')"
-        icon="mdi-plus"
+        :icon="mdiPlus"
         @click="addDeviceDialog = true"
       />
     </div>
@@ -28,7 +28,7 @@
     >
       <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
-          <q-icon name="devices" class="q-mb-md" size="50px"></q-icon>
+          <q-icon :name="mdiCellphoneLink" class="q-mb-md" size="50px"></q-icon>
           {{ message }}
         </div>
       </template>
@@ -53,7 +53,7 @@
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions" no-hover>
           <q-btn
-            icon="mdi-open-in-new"
+            :icon="mdiOpenInNew"
             color="grey-color"
             flat
             round
@@ -64,7 +64,7 @@
           </q-btn>
           <q-btn
             v-if="authStore.isAdmin"
-            icon="mdi-pencil"
+            :icon="mdiPencil"
             color="grey-color"
             flat
             round
@@ -75,7 +75,7 @@
           </q-btn>
           <q-btn
             v-if="authStore.isAdmin"
-            icon="mdi-trash-can-outline"
+            :icon="mdiTrashCanOutline"
             color="grey-color"
             flat
             round
@@ -115,6 +115,13 @@ import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import {
+  mdiCellphoneLink,
+  mdiOpenInNew,
+  mdiPencil,
+  mdiPlus,
+  mdiTrashCanOutline,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

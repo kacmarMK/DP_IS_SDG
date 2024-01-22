@@ -6,7 +6,7 @@
           flat
           dense
           round
-          icon="mdi-menu"
+          :icon="mdiMenu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
@@ -19,7 +19,7 @@
           size="18px"
           round
           padding="4px"
-          icon="account_circle"
+          :icon="mdiAccountCircle"
           :ripple="false"
         >
           <q-menu>
@@ -35,7 +35,7 @@
               <q-separator />
               <q-item clickable to="/account">
                 <div class="row items-center q-gutter-sm">
-                  <q-icon size="24px" name="person_outline" />
+                  <q-icon size="24px" :name="mdiAccountOutline" />
                   <div>{{ t('global.account') }}</div>
                 </div>
               </q-item>
@@ -48,7 +48,7 @@
               <q-separator />
               <q-item clickable @click="authStore.logout()">
                 <div class="row items-center q-gutter-sm">
-                  <q-icon size="24px" name="mdi-logout" />
+                  <q-icon size="24px" :name="mdiLogout" />
                   <div>{{ t('account.logout') }}</div>
                 </div>
               </q-item>
@@ -74,17 +74,17 @@
             to="/"
             :exact="true"
             :label="t('global.home')"
-            icon="mdi-home"
+            :icon="mdiHome"
           />
           <side-menu-button
             to="/devices"
             :label="t('device.label', 2)"
-            icon="mdi-cellphone-link"
+            :icon="mdiCellphoneLink"
           />
           <side-menu-button
             to="/collections"
             :label="t('collection.label', 2)"
-            icon="mdi-hub-outline"
+            :icon="mdiHubspot"
           />
           <!-- <side-menu-button
             to="/company"
@@ -99,23 +99,23 @@
           <side-menu-button
             to="/jobs"
             :label="t('job.label', 2)"
-            icon="mdi-list-status"
+            :icon="mdiListStatus"
           />
           <side-menu-button
             to="/recipes"
             :label="t('recipe.label', 2)"
-            icon="mdi-book-multiple-outline"
+            :icon="mdiBookMultipleOutline"
           />
           <side-menu-button
             to="/commands"
             :label="t('command.label', 2)"
-            icon="mdi-code-tags"
+            :icon="mdiCodeTags"
           />
           <side-menu-button
             v-if="authStore.isAdmin"
             to="/user-management"
             :label="t('global.user_management')"
-            icon="mdi-account-group"
+            :icon="mdiAccountGroup"
           />
         </div>
       </div>
@@ -132,6 +132,19 @@ import SideMenuButton from '@/components/core/SideMenuButton.vue';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import {
+  mdiMenu,
+  mdiAccountCircle,
+  mdiLogout,
+  mdiAccountOutline,
+  mdiHome,
+  mdiCellphoneLink,
+  mdiHubspot,
+  mdiListStatus,
+  mdiBookMultipleOutline,
+  mdiCodeTags,
+  mdiAccountGroup,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

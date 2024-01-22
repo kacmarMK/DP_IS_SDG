@@ -25,7 +25,7 @@
                 >
                   <template #append>
                     <q-icon
-                      :name="isPwd ? 'visibility_off' : 'visibility'"
+                      :name="isPwd ? mdiEyeOff : mdiEye"
                       class="cursor-pointer"
                       @click="isPwd = !isPwd"
                     />
@@ -77,6 +77,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { isFormValid } from '@/utils/form-validation';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
+import { mdiEye, mdiEyeOff } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

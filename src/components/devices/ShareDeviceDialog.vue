@@ -31,7 +31,7 @@
                   round
                   flat
                   dense
-                  icon="mdi-close"
+                  :icon="mdiClose"
                   @click="removeSharedUser(user)"
                 />
               </q-item-section>
@@ -55,6 +55,7 @@ import { Device } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { User } from '@/models/User';
 import { useI18n } from 'vue-i18n';
+import { mdiClose } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

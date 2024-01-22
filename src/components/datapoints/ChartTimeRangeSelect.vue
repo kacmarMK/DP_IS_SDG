@@ -13,7 +13,7 @@
     @update:model-value="setPredefinedTimeRange"
   >
     <template #prepend>
-      <q-icon name="mdi-clock-outline" />
+      <q-icon :name="mdiClockOutline" />
     </template>
     <template #after-options>
       <q-item clickable>
@@ -50,6 +50,7 @@ import { format, subSeconds } from 'date-fns';
 import { computed, ref } from 'vue';
 import { PredefinedTimeRange } from '@/models/TimeRange';
 import { useI18n } from 'vue-i18n';
+import { mdiClockOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

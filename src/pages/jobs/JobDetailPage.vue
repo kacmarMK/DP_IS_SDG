@@ -37,7 +37,7 @@
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon name="mdi-list-status" class="q-mb-md" size="50px"></q-icon>
+            <q-icon :name="mdiListStatus" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
@@ -72,11 +72,11 @@
               </div>
               <q-icon
                 v-else-if="props.row.step < currentStep"
-                name="mdi-check"
+                :name="mdiCheck"
                 size="28px"
                 color="green"
               ></q-icon>
-              <q-icon v-else name="mdi-check" size="28px" color="grey"></q-icon>
+              <q-icon v-else :name="mdiCheck" size="28px" color="grey"></q-icon>
             </div>
           </q-td>
         </template>
@@ -106,6 +106,7 @@ import { JobStatusEnum } from '@/models/JobStatusEnum';
 import JobStatusBadges from '@/components/jobs/JobStatusBadges.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import { mdiCheck, mdiListStatus } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

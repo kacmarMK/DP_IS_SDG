@@ -10,7 +10,7 @@
           v-if="runningJob"
           dense
           size="14px"
-          icon="mdi-open-in-new"
+          :icon="mdiOpenInNew"
           color="grey-color"
           :to="`/jobs/${runningJob?.uid}`"
           flat
@@ -103,6 +103,7 @@ import JobStatusBadges from './JobStatusBadges.vue';
 import { Device } from '@/models/Device';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import { mdiOpenInNew } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

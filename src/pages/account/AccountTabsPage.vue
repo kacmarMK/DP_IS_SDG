@@ -17,7 +17,7 @@
           :to="{ path: '/account' }"
           style="min-width: 130px"
           name="account"
-          icon="mdi-account"
+          :icon="mdiAccount"
           :label="t('account.label')"
           no-caps
         />
@@ -29,6 +29,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { mdiAccount } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 </script>

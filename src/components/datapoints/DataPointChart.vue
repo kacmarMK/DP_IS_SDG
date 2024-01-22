@@ -41,7 +41,7 @@
         no-caps
         :label="t('global.refresh')"
         padding="0.5rem 1rem"
-        icon="mdi-refresh"
+        :icon="mdiRefresh"
         @click="refreshDevice()"
       ></q-btn>
     </div>
@@ -68,6 +68,7 @@ import { format } from 'date-fns';
 import { DataPointTag } from '@/models/DataPointTag';
 import { now } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
+import { mdiRefresh } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

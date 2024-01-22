@@ -12,7 +12,7 @@
           no-caps
           size="15px"
           :label="t('device.add_device')"
-          icon="mdi-plus"
+          :icon="mdiPlus"
           to="/devices/create"
         />
       </div>
@@ -31,6 +31,7 @@ import { useDevicesStore } from '@/stores/devices-store';
 import DevicesTable from '@/components/devices/DevicesTable.vue';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth-store';
+import { mdiPlus } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

@@ -12,7 +12,7 @@
           no-caps
           size="15px"
           :label="t('collection.create_collection')"
-          icon="mdi-plus"
+          :icon="mdiPlus"
           @click="createCollectionDialog = true"
         />
       </div>
@@ -30,7 +30,7 @@
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon name="mdi-hub-outline" class="q-mb-md" size="50px"></q-icon>
+            <q-icon :name="mdiHubspot" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
@@ -53,7 +53,7 @@
                 dense
                 unelevated
                 flat
-                :icon="props.expand ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                :icon="props.expand ? mdiChevronUp : mdiChevronDown"
                 @click="props.expand = !props.expand"
               />
             </q-td>
@@ -72,7 +72,7 @@
             </q-td>
             <q-td auto-width>
               <q-btn
-                icon="mdi-open-in-new"
+                :icon="mdiOpenInNew"
                 color="grey-color"
                 flat
                 round
@@ -83,7 +83,7 @@
               </q-btn>
               <q-btn
                 v-if="authStore.isAdmin"
-                icon="mdi-pencil"
+                :icon="mdiPencil"
                 color="grey-color"
                 flat
                 round
@@ -97,7 +97,7 @@
               </q-btn>
               <q-btn
                 v-if="authStore.isAdmin"
-                icon="mdi-trash-can-outline"
+                :icon="mdiTrashCanOutline"
                 color="grey-color"
                 flat
                 round
@@ -164,6 +164,15 @@ import ModulesTable from '@/components/modules/ModulesTable.vue';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
+import {
+  mdiChevronDown,
+  mdiChevronUp,
+  mdiHubspot,
+  mdiOpenInNew,
+  mdiPencil,
+  mdiPlus,
+  mdiTrashCanOutline,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

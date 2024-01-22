@@ -14,7 +14,7 @@
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
             <q-icon
-              name="mdi-account-group"
+              :name="mdiAccountGroup"
               class="q-mb-md"
               size="50px"
             ></q-icon>
@@ -25,7 +25,7 @@
           <q-td auto-width :props="props">
             <q-btn
               :to="`/user-management/${props.row.uid}`"
-              icon="mdi-pencil"
+              :icon="mdiPencil"
               color="grey-color"
               flat
               round
@@ -48,6 +48,7 @@ import { QTableProps } from 'quasar';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { format } from 'date-fns';
+import { mdiAccountGroup, mdiPencil } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

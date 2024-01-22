@@ -13,7 +13,7 @@
       >
         <template #append>
           <q-icon
-            :name="hidePwCurrent ? 'mdi-eye-off' : 'mdi-eye'"
+            :name="hidePwCurrent ? mdiEyeOff : mdiEye"
             class="cursor-pointer"
             @click="hidePwCurrent = !hidePwCurrent"
           />
@@ -29,7 +29,7 @@
       >
         <template #append>
           <q-icon
-            :name="hidePwNew ? 'mdi-eye-off' : 'mdi-eye'"
+            :name="hidePwNew ? mdiEyeOff : mdiEye"
             class="cursor-pointer"
             @click="hidePwNew = !hidePwNew"
           />
@@ -59,6 +59,7 @@ import { toast } from 'vue3-toastify';
 import { QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
 import { useI18n } from 'vue-i18n';
+import { mdiEyeOff, mdiEye } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

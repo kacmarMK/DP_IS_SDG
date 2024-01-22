@@ -27,14 +27,18 @@
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon name="data_object" class="q-mb-md" size="50px"></q-icon>
+            <q-icon
+              :name="mdiBookMultipleOutline"
+              class="q-mb-md"
+              size="50px"
+            ></q-icon>
             {{ message }}
           </div>
         </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
-              icon="mdi-pencil"
+              :icon="mdiPencil"
               color="grey-color"
               flat
               round
@@ -48,7 +52,7 @@
               </q-tooltip>
             </q-btn>
             <q-btn
-              icon="mdi-trash-can-outline"
+              :icon="mdiTrashCanOutline"
               color="grey-color"
               flat
               round
@@ -78,6 +82,11 @@ import EditRecipeDialog from '@/components/recipes/EditRecipeDialog.vue';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {
+  mdiBookMultipleOutline,
+  mdiPencil,
+  mdiTrashCanOutline,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const store = useRecipesStore();

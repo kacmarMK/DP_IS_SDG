@@ -4,7 +4,7 @@
       <JobControlButton
         :label="t('job.controls.pause')"
         color="grey-color"
-        icon="mdi-pause"
+        :icon="mdiPause"
         :loading="pausingJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="pauseJob"
@@ -14,7 +14,7 @@
       <JobControlButton
         :label="t('job.controls.resume')"
         color="primary"
-        icon="mdi-play"
+        :icon="mdiPlay"
         :loading="resumingJob"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="resumeJob"
@@ -24,7 +24,7 @@
       <JobControlButton
         :label="t('job.controls.skip_step')"
         color="green-9"
-        icon="mdi-skip-next"
+        :icon="mdiSkipNext"
         :loading="skipStepLoading"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="skipStep"
@@ -34,7 +34,7 @@
       <JobControlButton
         :label="t('job.controls.skip_cycle')"
         color="primary"
-        icon="mdi-skip-forward"
+        :icon="mdiSkipForward"
         :loading="skipCycleLoading"
         :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="skipCycle"
@@ -44,7 +44,7 @@
       <JobControlButton
         :label="t('job.controls.stop')"
         color="red"
-        icon="mdi-stop"
+        :icon="mdiStop"
         :loading="stoppingJob"
         :disable="runningJob.toCancel == true"
         @click="stopJob"
@@ -62,6 +62,13 @@ import jobService from '@/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
+import {
+  mdiPause,
+  mdiPlay,
+  mdiSkipNext,
+  mdiSkipForward,
+  mdiStop,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

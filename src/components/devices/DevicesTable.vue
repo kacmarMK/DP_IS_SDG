@@ -12,7 +12,7 @@
     >
       <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
-          <q-icon name="devices" class="q-mb-md" size="50px"></q-icon>
+          <q-icon :name="mdiCellphoneLink" class="q-mb-md" size="50px"></q-icon>
           {{ message }}
         </div>
       </template>
@@ -31,7 +31,7 @@
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions">
           <q-btn
-            icon="mdi-open-in-new"
+            :icon="mdiOpenInNew"
             color="grey-color"
             flat
             round
@@ -42,7 +42,7 @@
           </q-btn>
           <q-btn
             v-if="authStore.isAdmin"
-            icon="mdi-pencil"
+            :icon="mdiPencil"
             color="grey-color"
             flat
             round
@@ -53,7 +53,7 @@
           </q-btn>
           <q-btn
             v-if="authStore.isAdmin"
-            icon="mdi-trash-can-outline"
+            :icon="mdiTrashCanOutline"
             color="grey-color"
             flat
             round
@@ -67,7 +67,7 @@
           </q-btn>
           <q-btn
             v-if="authStore.isAdmin"
-            icon="mdi-dots-vertical"
+            :icon="mdiDotsVertical"
             color="grey-color"
             flat
             round
@@ -80,7 +80,7 @@
                   @click="initExpireTimeWindow(propsActions.row.uid)"
                 >
                   <div class="row items-center q-gutter-sm">
-                    <q-icon color="grey-9" size="24px" name="mdi-timer" />
+                    <q-icon color="grey-9" size="24px" :name="mdiTimer" />
                     <div>{{ t('device.init_window') }}</div>
                   </div>
                 </q-item>
@@ -93,7 +93,7 @@
                   "
                 >
                   <div class="row items-center q-gutter-sm">
-                    <q-icon color="grey-9" size="24px" name="mdi-share" />
+                    <q-icon color="grey-9" size="24px" :name="mdiShare" />
                     <div>{{ t('device.share_device') }}</div>
                   </div>
                 </q-item>
@@ -133,6 +133,15 @@ import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth-store';
+import {
+  mdiCellphoneLink,
+  mdiDotsVertical,
+  mdiOpenInNew,
+  mdiPencil,
+  mdiShare,
+  mdiTimer,
+  mdiTrashCanOutline,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

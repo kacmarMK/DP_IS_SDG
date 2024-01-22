@@ -17,7 +17,7 @@
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon name="mdi-list-status" class="q-mb-md" size="50px"></q-icon>
+            <q-icon :name="mdiListStatus" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
@@ -36,7 +36,7 @@
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
-              icon="mdi-open-in-new"
+              :icon="mdiOpenInNew"
               color="grey-color"
               flat
               round
@@ -61,6 +61,7 @@ import jobService from '@/services/JobService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from 'src/models/JobStatusEnum';
 import { useI18n } from 'vue-i18n';
+import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

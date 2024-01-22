@@ -5,7 +5,7 @@
         flat
         round
         color="grey-color"
-        icon="mdi-trash-can-outline"
+        :icon="mdiTrashCanOutline"
         dense
         @click="emit('remove')"
       />
@@ -47,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 import { QInput } from 'quasar';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';

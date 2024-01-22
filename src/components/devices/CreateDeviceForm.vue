@@ -8,7 +8,7 @@
       header-nav
       keep-alive
     >
-      <q-step :name="1" :title="t('device.device_info')" icon="mdi-pencil">
+      <q-step :name="1" :title="t('device.device_info')" :icon="mdiPencil">
         <q-form>
           <div class="q-pa-sm row q-col-gutter-lg">
             <q-input
@@ -65,49 +65,55 @@
           </q-card-actions>
         </q-form>
       </q-step>
-      <q-step :name="2" :title="t('device.add_sensors')" icon="mdi-thermostat">
-        <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
-          <data-point-tag-form
-            ref="remoteDataPointTagFormRef"
-            v-model:dataPointTagName="dataPointTag.name"
-            v-model:dataPointTag="dataPointTag.tag"
-            v-model:dataPointTagUnit="dataPointTag.unit"
-            v-model:dataPointTagDecimal="dataPointTag.decimal"
-            :data-point-tag-uid="dataPointTag.uid"
-            @remove="deleteRemoteDataPointTag(dataPointTag.uid)"
-          />
-        </div>
-        <div v-for="(dataPointTag, index) in localDataPointTags" :key="index">
-          <data-point-tag-form
-            ref="localDataPointTagFormRef"
-            v-model:dataPointTagName="dataPointTag.name"
-            v-model:dataPointTag="dataPointTag.tag"
-            v-model:dataPointTagUnit="dataPointTag.unit"
-            v-model:dataPointTagDecimal="dataPointTag.decimal"
-            @remove="deleteLocalDataPointTag(index)"
-          />
-        </div>
-        <div class="text-primary">
-          <q-btn
-            class="full-width q-mb-md q-mt-sm"
-            outline
-            icon="mdi-plus-circle"
-            color="primary"
-            no-caps
-            padding="12px 30px"
-            :label="t('device.add_sensor')"
-            @click="addLocalDataPointTag"
-          />
-          <q-btn
-            unelevated
-            color="primary"
-            :label="t('global.save')"
-            padding="7px 35px"
-            :loading="submittingForm"
-            no-caps
-            @click="submitForm"
-          />
-        </div>
+      <q-step :name="2" :title="t('device.add_sensors')" :icon="matSensors">
+        <q-form>
+          <div
+            v-for="(dataPointTag, index) in remoteDataPointTags"
+            :key="index"
+          >
+            <data-point-tag-form
+              ref="remoteDataPointTagFormRef"
+              v-model:dataPointTagName="dataPointTag.name"
+              v-model:dataPointTag="dataPointTag.tag"
+              v-model:dataPointTagUnit="dataPointTag.unit"
+              v-model:dataPointTagDecimal="dataPointTag.decimal"
+              :data-point-tag-uid="dataPointTag.uid"
+              @remove="deleteRemoteDataPointTag(dataPointTag.uid)"
+            />
+          </div>
+          <div v-for="(dataPointTag, index) in localDataPointTags" :key="index">
+            <data-point-tag-form
+              ref="localDataPointTagFormRef"
+              v-model:dataPointTagName="dataPointTag.name"
+              v-model:dataPointTag="dataPointTag.tag"
+              v-model:dataPointTagUnit="dataPointTag.unit"
+              v-model:dataPointTagDecimal="dataPointTag.decimal"
+              @remove="deleteLocalDataPointTag(index)"
+            />
+          </div>
+          <div class="text-primary">
+            <q-btn
+              class="full-width q-mb-md q-mt-sm"
+              outline
+              :icon="mdiPlusCircle"
+              color="primary"
+              no-caps
+              padding="12px 30px"
+              :label="t('device.add_sensor')"
+              @click="addLocalDataPointTag"
+            />
+            <q-btn
+              unelevated
+              color="primary"
+              :label="t('global.save')"
+              padding="7px 35px"
+              :loading="submittingForm"
+              no-caps
+              type="submit"
+              @click.prevent="submitForm"
+            />
+          </div>
+        </q-form>
       </q-step>
     </q-stepper>
   </q-card>
@@ -127,6 +133,8 @@ import { useI18n } from 'vue-i18n';
 import { QField, QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
 import DataPointTagForm from './DataPointTagForm.vue';
+import { mdiPencil, mdiPlusCircle } from '@quasar/extras/mdi-v6';
+import { matSensors } from '@quasar/extras/material-icons';
 
 const { t } = useI18n();
 
