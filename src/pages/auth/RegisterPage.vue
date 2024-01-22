@@ -4,8 +4,8 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">{{ t('auth.register.label') }}</h1>
-            <div>
+            <h1>{{ t('auth.register.label') }}</h1>
+            <div class="q-mt-md">
               <q-form>
                 <q-input
                   ref="nicknameRef"
@@ -98,23 +98,23 @@ const mailRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
 const nameRules = [
-  (val: string) => (val && val.length > 0) || t('auth.rules.username_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
 ];
 const mailRules = [
-  (val: string) => (val && val.length > 0) || t('auth.rules.email_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
   (val: string) => {
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
     return emailRegex.test(val) || t('auth.rules.email_invalid');
   },
 ];
 const passwordRules = [
-  (val: string) => (val && val.length > 0) || t('auth.rules.password_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
 ];
 
 async function register() {
-  if (!isFormValid([nicknameRef.value, mailRef.value, passwordRef.value])) {
-    return;
-  }
+  const form = [nicknameRef.value, mailRef.value, passwordRef.value];
+  if (!isFormValid(form)) return;
+
   try {
     isSubmitting.value = true;
     await authService.register(userRegister.value, Role.ADMIN);

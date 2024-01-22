@@ -99,7 +99,7 @@ const series = computed(() => {
   }));
 });
 
-const yaxisLabels = props.dataPointTags.map((tag) => tag.unit) || [];
+const yaxisLabels = props.dataPointTags.map((tag) => tag.unit) ?? [];
 
 const chartOptions = ref({
   chart: {
@@ -270,7 +270,7 @@ function updateSeriesVisibility(tags: DataPointTag[], ticked: string[]) {
 watch(
   () => tickedNodes.value,
   (newTicked) => {
-    updateSeriesVisibility(props.dataPointTags, newTicked || []);
+    updateSeriesVisibility(props.dataPointTags, newTicked ?? []);
   },
 );
 
@@ -278,7 +278,7 @@ watch(
   () => props.dataPointTags,
   async (newTags) => {
     await nextTick();
-    updateSeriesVisibility(newTags, tickedNodes.value || []);
+    updateSeriesVisibility(newTags, tickedNodes.value ?? []);
   },
 );
 </script>

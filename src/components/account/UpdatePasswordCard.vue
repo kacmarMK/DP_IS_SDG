@@ -86,15 +86,13 @@ const newPassword = ref('');
 const changingPassword = ref(false);
 
 const currentPasswordRules = [
-  (val: string) =>
-    (val && val.length > 0) || t('account.rules.password_current_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
   (val: string) =>
     val === props.user?.password || t('account.rules.password_current_wrong'),
 ];
 
 const newPasswordRules = [
-  (val: string) =>
-    (val && val.length > 0) || t('account.rules.password_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
 ];
 
 async function updatePassword() {

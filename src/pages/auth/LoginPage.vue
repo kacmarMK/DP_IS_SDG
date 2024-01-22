@@ -4,8 +4,8 @@
       <q-page class="flex flex-center">
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
-            <h1 class="text-center q-my-md">{{ t('auth.login.label') }}</h1>
-            <div>
+            <h1>{{ t('auth.login.label') }}</h1>
+            <div class="q-mt-md">
               <q-form>
                 <q-input
                   ref="nameRef"
@@ -96,17 +96,16 @@ const nameRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
 const nameRules = [
-  (val: string) => (val && val.length > 0) || t('auth.rules.username_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
 ];
 
 const passwordRules = [
-  (val: string) => (val && val.length > 0) || t('auth.rules.password_required'),
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
 ];
 
 async function login() {
-  if (!isFormValid([nameRef.value, passwordRef.value])) {
-    return;
-  }
+  const form = [nameRef.value, passwordRef.value];
+  if (!isFormValid(form)) return;
 
   try {
     isSubmitting.value = true;

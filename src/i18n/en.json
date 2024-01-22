@@ -22,7 +22,10 @@
     "owner": "Owner",
     "shared": "Shared",
     "permissions": "Permissions",
-    "n_of_m": "{0} of {1}"
+    "n_of_m": "{0} of {1}",
+    "rules": {
+      "required": "This field is required!"
+    }
   },
   "table": {
     "no_data_label": "No data available",
@@ -63,9 +66,6 @@
       "logout_success": "Logout successful!"
     },
     "rules": {
-      "username_required": "Please enter your username",
-      "password_required": "Please enter your password",
-      "email_required": "Please enter your email",
       "email_invalid": "Please enter a valid email address"
     }
   },
@@ -104,10 +104,7 @@
       "role_change_failed": "Changing role failed!"
     },
     "rules": {
-      "password_required": "Password is required!",
-      "password_current_required": "Current password is required!",
       "password_current_wrong": "Current password is wrong!",
-      "email_required": "Email is required!",
       "email_invalid": "Please enter a valid email address"
     }
   },
@@ -163,6 +160,9 @@
         "user_remove_failed": "Removing user from device failed!",
         "shared_users_load_failed": "Loading shared users failed!"
       }
+    },
+    "rules": {
+      "decimal_min": "Decimal places must be greater than 0!"
     }
   },
   "chart": {
@@ -224,8 +224,7 @@
       "load_failed": "Loading job failed!"
     },
     "rules": {
-      "repetitions_min": "Repetitions must be greater than 0!",
-      "recipe_required": "Recipe is required!"
+      "repetitions_min": "Repetitions must be greater than 0!"
     }
   },
   "recipe": {

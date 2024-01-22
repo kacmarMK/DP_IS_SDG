@@ -90,6 +90,7 @@ import { parse } from 'date-fns';
 import { handleError } from '@/utils/error-handler';
 import { Device } from '@/models/Device';
 import { useI18n } from 'vue-i18n';
+import { isFormValid } from '@/utils/form-validation';
 
 const { t } = useI18n();
 
@@ -132,6 +133,10 @@ getRecipes();
 
 async function runJob() {
   if (!jobToRun.value || !props.device) return;
+
+  const form = [repetitionsRef.value, recipeRef.value];
+  if (!isFormValid(form)) return;
+
   try {
     jobToRun.value.scheduledDays = selectedDays.value;
 
@@ -200,7 +205,7 @@ const repetitionRules = [
 const recipeRef = ref<QInput>();
 const recipeRules = [
   (val: string) => {
-    if (!val) return t('job.rules.recipe_required');
+    if (!val) return t('global.rules.required');
     return true;
   },
 ];

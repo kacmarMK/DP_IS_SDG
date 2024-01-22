@@ -22,7 +22,10 @@
     "owner": "Vlastník",
     "shared": "Zdieľané",
     "permissions": "Oprávnenia",
-    "n_of_m": "{0} z {1}"
+    "n_of_m": "{0} z {1}",
+    "rules": {
+      "required": "Toto pole je povinné!"
+    }
   },
   "table": {
     "no_data_label": "Žiadne dostupné dáta",
@@ -63,9 +66,6 @@
       "logout_success": "Odhlásenie prebehlo úspešné!"
     },
     "rules": {
-      "username_required": "Prosím, zadajte svoje používateľské meno",
-      "password_required": "Prosím, zadajte svoje heslo",
-      "email_required": "Prosím, zadajte svoj email",
       "email_invalid": "Prosím, zadajte platnú emailovú adresu"
     }
   },
@@ -104,10 +104,7 @@
       "role_change_failed": "Zmena roly zlyhala!"
     },
     "rules": {
-      "password_required": "Heslo je povinné!",
-      "password_current_required": "Aktuálne heslo je povinné!",
       "password_current_wrong": "Aktuálne heslo je nesprávne!",
-      "email_required": "E-mail je povinný!",
       "email_invalid": "Prosím, zadajte platnú e-mailovú adresu"
     }
   },
@@ -163,6 +160,9 @@
         "user_remove_failed": "Odstránenie používateľa zo zariadenia zlyhalo!",
         "shared_users_load_failed": "Načítanie používateľov zlyhalo!"
       }
+    },
+    "rules": {
+      "decimal_min": "Desatinné miesta musia byť väčšie ako 0!"
     }
   },
   "chart": {
@@ -224,8 +224,7 @@
       "load_failed": "Načítanie úlohy zlyhalo!"
     },
     "rules": {
-      "repetitions_min": "Počet opakovaní musí byť väčší ako 0!",
-      "recipe_required": "Recept je povinný!"
+      "repetitions_min": "Počet opakovaní musí byť väčší ako 0!"
     }
   },
   "recipe": {

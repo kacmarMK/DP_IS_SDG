@@ -94,7 +94,7 @@ module.exports = {
         extensions: ['.js', '.ts', '.vue'],
       },
     ],
-    // '@intlify/vue-i18n/no-missing-keys-in-other-locales': ['error'],
+    '@intlify/vue-i18n/no-missing-keys-in-other-locales': ['warn'],
   },
   settings: {
     'vue-i18n': {

@@ -124,7 +124,7 @@ const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'step',
     label: t('job.step'),
-    field: (row) => row.status?.currentStep || 1,
+    field: (row) => row.status?.currentStep ?? 1,
     sortable: true,
     align: 'left',
     format: (val: string, row: Job) => {
@@ -134,7 +134,7 @@ const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'cycle',
     label: t('job.cycle'),
-    field: (row) => row.status?.currentCycle || 1,
+    field: (row) => row.status?.currentCycle ?? 1,
     sortable: true,
     align: 'left',
     format: (val: number, row: Job) => {

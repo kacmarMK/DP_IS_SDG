@@ -5,7 +5,7 @@ import messages from '@intlify/unplugin-vue-i18n/messages';
 export default boot(({ app }) => {
   const i18n = createI18n({
     legacy: false,
-    locale: localStorage.getItem('locale') || 'en',
+    locale: localStorage.getItem('locale') ?? 'en',
     messages,
   });
 

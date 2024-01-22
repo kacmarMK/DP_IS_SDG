@@ -1,124 +1,91 @@
 <template>
   <q-card style="min-width: 350px" class="q-pa-sm q-pa-md-lg shadow">
-    <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav>
+    <q-stepper
+      ref="stepper"
+      v-model="createStep"
+      animated
+      vertical
+      header-nav
+      keep-alive
+    >
       <q-step :name="1" :title="t('device.device_info')" icon="mdi-pencil">
-        <div class="q-pa-sm row q-col-gutter-lg">
-          <q-input
-            v-model="deviceInput.name"
-            class="col-12 col-md-6"
-            :label="t('global.name')"
-          />
-          <q-input
-            v-model="deviceInput.mac"
-            class="col-12 col-md-6"
-            :label="t('device.mac_address')"
-          />
-          <q-select
-            v-model="deviceInput.type"
-            class="col-12 col-md-6"
-            :label="t('device.type')"
-            :options="Object.values(DeviceTypeEnum)"
-          >
-          </q-select>
-          <q-input
-            v-model="deviceInput.initApiKey"
-            class="col-12 col-md-6"
-            :label="t('device.api_key')"
-          />
-          <q-input
-            v-model="deviceInput.firmware"
-            class="col-12 col-md-6"
-            :label="t('device.firmware')"
-          />
-          <q-input
-            v-model="deviceInput.version"
-            class="col-12 col-md-6"
-            :label="t('device.version')"
-          />
-        </div>
-        <q-card-actions align="left" class="text-primary q-mt-sm">
-          <q-btn
-            unelevated
-            color="primary"
-            :label="t('global.next')"
-            padding="7px 40px"
-            no-caps
-            @click="if (createStep == 1) createStep = 2;"
-          />
-        </q-card-actions>
+        <q-form>
+          <div class="q-pa-sm row q-col-gutter-lg">
+            <q-input
+              ref="nameRef"
+              v-model="deviceInput.name"
+              :rules="nameRules"
+              class="col-12 col-md-6"
+              :label="t('global.name')"
+            />
+            <q-input
+              ref="macRef"
+              v-model="deviceInput.mac"
+              :rules="macRules"
+              class="col-12 col-md-6"
+              :label="t('device.mac_address')"
+            />
+            <q-select
+              ref="typeRef"
+              v-model="deviceInput.type"
+              :rules="typeRules"
+              class="col-12 col-md-6"
+              :label="t('device.type')"
+              :options="Object.values(DeviceTypeEnum)"
+            >
+            </q-select>
+            <q-input
+              ref="initApiKeyRef"
+              v-model="deviceInput.initApiKey"
+              class="col-12 col-md-6"
+              :label="t('device.api_key')"
+            />
+            <q-input
+              ref="firmwareRef"
+              v-model="deviceInput.firmware"
+              class="col-12 col-md-6"
+              :label="t('device.firmware')"
+            />
+            <q-input
+              v-model="deviceInput.version"
+              class="col-12 col-md-6"
+              :label="t('device.version')"
+            />
+          </div>
+          <q-card-actions align="left" class="text-primary q-mt-sm">
+            <q-btn
+              unelevated
+              color="primary"
+              :label="t('global.next')"
+              padding="7px 40px"
+              no-caps
+              type="submit"
+              @click.prevent="goToStep(2)"
+            />
+          </q-card-actions>
+        </q-form>
       </q-step>
       <q-step :name="2" :title="t('device.add_sensors')" icon="mdi-thermostat">
         <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
-          <div class="data-point-container q-my-md">
-            <div class="row items-center justify-end">
-              <q-btn
-                flat
-                round
-                color="grey-color"
-                icon="mdi-trash-can-outline"
-                dense
-                @click="deleteRemoteDataPointTag(dataPointTag.uid)"
-              />
-            </div>
-            <div class="row q-col-gutter-lg">
-              <q-input
-                v-model="dataPointTag.name"
-                class="col-12 col-md-6"
-                :label="t('global.name')"
-              />
-              <q-input
-                v-model="dataPointTag.tag"
-                class="col-12 col-md-6"
-                :label="t('device.tag')"
-              />
-              <q-input
-                v-model="dataPointTag.unit"
-                class="col-12 col-md-6"
-                :label="t('device.unit')"
-              />
-              <q-input
-                v-model="dataPointTag.decimal"
-                class="col-12 col-md-6"
-                :label="t('device.decimal')"
-              />
-            </div>
-          </div>
+          <data-point-tag-form
+            ref="remoteDataPointTagFormRef"
+            v-model:dataPointTagName="dataPointTag.name"
+            v-model:dataPointTag="dataPointTag.tag"
+            v-model:dataPointTagUnit="dataPointTag.unit"
+            v-model:dataPointTagDecimal="dataPointTag.decimal"
+            :data-point-tag-uid="dataPointTag.uid"
+            @remove="deleteRemoteDataPointTag(dataPointTag.uid)"
+          />
         </div>
         <div v-for="(dataPointTag, index) in localDataPointTags" :key="index">
-          <div class="data-point-container q-my-md">
-            <div class="row items-center justify-end">
-              <q-btn
-                flat
-                round
-                color="grey-color"
-                icon="mdi-trash-can-outline"
-                dense
-                @click="deleteLocalDataPointTag(index)"
-              />
-            </div>
-            <div class="row q-col-gutter-lg">
-              <q-input
-                v-model="dataPointTag.name"
-                class="col-12 col-md-6"
-                :label="t('global.name')"
-              />
-              <q-input
-                v-model="dataPointTag.tag"
-                class="col-12 col-md-6"
-                :label="t('device.tag')"
-              />
-              <q-input
-                v-model="dataPointTag.unit"
-                class="col-12 col-md-6"
-                :label="t('device.unit')"
-              />
-              <q-input
-                v-model="dataPointTag.decimal"
-                class="col-12 col-md-6"
-                :label="t('device.decimal')"
-              />
-            </div>
-          </div>
+          <data-point-tag-form
+            ref="localDataPointTagFormRef"
+            v-model:dataPointTagName="dataPointTag.name"
+            v-model:dataPointTag="dataPointTag.tag"
+            v-model:dataPointTagUnit="dataPointTag.unit"
+            v-model:dataPointTagDecimal="dataPointTag.decimal"
+            @remove="deleteLocalDataPointTag(index)"
+          />
         </div>
         <div class="text-primary">
           <q-btn
@@ -157,6 +124,9 @@ import dataPointTagService from '@/services/DataPointTagService';
 import { useRouter } from 'vue-router';
 import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
+import { QField, QInput } from 'quasar';
+import { isFormValid } from '@/utils/form-validation';
+import DataPointTagForm from './DataPointTagForm.vue';
 
 const { t } = useI18n();
 
@@ -254,7 +224,6 @@ async function createDevice(): Promise<Device | undefined> {
   let createdDevice!: Device;
   try {
     createdDevice = await deviceService.createDevice(deviceInput.value);
-    createStep.value = 1;
   } catch (error) {
     handleError(error, t('device.toasts.create_failed'));
   }
@@ -270,7 +239,6 @@ async function updateDevice(): Promise<Device | undefined> {
       deviceInput.value,
       props.editingDeviceId,
     );
-    createStep.value = 1;
   } catch (error) {
     handleError(error, t('device.toasts.update_failed'));
   }
@@ -279,8 +247,18 @@ async function updateDevice(): Promise<Device | undefined> {
 
 const submittingForm = ref(false);
 async function submitForm() {
-  submittingForm.value = true;
+  const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
+  if (!isFormValid(firstStepForm)) {
+    createStep.value = 1;
+    return;
+  }
 
+  if (!isFormValid(allDataPointTagRefs())) {
+    createStep.value = 2;
+    return;
+  }
+
+  submittingForm.value = true;
   let device: Device | undefined;
   if (props.isEditing) {
     device = await updateDevice();
@@ -340,6 +318,43 @@ async function submitForm() {
   }
 
   router.push(`/devices/${device.uid}`);
+}
+
+function goToStep(step: number) {
+  if (createStep.value == 1) {
+    const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
+    if (!isFormValid(firstStepForm)) return;
+  }
+  createStep.value = step;
+}
+
+// Input validation
+const nameRef = ref<QInput>();
+const macRef = ref<QInput>();
+const typeRef = ref<QField>();
+
+const localDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
+const remoteDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
+
+const nameRules = [
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
+];
+const macRules = [
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
+];
+const typeRules = [
+  (val: string) => (val && val.length > 0) || t('global.rules.required'),
+];
+
+function allDataPointTagRefs() {
+  const allRefs: QInput[] = [];
+  for (const dataPointTagForm of localDataPointTagFormRef.value) {
+    allRefs.push(...dataPointTagForm.getAllRefs());
+  }
+  for (const dataPointTagForm of remoteDataPointTagFormRef.value) {
+    allRefs.push(...dataPointTagForm.getAllRefs());
+  }
+  return allRefs;
 }
 </script>
 

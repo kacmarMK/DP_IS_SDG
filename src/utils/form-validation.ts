@@ -1,6 +1,7 @@
-import { QInput } from 'quasar';
+import { QField } from 'quasar';
 
-function isFormValid(inputRefs: (QInput | undefined)[]) {
+function isFormValid(inputRefs: (QField | undefined)[]) {
+  if (!inputRefs) return false;
   let hasError = false;
   for (const input of inputRefs) {
     if (input) {

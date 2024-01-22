@@ -51,7 +51,7 @@ const expanded = ref<string[]>(extractNodeKeys(props.dataPointTagTree));
 
 const noChildren = computed(() => {
   return (
-    props.dataPointTagTree.children?.every((node) => node.dataPointTag) || false
+    props.dataPointTagTree.children?.every((node) => node.dataPointTag) ?? false
   );
 });
 

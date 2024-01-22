@@ -46,7 +46,7 @@
             <div>
               {{
                 t('job.step_of', [
-                  runningJob.status?.currentStep || 1,
+                  runningJob.status?.currentStep ?? 1,
                   runningJob.noOfCmds,
                 ])
               }}
@@ -56,7 +56,7 @@
             <div>
               {{
                 t('job.cycle_of', [
-                  runningJob.status?.currentCycle || 1,
+                  runningJob.status?.currentCycle ?? 1,
                   runningJob.noOfReps,
                 ])
               }}
@@ -158,7 +158,7 @@ const currentProgress = computed(() => {
     const total = noOfReps * noOfCmds;
 
     const current =
-      status.currentStep + ((status.currentCycle || 1) - 1) * noOfCmds;
+      status.currentStep + ((status.currentCycle ?? 1) - 1) * noOfCmds;
 
     return Math.min(current / total, 1);
   }
@@ -168,7 +168,7 @@ const currentProgress = computed(() => {
 const currentCommandName = computed(() => {
   if (runningJob.value && runningJob.value.status) {
     const { status, commands } = runningJob.value;
-    return commands[(status.currentStep || 1) - 1].name ?? '';
+    return commands[(status.currentStep ?? 1) - 1].name ?? '';
   }
   return '';
 });

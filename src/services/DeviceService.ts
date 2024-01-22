@@ -11,7 +11,7 @@ class DeviceService {
   async getDevice(uid: string): Promise<Device> {
     const device = await api<Device>(`device/getDeviceById/${uid}`);
     device.dataPointTags = device.dataPointTags.filter(
-      (dataPoint) => dataPoint !== null,
+      (dataPoint) => dataPoint !== null && dataPoint.deactivated === false,
     );
     return device;
   }
