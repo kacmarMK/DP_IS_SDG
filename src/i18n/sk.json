@@ -49,7 +49,7 @@
       "sign_up": "Zaregistrujte sa",
       "toasts": {
         "login_failed": "Prihlásenie zlyhalo!",
-        "login_success": "Prihlásenie prebehlo úspešné!"
+        "login_success": "Prihlásenie prebehlo úspešne!"
       }
     },
     "register": {
@@ -59,11 +59,11 @@
       "login": "Prihláste sa",
       "toasts": {
         "register_failed": "Registrácia zlyhala!",
-        "register_success": "Registrácia prebehla úspešné!"
+        "register_success": "Registrácia prebehla úspešne!"
       }
     },
     "toasts": {
-      "logout_success": "Odhlásenie prebehlo úspešné!"
+      "logout_success": "Odhlásenie prebehlo úspešne!"
     },
     "rules": {
       "email_invalid": "Prosím, zadajte platnú emailovú adresu"

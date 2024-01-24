@@ -1,6 +1,6 @@
 <template>
   <q-page class="main-padding">
-    <div>
+    <div v-if="device">
       <div class="q-mb-md row">
         <router-link
           class="main-text text-accent text-weight-medium z-fab"
@@ -9,10 +9,9 @@
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ t('device.label', 2) }} >
         </router-link>
-        <p class="main-text z-fab">&nbsp;{{ device?.name }}</p>
+        <p class="main-text z-fab">&nbsp;{{ device.name }}</p>
         <q-space></q-space>
         <q-btn
-          v-if="device"
           class="shadow bg-white q-ml-md"
           :to="`/devices/${device?.uid}/jobs`"
           text-color="grey-color"
@@ -34,10 +33,7 @@
           :to="`/devices/${device?.uid}/edit`"
         />
       </div>
-      <div
-        v-if="device"
-        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
-      >
+      <div class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
         <div class="col-12 col-md-12 col-lg-4 col-xl-3">
           <device-info-card
             :device="device"
@@ -68,7 +64,6 @@
           ></data-point-chart>
         </div>
       </div>
-      <div></div>
     </div>
   </q-page>
 </template>
