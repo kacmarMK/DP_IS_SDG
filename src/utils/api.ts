@@ -12,7 +12,7 @@ async function onResponseError(context: FetchContext) {
     authStore.isTokenExpired &&
     authStore.isAuthenticated
   ) {
-    authStore.logout(true);
+    authStore.logout();
   }
 }
 

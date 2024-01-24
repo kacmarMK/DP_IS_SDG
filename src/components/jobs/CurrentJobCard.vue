@@ -22,7 +22,7 @@
         v-if="runningJob"
         class="column justify-between col-grow q-my-sm wrap"
       >
-        <div class="row justify-center justify-sm-start items-center">
+        <div class="row justify-start items-center q-mb-sm">
           <q-circular-progress
             show-value
             font-size="16px"

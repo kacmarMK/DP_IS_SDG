@@ -46,7 +46,7 @@
                 </div>
               </q-item> -->
               <q-separator />
-              <q-item clickable @click="authStore.logout()">
+              <q-item clickable @click="logout()">
                 <div class="row items-center q-gutter-sm">
                   <q-icon size="24px" :name="mdiLogout" />
                   <div>{{ t('account.logout') }}</div>
@@ -145,11 +145,17 @@ import {
   mdiCodeTags,
   mdiAccountGroup,
 } from '@quasar/extras/mdi-v6';
+import { toast } from 'vue3-toastify';
 
 const { t } = useI18n();
 
 const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
+
+function logout() {
+  authStore.logout();
+  toast.success(t('auth.toasts.logout_success'));
+}
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

@@ -4,10 +4,8 @@ import { User, UserLogin } from '@/models/User';
 import AuthService from '@/services/AuthService';
 import { computed, nextTick, ref, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
-import { toast } from 'vue3-toastify';
 import { Role } from '@/models/Role';
 import { JwtPayload } from '@/models/JwtPayload';
-import { useI18n } from 'vue-i18n';
 
 export const useAuthStore = defineStore('authStore', () => {
   const jwt = useStorage('jwt', '');
@@ -20,13 +18,9 @@ export const useAuthStore = defineStore('authStore', () => {
     jwt.value = res;
   }
 
-  function logout(this: AuthUserStore, silent: boolean = false) {
+  function logout(this: AuthUserStore) {
     jwt.value = '';
     this.router.push('/login');
-    if (!silent) {
-      const { t } = useI18n();
-      toast.success(t('auth.toasts.logout_success'));
-    }
   }
 
   async function getCurrentUser() {
