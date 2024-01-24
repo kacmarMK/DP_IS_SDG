@@ -45,7 +45,7 @@
             :label="t('job.scheduled_time')"
           >
             <template #append>
-              <q-icon name="access_time" class="cursor-pointer">
+              <q-icon :name="mdiClock" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="scheduledTime" format24h>
                     <div class="row items-center justify-end">
@@ -91,6 +91,7 @@ import { handleError } from '@/utils/error-handler';
 import { Device } from '@/models/Device';
 import { useI18n } from 'vue-i18n';
 import { isFormValid } from '@/utils/form-validation';
+import { mdiClock } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 
