@@ -91,15 +91,15 @@
             label="Team"
             icon="mdi-account-group"
           /> -->
-          <!-- <side-menu-button
-            to="/notifications"
-            label="Notifications"
-            icon="mdi-bell"
-          /> -->
           <side-menu-button
             to="/jobs"
             :label="t('job.label', 2)"
             :icon="mdiListStatus"
+          />
+          <side-menu-button
+            to="/scenarios"
+            :label="t('scenario.label', 2)"
+            :icon="mdiVariable"
           />
           <side-menu-button
             to="/recipes"
@@ -141,6 +141,7 @@ import {
   mdiCellphoneLink,
   mdiHubspot,
   mdiListStatus,
+  mdiVariable,
   mdiBookMultipleOutline,
   mdiCodeTags,
   mdiAccountGroup,

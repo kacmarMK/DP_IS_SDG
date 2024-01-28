@@ -295,5 +295,8 @@
       "add_device_to_module_success": "Zariadenie bolo pridané do modulu!",
       "add_device_to_module_failed": "Pridanie zariadenia do modulu zlyhalo!"
     }
+  },
+  "scenario": {
+    "label": "Scenár | Scenáre"
   }
 }

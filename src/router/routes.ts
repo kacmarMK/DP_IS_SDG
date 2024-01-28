@@ -80,6 +80,10 @@ const routes: RouteRecordRaw[] = [
         path: '/modules/:id/',
         component: () => import('pages/modules/ModulePage.vue'),
       },
+      {
+        path: 'scenarios',
+        component: () => import('pages/scenarios/ScenariosPage.vue'),
+      },
     ],
   },
   {

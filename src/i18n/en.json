@@ -295,5 +295,8 @@
       "add_device_to_module_success": "Device added to module!",
       "add_device_to_module_failed": "Adding device to module failed!"
     }
+  },
+  "scenario": {
+    "label": "Scenario | Scenarios"
   }
 }
