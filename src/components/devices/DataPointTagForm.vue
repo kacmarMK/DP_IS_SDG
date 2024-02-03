@@ -6,22 +6,28 @@
     <div class="row q-col-gutter-lg">
       <q-input
         ref="dataTagNameRef"
-        v-model="dataPointTagName"
+        v-model="dataPointTag.name"
         :rules="nameRules"
         class="col-12 col-md-6"
         :label="t('global.name')"
       />
-      <q-input ref="tagRef" v-model="dataPointTag" :rules="tagRules" class="col-12 col-md-6" :label="t('device.tag')" />
+      <q-input
+        ref="tagRef"
+        v-model="dataPointTag.tag"
+        :rules="tagRules"
+        class="col-12 col-md-6"
+        :label="t('device.tag')"
+      />
       <q-input
         ref="unitRef"
-        v-model="dataPointTagUnit"
+        v-model="dataPointTag.unit"
         :rules="unitRules"
         class="col-12 col-md-6"
         :label="t('device.unit')"
       />
       <q-input
         ref="decimalRef"
-        v-model.number="dataPointTagDecimal"
+        v-model.number="dataPointTag.decimal"
         type="number"
         inputmode="numeric"
         mask="#"
@@ -34,23 +40,16 @@
 </template>
 
 <script setup lang="ts">
+import { DataPointTagInput } from '@/models/DataPointTag';
 import { mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 import { QInput } from 'quasar';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const dataPointTagName = defineModel<string>('dataPointTagName', {
+const dataPointTag = defineModel<DataPointTagInput>({
   required: true,
 });
-const dataPointTag = defineModel<string>('dataPointTag', {
-  required: true,
-});
-const dataPointTagUnit = defineModel<string>('dataPointTagUnit', {
-  required: true,
-});
-const dataPointTagDecimal = defineModel<number>('dataPointTagDecimal', {
-  required: true,
-});
+
 const emit = defineEmits(['remove']);
 
 const { t } = useI18n();

@@ -59,21 +59,14 @@
           <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
             <data-point-tag-form
               ref="remoteDataPointTagFormRef"
-              v-model:dataPointTagName="dataPointTag.name"
-              v-model:dataPointTag="dataPointTag.tag"
-              v-model:dataPointTagUnit="dataPointTag.unit"
-              v-model:dataPointTagDecimal="dataPointTag.decimal"
-              :data-point-tag-uid="dataPointTag.uid"
+              v-model="remoteDataPointTags[index]"
               @remove="deleteRemoteDataPointTag(dataPointTag.uid)"
             />
           </div>
           <div v-for="(dataPointTag, index) in localDataPointTags" :key="index">
             <data-point-tag-form
-              ref="localDataPointTagFormRef"
-              v-model:dataPointTagName="dataPointTag.name"
-              v-model:dataPointTag="dataPointTag.tag"
-              v-model:dataPointTagUnit="dataPointTag.unit"
-              v-model:dataPointTagDecimal="dataPointTag.decimal"
+              ref="remoteDataPointTagFormRef"
+              v-model="localDataPointTags[index]"
               @remove="deleteLocalDataPointTag(index)"
             />
           </div>
