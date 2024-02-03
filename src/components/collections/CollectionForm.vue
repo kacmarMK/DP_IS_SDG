@@ -8,7 +8,7 @@
 import { CollectionInput } from '@/models/Collection';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const collection = defineModel<CollectionInput>({ required: true });
+
+const { t } = useI18n();
 </script>

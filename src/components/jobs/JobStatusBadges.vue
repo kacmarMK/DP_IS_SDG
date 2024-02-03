@@ -18,12 +18,12 @@ import { statusColors } from '@/utils/colors';
 import { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const props = defineProps({
   job: {
     type: Object as PropType<Job>,
     required: true,
   },
 });
+
+const { t } = useI18n();
 </script>

@@ -85,15 +85,10 @@
         </q-td>
       </template>
     </q-table>
-    <DeleteConfirmationDialog
+    <DeleteDeviceDialog
       v-if="deviceToDelete"
       v-model="deleteDialog"
-      :item-uid="deviceToDelete.uid"
-      :delete-function="DeviceService.deleteDevice"
-      :title="t('device.delete_device')"
-      :description="t('device.delete_device_desc')"
-      :success-message="t('device.toasts.delete_success')"
-      :failed-message="t('device.toasts.delete_failed')"
+      :device="deviceToDelete"
       @on-deleted="deviceDeleted"
     />
     <ShareDeviceDialog v-if="deviceToShare" v-model="shareDialog" :device="deviceToShare" />
@@ -102,7 +97,6 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import DeleteConfirmationDialog from '../core/DeleteConfirmationDialog.vue';
 import ShareDeviceDialog from './ShareDeviceDialog.vue';
 import { computed, ref } from 'vue';
 import { Device } from '@/models/Device';
@@ -120,11 +114,9 @@ import {
   mdiTimer,
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
+import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 
-const { t } = useI18n();
-
-const authStore = useAuthStore();
-
+const devices = defineModel<Device[]>({ required: true });
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -133,7 +125,8 @@ const props = defineProps({
 });
 const emit = defineEmits(['onChange']);
 
-const devices = defineModel<Device[]>({ required: true });
+const { t } = useI18n();
+const authStore = useAuthStore();
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();

@@ -109,8 +109,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiCellphoneLink, mdiOpenInNew, mdiPencil, mdiPlus, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
+const devices = defineModel<Device[]>({ required: true });
 defineProps({
   module: {
     type: Object as PropType<Module>,
@@ -119,9 +118,8 @@ defineProps({
 });
 const emit = defineEmits(['onChange']);
 
+const { t } = useI18n();
 const authStore = useAuthStore();
-
-const devices = defineModel<Device[]>({ required: true });
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();

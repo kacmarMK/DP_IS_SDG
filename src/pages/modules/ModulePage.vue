@@ -36,7 +36,7 @@ import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue
 import DataPointChart from '@/components/datapoints/DataPointChart.vue';
 import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
-import { moduleToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
+import { extractNodeKeys, moduleToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import ModuleService from '@/services/ModuleService';
@@ -54,6 +54,7 @@ async function getModule() {
     isLoadingModule.value = true;
     const collection = await ModuleService.getModule(route.params.id.toString());
     dataPointTagTree.value = moduleToDataPointTagNode(collection);
+    tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
   } catch (error) {
     handleError(error, t('module.toasts.load_failed'));
   } finally {

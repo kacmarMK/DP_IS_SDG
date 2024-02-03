@@ -86,8 +86,6 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiOpenInNew } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const props = defineProps({
   device: {
     type: Object as PropType<Device>,
@@ -99,6 +97,7 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 
 const openDialog = ref(false);

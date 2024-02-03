@@ -48,12 +48,12 @@ import { PredefinedTimeRange } from '@/models/TimeRange';
 import { useI18n } from 'vue-i18n';
 import { mdiClockOutline } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const emit = defineEmits(['update:modelValue']);
 defineExpose({
   emitUpdate,
 });
+
+const { t } = useI18n();
 
 const timeRanges = computed(() => [
   {

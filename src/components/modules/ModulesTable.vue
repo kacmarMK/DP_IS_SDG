@@ -122,22 +122,17 @@
       </q-table>
     </div>
     <CreateModuleDialog v-model="createModuleDialog" :collection="collection" @on-create="emit('onUpdate')" />
-    <DeleteConfirmationDialog
-      v-if="moduleToUpdate"
-      v-model="deleteModuleDialog"
-      :item-uid="moduleToUpdate.uid"
-      :delete-function="ModuleService.deleteModule"
-      :title="t('module.delete_module')"
-      :description="t('module.delete_module_desc')"
-      :success-message="t('module.toasts.delete_success')"
-      :failed-message="t('module.toasts.delete_failed')"
-      @on-deleted="emit('onUpdate')"
-    />
     <EditModuleDialog
       v-if="moduleToUpdate"
       v-model="editModuleDialog"
       :module="moduleToUpdate"
       @on-update="emit('onUpdate')"
+    />
+    <DeleteModuleDialog
+      v-if="moduleToUpdate"
+      v-model="deleteModuleDialog"
+      :module="moduleToUpdate"
+      @on-deleted="emit('onUpdate')"
     />
   </div>
 </template>
@@ -147,11 +142,9 @@ import { Collection } from '@/models/Collection';
 import { QTableProps } from 'quasar';
 import { computed, ref } from 'vue';
 import CreateModuleDialog from './CreateModuleDialog.vue';
-import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import EditModuleDialog from './EditModuleDialog.vue';
 import DevicesInModuleTable from '@/components/modules/DevicesInModuleTable.vue';
 import { Module } from '@/models/Module';
-import ModuleService from '@/services/ModuleService';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import {
@@ -164,11 +157,10 @@ import {
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const collection = defineModel<Collection>({ required: true });
 const emit = defineEmits(['onUpdate']);
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 
 const createModuleDialog = ref(false);

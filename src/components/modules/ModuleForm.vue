@@ -8,7 +8,7 @@
 import { ModuleInput } from '@/models/Module';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const module = defineModel<ModuleInput>({ required: true });
+
+const { t } = useI18n();
 </script>

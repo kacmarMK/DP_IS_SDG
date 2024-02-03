@@ -51,8 +51,7 @@ import { User } from '@/models/User';
 import { useI18n } from 'vue-i18n';
 import { mdiClose } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
   device: {
     type: Object as PropType<Device>,
@@ -60,7 +59,7 @@ const props = defineProps({
   },
 });
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 
 const emailToShare = ref('');
 const sharedWithUsers = ref<User[]>([]);

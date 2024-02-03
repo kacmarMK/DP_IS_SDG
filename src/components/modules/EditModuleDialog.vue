@@ -1,12 +1,14 @@
 <template>
   <dialog-common
     v-model="isDialogOpen"
-    :title="t('module.edit_module')"
     :action-label="t('global.save')"
     :loading="updatingModule"
     @on-submit="updateModule"
   >
-    <module-form v-model="moduleInput" />
+    <template #title>{{ t('module.edit_module') }}</template>
+    <template #default>
+      <module-form v-model="moduleInput" />
+    </template>
   </dialog-common>
 </template>
 
@@ -20,8 +22,7 @@ import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 import ModuleForm from '@/components/modules/ModuleForm.vue';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
   module: {
     type: Object as PropType<Module>,
@@ -30,7 +31,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['onUpdate']);
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 
 function newModuleInput(module: Module): ModuleInput {
   return {

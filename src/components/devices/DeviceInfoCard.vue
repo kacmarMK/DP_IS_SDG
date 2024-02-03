@@ -41,14 +41,14 @@ import { PropType } from 'vue';
 import { Device } from '@/models/Device';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const props = defineProps({
   device: {
     type: Object as PropType<Device>,
     required: true,
   },
 });
+
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,12 +1,14 @@
 <template>
   <dialog-common
     v-model="isDialogOpen"
-    :title="t('collection.edit_collection')"
     :action-label="t('global.save')"
     :loading="updatingCollection"
     @on-submit="updateCollection"
   >
-    <collection-form v-model="collectionInput" />
+    <template #title>{{ t('collection.edit_collection') }}</template>
+    <template #default>
+      <collection-form v-model="collectionInput" />
+    </template>
   </dialog-common>
 </template>
 
@@ -20,27 +22,25 @@ import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 import CollectionForm from '@/components/collections/CollectionForm.vue';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
   collection: {
     type: Object as PropType<Collection>,
     required: true,
   },
 });
-
-const isDialogOpen = defineModel<boolean>();
-
 const emit = defineEmits(['onUpdate']);
 
-function newCollectionInput(collection: Collection): CollectionInput {
+const { t } = useI18n();
+
+function getDefaultCollection(collection: Collection): CollectionInput {
   return {
     name: collection.name,
   };
 }
 
 const updatingCollection = ref(false);
-const collectionInput = ref<CollectionInput>(newCollectionInput(props.collection));
+const collectionInput = ref<CollectionInput>(getDefaultCollection(props.collection));
 
 async function updateCollection() {
   try {
@@ -58,9 +58,10 @@ async function updateCollection() {
 
 watch(
   () => props.collection,
-  (value) => {
-    collectionInput.value = newCollectionInput(value);
+  (collection) => {
+    collectionInput.value = getDefaultCollection(collection);
   },
+  { immediate: true },
 );
 </script>
 

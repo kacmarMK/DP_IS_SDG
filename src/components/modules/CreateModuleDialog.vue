@@ -1,12 +1,14 @@
 <template>
   <dialog-common
     v-model="isDialogOpen"
-    :title="t('module.create_module')"
     :action-label="t('global.create')"
     :loading="creatingModule"
     @on-submit="createModule"
   >
-    <module-form v-model="moduleObj" />
+    <template #title>{{ t('module.create_module') }}</template>
+    <template #default>
+      <module-form v-model="moduleObj" />
+    </template>
   </dialog-common>
 </template>
 
@@ -21,8 +23,7 @@ import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 import ModuleForm from '@/components/modules/ModuleForm.vue';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
   collection: {
     type: Object as PropType<Collection>,
@@ -31,7 +32,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['onCreate']);
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 
 const getEmptyModule = (): ModuleInput => ({
   name: '',

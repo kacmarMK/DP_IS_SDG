@@ -1,12 +1,14 @@
 <template>
   <dialog-common
     v-model="isDialogOpen"
-    :title="t('collection.create_collection')"
     :action-label="t('global.create')"
     :loading="creatingCollection"
     @on-submit="createCollection"
   >
-    <collection-form v-model="collection" />
+    <template #title>{{ t('collection.create_collection') }}</template>
+    <template #default>
+      <collection-form v-model="collection" />
+    </template>
   </dialog-common>
 </template>
 
@@ -20,30 +22,23 @@ import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 import CollectionForm from '@/components/collections/CollectionForm.vue';
 
-const { t } = useI18n();
-
-defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
-});
+const isDialogOpen = defineModel<boolean>();
 const emit = defineEmits(['onCreate']);
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 
-const getEmptyCollection = (): CollectionInput => ({
+const getDefaultCollection = (): CollectionInput => ({
   name: '',
 });
 
 const creatingCollection = ref(false);
-const collection = ref<CollectionInput>(getEmptyCollection());
+const collection = ref<CollectionInput>(getDefaultCollection());
 
 async function createCollection() {
   try {
     creatingCollection.value = true;
     await CollectionService.createCollection(collection.value);
-    collection.value = getEmptyCollection();
+    collection.value = getDefaultCollection();
     isDialogOpen.value = false;
     emit('onCreate');
     toast.success(t('collection.toasts.create_success'));

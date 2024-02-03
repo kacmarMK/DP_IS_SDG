@@ -41,7 +41,6 @@ const props = defineProps({
     required: true,
   },
 });
-
 const emit = defineEmits(['update']);
 
 const { t } = useI18n();
@@ -58,7 +57,6 @@ const availableRoles = [
 const currentRole = computed(() => {
   return props.user.authorities?.at(0)?.authority;
 });
-
 const newRole = ref<Role>(currentRole.value ?? Role.USER);
 
 async function updateRole() {

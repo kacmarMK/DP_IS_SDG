@@ -57,8 +57,6 @@ import { isFormValid } from '@/utils/form-validation';
 import { useI18n } from 'vue-i18n';
 import { mdiEyeOff, mdiEye } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const props = defineProps({
   user: {
     type: Object as PropType<User>,
@@ -70,6 +68,8 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['update']);
+
+const { t } = useI18n();
 
 const currentPwRef = ref<QInput>();
 const newPwRef = ref<QInput>();

@@ -32,8 +32,7 @@ import { toast } from 'vue3-toastify';
 import ModuleService from '@/services/ModuleService';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
   device: {
     type: Object as PropType<Device>,
@@ -44,9 +43,9 @@ const props = defineProps({
     required: true,
   },
 });
-
 const emit = defineEmits(['onDeleted']);
-const isDialogOpen = defineModel<boolean>();
+
+const { t } = useI18n();
 
 const isDeleteInProgress = ref(false);
 async function handleDelete() {

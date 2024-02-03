@@ -122,8 +122,6 @@ import DataPointTagForm from './DataPointTagForm.vue';
 import { mdiPencil, mdiPlusCircle } from '@quasar/extras/mdi-v6';
 import { matSensors } from '@quasar/extras/material-icons';
 
-const { t } = useI18n();
-
 const props = defineProps({
   isEditing: {
     type: Boolean,
@@ -135,7 +133,9 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const router = useRouter();
+
 const createStep = ref(1);
 const deviceInput = ref<DeviceInput>({
   name: '',

@@ -56,18 +56,17 @@ import { now } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { mdiRefresh } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const props = defineProps({
   dataPointTags: {
     type: Array as PropType<DataPointTag[]>,
     required: true,
   },
 });
-
 const emit = defineEmits(['refresh']);
-const selectedTimeRange = ref<TimeRange>();
 
+const { t } = useI18n();
+
+const selectedTimeRange = ref<TimeRange>();
 const timeRangeSelect = ref();
 function refreshDevice() {
   emit('refresh');

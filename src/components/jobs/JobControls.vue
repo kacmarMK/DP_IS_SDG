@@ -64,16 +64,15 @@ import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
 import { mdiPause, mdiPlay, mdiSkipNext, mdiSkipForward, mdiStop } from '@quasar/extras/mdi-v6';
 
-const { t } = useI18n();
-
 const props = defineProps({
   runningJob: {
     type: Object as PropType<Job>,
     required: true,
   },
 });
-
 const emit = defineEmits(['action-performed']);
+
+const { t } = useI18n();
 
 //Job actions
 async function performJobAction(

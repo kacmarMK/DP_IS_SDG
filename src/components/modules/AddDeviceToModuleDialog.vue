@@ -1,20 +1,22 @@
 <template>
   <dialog-common
     v-model="isDialogOpen"
-    :title="t('device.add_device')"
     :action-label="t('global.add')"
     :loading="addingInProgress"
     @on-submit="addDevice"
   >
-    <q-select
-      v-model="selectedDeviceId"
-      :options="filteredDevices"
-      :label="t('device.label')"
-      emit-value
-      map-options
-      option-value="uid"
-      option-label="name"
-    />
+    <template #title>{{ t('device.add_device') }}</template>
+    <template #default>
+      <q-select
+        v-model="selectedDeviceId"
+        :options="filteredDevices"
+        :label="t('device.label')"
+        emit-value
+        map-options
+        option-value="uid"
+        option-label="name"
+      />
+    </template>
   </dialog-common>
 </template>
 
@@ -30,13 +32,8 @@ import { Device } from '@/models/Device';
 import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
   module: {
     type: Object as PropType<Module>,
     required: true,
@@ -46,10 +43,10 @@ const props = defineProps({
     required: true,
   },
 });
-
-const isDialogOpen = defineModel<boolean>();
-
 const emit = defineEmits(['onAdded']);
+
+const { t } = useI18n();
+const deviceStore = useDeviceStore();
 
 const filteredDevices = computed(() => {
   return deviceStore.devices.filter(
@@ -57,7 +54,6 @@ const filteredDevices = computed(() => {
   );
 });
 
-const deviceStore = useDeviceStore();
 const selectedDeviceId = ref<string>();
 const addingInProgress = ref(false);
 
@@ -77,7 +73,7 @@ async function addDevice() {
 }
 
 watch(
-  () => props.modelValue,
+  () => isDialogOpen,
   (value) => {
     if (!value) {
       selectedDeviceId.value = undefined;

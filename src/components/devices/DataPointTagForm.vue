@@ -39,10 +39,6 @@ import { QInput } from 'quasar';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
-const emit = defineEmits(['remove']);
-
 const dataPointTagName = defineModel<string>('dataPointTagName', {
   required: true,
 });
@@ -55,12 +51,16 @@ const dataPointTagUnit = defineModel<string>('dataPointTagUnit', {
 const dataPointTagDecimal = defineModel<number>('dataPointTagDecimal', {
   required: true,
 });
+const emit = defineEmits(['remove']);
+
+const { t } = useI18n();
 
 const dataTagNameRef = ref<QInput>();
 const tagRef = ref<QInput>();
 const unitRef = ref<QInput>();
 const decimalRef = ref<QInput>();
 
+//For outside validation
 const getAllRefs = () => [dataTagNameRef.value, tagRef.value, unitRef.value, decimalRef.value];
 
 const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];

@@ -121,22 +121,17 @@
       </q-table>
     </div>
     <CreateCollectionDialog v-model="createCollectionDialog" @on-create="getCollections" />
-    <DeleteConfirmationDialog
-      v-if="collectionToUpdate"
-      v-model="deleteCollectionDialog"
-      :item-uid="collectionToUpdate.uid"
-      :delete-function="CollectionService.deleteCollection"
-      :title="t('collection.delete_collection')"
-      :description="t('collection.delete_collection_desc')"
-      :success-message="t('collection.toasts.delete_success')"
-      :failed-message="t('collection.toasts.delete_failed')"
-      @on-deleted="getCollections"
-    />
     <EditCollectionDialog
       v-if="collectionToUpdate"
       v-model="editCollectionDialog"
       :collection="collectionToUpdate"
       @on-update="getCollections"
+    />
+    <DeleteCollectionDialog
+      v-if="collectionToUpdate"
+      v-model="deleteCollectionDialog"
+      :collection="collectionToUpdate"
+      @on-deleted="getCollections"
     />
   </q-page>
 </template>
@@ -150,7 +145,7 @@ import CollectionService from '@/services/CollectionService';
 import CreateCollectionDialog from '@/components/collections/CreateCollectionDialog.vue';
 import EditCollectionDialog from '@/components/collections/EditCollectionDialog.vue';
 import ModulesTable from '@/components/modules/ModulesTable.vue';
-import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
+import DeleteCollectionDialog from '@/components/collections/DeleteCollectionDialog.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import {

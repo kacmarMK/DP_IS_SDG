@@ -2,7 +2,9 @@
   <q-dialog v-model="isDialogOpen">
     <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
-        <div class="text-h6">{{ title }}</div>
+        <div class="text-h6">
+          <slot name="title" />
+        </div>
       </q-card-section>
       <q-card-section class="q-pt-none column q-gutter-md">
         <slot />
@@ -18,14 +20,8 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 defineProps({
-  title: {
-    type: String,
-    required: false,
-    default: '',
-  },
   actionLabel: {
     type: String,
     required: true,
@@ -36,8 +32,7 @@ defineProps({
     default: false,
   },
 });
-
 const emit = defineEmits(['onSubmit']);
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 </script>

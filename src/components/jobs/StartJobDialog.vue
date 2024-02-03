@@ -2,55 +2,57 @@
   <dialog-common
     v-if="jobToRun"
     v-model="isDialogOpen"
-    :title="t('job.run_job')"
     :action-label="t('job.run_job')"
     :loading="jobIsStarting"
     @on-submit="runJob"
   >
-    <q-select
-      ref="recipeRef"
-      v-model="jobToRun.recipeId"
-      :label="t('recipe.label')"
-      :options="recipesAvailable"
-      option-value="id"
-      option-label="name"
-      lazy-rules
-      :rules="recipeRules"
-      emit-value
-      map-options
-    >
-    </q-select>
-    <q-input
-      ref="repetitionsRef"
-      v-model="jobToRun.repetitions"
-      :label="t('job.repetitions')"
-      type="number"
-      lazy-rules
-      :rules="repetitionRules"
-    />
-    <div>{{ t('job.schedule') }}</div>
-    <q-btn-group unelevated>
-      <q-btn
-        v-for="(button, index) in dayButtons"
-        :key="index"
-        :label="button.label.toUpperCase()"
-        :color="button.onOff ? 'primary' : 'grey'"
-        @click="dayButtons[index].onOff = !dayButtons[index].onOff"
-      ></q-btn>
-    </q-btn-group>
-    <q-input v-model="scheduledTime" mask="time" fill-mask="-" :rules="['time']" :label="t('job.scheduled_time')">
-      <template #append>
-        <q-icon :name="mdiClock" class="cursor-pointer">
-          <q-popup-proxy transition-show="scale" transition-hide="scale">
-            <q-time v-model="scheduledTime" format24h>
-              <div class="row items-center justify-end">
-                <q-btn v-close-popup :label="t('global.close')" color="primary" flat />
-              </div>
-            </q-time>
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
+    <template #title>{{ t('job.run_job') }}</template>
+    <template #default>
+      <q-select
+        ref="recipeRef"
+        v-model="jobToRun.recipeId"
+        :label="t('recipe.label')"
+        :options="recipesAvailable"
+        option-value="id"
+        option-label="name"
+        lazy-rules
+        :rules="recipeRules"
+        emit-value
+        map-options
+      >
+      </q-select>
+      <q-input
+        ref="repetitionsRef"
+        v-model="jobToRun.repetitions"
+        :label="t('job.repetitions')"
+        type="number"
+        lazy-rules
+        :rules="repetitionRules"
+      />
+      <div>{{ t('job.schedule') }}</div>
+      <q-btn-group unelevated>
+        <q-btn
+          v-for="(button, index) in dayButtons"
+          :key="index"
+          :label="button.label.toUpperCase()"
+          :color="button.onOff ? 'primary' : 'grey'"
+          @click="dayButtons[index].onOff = !dayButtons[index].onOff"
+        ></q-btn>
+      </q-btn-group>
+      <q-input v-model="scheduledTime" mask="time" fill-mask="-" :rules="['time']" :label="t('job.scheduled_time')">
+        <template #append>
+          <q-icon :name="mdiClock" class="cursor-pointer">
+            <q-popup-proxy transition-show="scale" transition-hide="scale">
+              <q-time v-model="scheduledTime" format24h>
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup :label="t('global.close')" color="primary" flat />
+                </div>
+              </q-time>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </template>
   </dialog-common>
 </template>
 
@@ -70,13 +72,8 @@ import { isFormValid } from '@/utils/form-validation';
 import { mdiClock } from '@quasar/extras/mdi-v6';
 import DialogCommon from '../core/DialogCommon.vue';
 
-const { t } = useI18n();
-
+const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
   device: {
     type: Object as PropType<Device>,
     required: true,
@@ -84,7 +81,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['jobStarted']);
 
-const isDialogOpen = defineModel<boolean>();
+const { t } = useI18n();
 
 const jobToRun = ref<JobToRun>();
 const recipesAvailable = ref<Recipe[]>([]);

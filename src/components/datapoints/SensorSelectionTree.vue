@@ -39,15 +39,16 @@ import { computed } from 'vue';
 import { PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
+const tickedNodes = defineModel<string[]>('tickedNodes');
 const props = defineProps({
   dataPointTagTree: {
     type: Object as PropType<DataPointTagNode>,
     required: true,
   },
 });
-const tickedNodes = defineModel<string[]>('tickedNodes');
+
+const { t } = useI18n();
+
 const expanded = ref<string[]>(extractNodeKeys(props.dataPointTagTree));
 
 const noChildren = computed(() => {

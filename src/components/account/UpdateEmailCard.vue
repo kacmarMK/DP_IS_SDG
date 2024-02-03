@@ -35,16 +35,15 @@ import { QForm, QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-
 const props = defineProps({
   user: {
     type: Object as PropType<User>,
     required: true,
   },
 });
-
 const emit = defineEmits(['update']);
+
+const { t } = useI18n();
 
 const mailRef = ref<QInput>();
 const qform = ref<QForm>();

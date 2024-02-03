@@ -37,7 +37,7 @@ import DataPointChart from '@/components/datapoints/DataPointChart.vue';
 import CollectionService from '@/services/CollectionService';
 import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
-import { collectionToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
+import { collectionToDataPointTagNode, extractNodeKeys, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
@@ -54,6 +54,7 @@ async function getCollection() {
     isLoadingCollection.value = true;
     const collection = await CollectionService.getCollection(route.params.id.toString());
     dataPointTagTree.value = collectionToDataPointTagNode(collection);
+    tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
   } catch (error) {
     handleError(error, t('collection.toasts.load_failed'));
   } finally {
