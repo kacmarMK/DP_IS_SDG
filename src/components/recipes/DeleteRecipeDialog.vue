@@ -10,13 +10,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn
-          v-close-popup
-          flat
-          color="grey-9"
-          :label="t('global.cancel')"
-          no-caps
-        />
+        <q-btn v-close-popup flat color="grey-9" :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           :label="t('global.delete')"

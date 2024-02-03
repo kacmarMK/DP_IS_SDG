@@ -6,13 +6,7 @@
       </div>
     </div>
     <q-card class="shadow q-mb-lg">
-      <q-tabs
-        dense
-        class="text-grey"
-        active-color="primary"
-        indicator-color="primary"
-        align="left"
-      >
+      <q-tabs dense class="text-grey" active-color="primary" indicator-color="primary" align="left">
         <q-route-tab
           :to="{ path: '/account' }"
           style="min-width: 130px"

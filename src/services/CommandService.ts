@@ -18,9 +18,7 @@ class CommandService {
   }
 
   async getCommands(sortBy: string, sortDirection: string): Promise<Command[]> {
-    return await api<Command[]>(
-      `jobs/command/getAllCommands/${sortBy}/${sortDirection}`,
-    );
+    return await api<Command[]>(`jobs/command/getAllCommands/${sortBy}/${sortDirection}`);
   }
 
   async deleteCommand(id: string): Promise<void> {

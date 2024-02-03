@@ -8,11 +8,7 @@
         </router-link>
         <p class="main-text">&nbsp;{{ t('global.edit') }}</p>
       </div>
-      <create-device-form
-        :is-editing="true"
-        :editing-device-id="route.params.id.toString()"
-        class="q-mt-md"
-      />
+      <create-device-form :is-editing="true" :editing-device-id="route.params.id.toString()" class="q-mt-md" />
     </div>
   </q-page>
 </template>

@@ -14,11 +14,7 @@ function handleError(error: unknown, defaultErrorMessage: string): void {
       const errorResponse = errorData as ErrorResponse;
       message = errorResponse.errors?.[0] ?? defaultErrorMessage;
     }
-    if (
-      !errorData &&
-      error.response?.status === 403 &&
-      authStore.isTokenExpired
-    ) {
+    if (!errorData && error.response?.status === 403 && authStore.isTokenExpired) {
       message = '';
     }
   }

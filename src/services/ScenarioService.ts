@@ -26,13 +26,8 @@ class ScenarioService {
     return await api<Scenario>(`scenarios/getScenarioByDeviceId/${deviceId}`);
   }
 
-  async getScenarioByDeviceIdAndTag(
-    deviceId: string,
-    tag: string,
-  ): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/getScenarioByDeviceIdAndTag/${deviceId}/${tag}`,
-    );
+  async getScenarioByDeviceIdAndTag(deviceId: string, tag: string): Promise<Scenario> {
+    return await api<Scenario>(`scenarios/getScenarioByDeviceIdAndTag/${deviceId}/${tag}`);
   }
 
   async createScenario(scenario: ScenarioFrame): Promise<Scenario> {
@@ -56,57 +51,33 @@ class ScenarioService {
   }
 
   async removeScenarioActiveAtHour(scenarioId: string): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/removeScenarioActiveAtHour/${scenarioId}`,
-      {
-        method: 'PUT',
-      },
-    );
+    return await api<Scenario>(`scenarios/removeScenarioActiveAtHour/${scenarioId}`, {
+      method: 'PUT',
+    });
   }
 
   async removeScenarioActiveAtDay(scenarioId: string): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/removeScenarioActiveAtDay/${scenarioId}`,
-      {
-        method: 'PUT',
-      },
-    );
+    return await api<Scenario>(`scenarios/removeScenarioActiveAtDay/${scenarioId}`, {
+      method: 'PUT',
+    });
   }
 
-  async resolveScenario(
-    scenarioId: string,
-    scenarioLevel: string,
-  ): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/resolveScenario/${scenarioId}/${scenarioLevel}`,
-      {
-        method: 'PUT',
-      },
-    );
+  async resolveScenario(scenarioId: string, scenarioLevel: string): Promise<Scenario> {
+    return await api<Scenario>(`scenarios/resolveScenario/${scenarioId}/${scenarioLevel}`, {
+      method: 'PUT',
+    });
   }
 
-  async setScenarioActiveAtHour(
-    scenarioId: string,
-    activeHours: Array<number>,
-  ): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/setScenarioActiveAtHour/${scenarioId}/${activeHours}`,
-      {
-        method: 'PUT',
-      },
-    );
+  async setScenarioActiveAtHour(scenarioId: string, activeHours: Array<number>): Promise<Scenario> {
+    return await api<Scenario>(`scenarios/setScenarioActiveAtHour/${scenarioId}/${activeHours}`, {
+      method: 'PUT',
+    });
   }
 
-  async setScenarioActiveAtDay(
-    scenarioId: string,
-    activeDays: Array<number>,
-  ): Promise<Scenario> {
-    return await api<Scenario>(
-      `scenarios/setScenarioActiveAtDay/${scenarioId}/${activeDays}`,
-      {
-        method: 'PUT',
-      },
-    );
+  async setScenarioActiveAtDay(scenarioId: string, activeDays: Array<number>): Promise<Scenario> {
+    return await api<Scenario>(`scenarios/setScenarioActiveAtDay/${scenarioId}/${activeDays}`, {
+      method: 'PUT',
+    });
   }
 
   async deleteScenario(scenarioId: string): Promise<void> {

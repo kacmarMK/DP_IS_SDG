@@ -54,9 +54,10 @@ export const useAuthStore = defineStore('authStore', () => {
   const isAdmin = computed(() => {
     if (!jwt.value) return false;
     const decodedToken = jwtDecode(jwt.value) as JwtPayload;
-    const isAdmin = decodedToken.authorities.some(
-      (authority) => authority.authority === Role.ADMIN,
-    );
+
+    if (!decodedToken.authorities) return false;
+
+    const isAdmin = decodedToken.authorities.some((authority) => authority.authority === Role.ADMIN);
     return isAdmin;
   });
 

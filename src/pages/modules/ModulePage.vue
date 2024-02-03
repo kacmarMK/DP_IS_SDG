@@ -2,21 +2,13 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <router-link
-          class="main-text text-accent text-weight-medium z-fab"
-          to="/collections"
-        >
+        <router-link class="main-text text-accent text-weight-medium z-fab" to="/collections">
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ t('module.label') }} >
         </router-link>
-        <p v-if="dataPointTagTree" class="main-text z-fab">
-          &nbsp;{{ dataPointTagTree.name }}
-        </p>
+        <p v-if="dataPointTagTree" class="main-text z-fab">&nbsp;{{ dataPointTagTree.name }}</p>
       </div>
-      <div
-        v-if="dataPointTagTree"
-        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
-      >
+      <div v-if="dataPointTagTree" class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
         <div class="col-12">
           <sensor-selection-tree
             v-model:tickedNodes="tickedNodes"
@@ -44,10 +36,7 @@ import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue
 import DataPointChart from '@/components/datapoints/DataPointChart.vue';
 import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
-import {
-  moduleToDataPointTagNode,
-  nodeToDataPointTags,
-} from '@/utils/data-point-tag-nodes';
+import { moduleToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import ModuleService from '@/services/ModuleService';
@@ -63,9 +52,7 @@ const isLoadingModule = ref(false);
 async function getModule() {
   try {
     isLoadingModule.value = true;
-    const collection = await ModuleService.getModule(
-      route.params.id.toString(),
-    );
+    const collection = await ModuleService.getModule(route.params.id.toString());
     dataPointTagTree.value = moduleToDataPointTagNode(collection);
   } catch (error) {
     handleError(error, t('module.toasts.load_failed'));

@@ -24,10 +24,7 @@
 
         <template #body-cell-status="props">
           <q-td auto-width :props="props">
-            <q-badge
-              :color="statusColors[props.row.currentStatus as JobStatusEnum]"
-              class="q-pa-xs"
-            >
+            <q-badge :color="statusColors[props.row.currentStatus as JobStatusEnum]" class="q-pa-xs">
               {{ props.row.currentStatus }}
             </q-badge>
           </q-td>
@@ -35,12 +32,7 @@
 
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn
-              :icon="mdiOpenInNew"
-              color="grey-color"
-              flat
-              round
-              :to="`/jobs/${props.row.uid}`"
+            <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/jobs/${props.row.uid}`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.open') }}
               </q-tooltip>

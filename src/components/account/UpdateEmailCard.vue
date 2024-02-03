@@ -1,11 +1,6 @@
 <template>
   <q-card class="shadow q-pa-lg">
-    <q-input
-      v-model="currentMail"
-      :label="t('account.current_email')"
-      readonly
-      disable
-    ></q-input>
+    <q-input v-model="currentMail" :label="t('account.current_email')" readonly disable></q-input>
     <q-form ref="qform" autocomplete="off">
       <q-input
         ref="mailRef"

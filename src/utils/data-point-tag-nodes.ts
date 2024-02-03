@@ -54,9 +54,17 @@ function nodeToDataPointTags(node: DataPointTagNode, seenUids = new Set()) {
   return tags;
 }
 
+function extractNodeKeys(node: DataPointTagNode): string[] {
+  if (!node.children) {
+    return [node.uid];
+  }
+  return [node.uid, ...node.children.flatMap(extractNodeKeys)];
+}
+
 export {
   collectionToDataPointTagNode,
   moduleToDataPointTagNode,
   deviceToDataPointTagNode,
   nodeToDataPointTags,
+  extractNodeKeys,
 };

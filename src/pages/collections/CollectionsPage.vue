@@ -59,10 +59,7 @@
             </q-td>
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
               <template v-if="col.name === 'name'">
-                <router-link
-                  :to="`/collections/${props.row.uid}`"
-                  class="text-black text-weight-regular"
-                >
+                <router-link :to="`/collections/${props.row.uid}`" class="text-black text-weight-regular">
                   {{ col.value }}
                 </router-link>
               </template>
@@ -71,12 +68,7 @@
               </template>
             </q-td>
             <q-td auto-width>
-              <q-btn
-                :icon="mdiOpenInNew"
-                color="grey-color"
-                flat
-                round
-                :to="`/collections/${props.row.uid}`"
+              <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/collections/${props.row.uid}`"
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   {{ t('global.open') }}
                 </q-tooltip>
@@ -117,7 +109,7 @@
                 <div v-show="props.expand">
                   <ModulesTable
                     v-model="props.row"
-                    class="q-pa-md"
+                    class="q-pa-lg"
                     @update:model-value="updateCollection"
                     @on-update="getCollections"
                   />
@@ -128,10 +120,7 @@
         </template>
       </q-table>
     </div>
-    <CreateCollectionDialog
-      v-model="createCollectionDialog"
-      @on-create="getCollections"
-    />
+    <CreateCollectionDialog v-model="createCollectionDialog" @on-create="getCollections" />
     <DeleteConfirmationDialog
       v-if="collectionToUpdate"
       v-model="deleteCollectionDialog"

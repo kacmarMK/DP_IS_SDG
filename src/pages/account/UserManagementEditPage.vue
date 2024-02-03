@@ -20,11 +20,7 @@
               {{ t('account.change_role_desc') }}
             </div>
           </div>
-          <UpdateRoleCard
-            :user="user"
-            class="col-12 col-md-7"
-            @update="getUser()"
-          />
+          <UpdateRoleCard :user="user" class="col-12 col-md-7" @update="getUser()" />
         </div>
         <div class="row q-mb-xl">
           <div class="col-12 col-md-5 q-mb-md">
@@ -35,11 +31,7 @@
               {{ t('account.update_email_other_desc') }}
             </div>
           </div>
-          <UpdateEmailCard
-            :user="user"
-            class="col-12 col-md-7"
-            @update="getUser()"
-          />
+          <UpdateEmailCard :user="user" class="col-12 col-md-7" @update="getUser()" />
         </div>
         <div class="row q-mb-xl">
           <div class="col-12 col-md-5 q-mb-md">
@@ -50,12 +42,7 @@
               {{ t('account.update_password_other_desc') }}
             </div>
           </div>
-          <UpdatePasswordCard
-            :user="user"
-            :require-old-password="false"
-            class="col-12 col-md-7"
-            @update="getUser()"
-          />
+          <UpdatePasswordCard :user="user" :require-old-password="false" class="col-12 col-md-7" @update="getUser()" />
         </div>
       </div>
     </div>

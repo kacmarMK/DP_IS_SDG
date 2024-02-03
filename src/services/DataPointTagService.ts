@@ -7,47 +7,30 @@ class DataPointTagService {
     return await api<DataPointTag[]>('device');
   }
 
-  async createDataPointTag(
-    dataPointTagCreate: DataPointTagInput,
-  ): Promise<DataPointTag> {
+  async createDataPointTag(dataPointTagCreate: DataPointTagInput): Promise<DataPointTag> {
     return await api<DataPointTag>('datapoint/datapointtag/create', {
       method: 'POST',
       body: dataPointTagCreate,
     });
   }
 
-  async addDataPointTagToDevice(
-    deviceId: string,
-    dataPointTagId: string,
-  ): Promise<Device> {
-    return await api<Device>(
-      `device/addDataPointTagToDevice/${deviceId}/${dataPointTagId}`,
-      {
-        method: 'PUT',
-      },
-    );
+  async addDataPointTagToDevice(deviceId: string, dataPointTagId: string): Promise<Device> {
+    return await api<Device>(`device/addDataPointTagToDevice/${deviceId}/${dataPointTagId}`, {
+      method: 'PUT',
+    });
   }
 
-  async updateDataPointTag(
-    dataPointTagUpdate: DataPointTagInput,
-    dataPointTagId: string,
-  ): Promise<DataPointTag> {
-    return await api<DataPointTag>(
-      `datapoint/datapointtag/updateDataPointTag/${dataPointTagId}`,
-      {
-        method: 'POST',
-        body: dataPointTagUpdate,
-      },
-    );
+  async updateDataPointTag(dataPointTagUpdate: DataPointTagInput, dataPointTagId: string): Promise<DataPointTag> {
+    return await api<DataPointTag>(`datapoint/datapointtag/updateDataPointTag/${dataPointTagId}`, {
+      method: 'POST',
+      body: dataPointTagUpdate,
+    });
   }
 
   async deleteDataPointTag(dataPointTagId: string): Promise<DataPointTag> {
-    return await api<DataPointTag>(
-      `datapoint/datapointtag/deleteDataPointTag/${dataPointTagId}`,
-      {
-        method: 'DELETE',
-      },
-    );
+    return await api<DataPointTag>(`datapoint/datapointtag/deleteDataPointTag/${dataPointTagId}`, {
+      method: 'DELETE',
+    });
   }
 }
 

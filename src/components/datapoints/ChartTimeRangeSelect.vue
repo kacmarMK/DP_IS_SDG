@@ -21,11 +21,7 @@
           <q-item-label>{{ t('time_range.custom') }}</q-item-label>
         </q-item-section>
         <q-popup-proxy transition-show="scale" transition-hide="scale">
-          <q-date
-            :model-value="customTimeRangeSelected"
-            range
-            @update:model-value="setCustomTimeRange"
-          >
+          <q-date :model-value="customTimeRangeSelected" range @update:model-value="setCustomTimeRange">
             <div class="row items-center justify-end q-gutter-sm">
               <q-btn v-close-popup label="OK" color="primary" flat />
             </div>
@@ -111,9 +107,7 @@ function setCustomTimeRange(val: { from: Date; to: Date }) {
 }
 
 function setPredefinedTimeRange(val: PredefinedTimeRange) {
-  selectedTimeRangeIndex.value = timeRanges.value.findIndex(
-    (r) => r.name === val.name,
-  );
+  selectedTimeRangeIndex.value = timeRanges.value.findIndex((r) => r.name === val.name);
   isCustomTimeRangeSelected.value = false;
   emitUpdate();
 }
@@ -129,9 +123,7 @@ function emitUpdate() {
   } else {
     const now = new Date();
     newVal = {
-      from: formatDate(
-        subSeconds(now, timeRanges.value[selectedTimeRangeIndex.value].time),
-      ),
+      from: formatDate(subSeconds(now, timeRanges.value[selectedTimeRangeIndex.value].time)),
       to: formatDate(now),
     };
   }

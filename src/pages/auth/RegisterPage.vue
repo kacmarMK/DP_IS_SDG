@@ -32,11 +32,7 @@
                   :rules="passwordRules"
                 >
                   <template #append>
-                    <q-icon
-                      :name="isPwd ? mdiEyeOff : mdiEye"
-                      class="cursor-pointer"
-                      @click="isPwd = !isPwd"
-                    />
+                    <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
                   </template>
                 </q-input>
                 <q-btn
@@ -98,9 +94,7 @@ const nicknameRef = ref<QInput>();
 const mailRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
-const nameRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const mailRules = [
   (val: string) => (val && val.length > 0) || t('global.rules.required'),
   (val: string) => {
@@ -108,9 +102,7 @@ const mailRules = [
     return emailRegex.test(val) || t('auth.rules.email_invalid');
   },
 ];
-const passwordRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const passwordRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
 async function register() {
   const form = [nicknameRef.value, mailRef.value, passwordRef.value];

@@ -24,11 +24,7 @@
                   :rules="passwordRules"
                 >
                   <template #append>
-                    <q-icon
-                      :name="isPwd ? mdiEyeOff : mdiEye"
-                      class="cursor-pointer"
-                      @click="isPwd = !isPwd"
-                    />
+                    <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
                   </template>
                 </q-input>
                 <!-- <q-checkbox
@@ -96,13 +92,9 @@ const isSubmitting = ref(false);
 const nameRef = ref<QInput>();
 const passwordRef = ref<QInput>();
 
-const nameRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
-const passwordRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const passwordRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
 async function login() {
   const form = [nameRef.value, passwordRef.value];

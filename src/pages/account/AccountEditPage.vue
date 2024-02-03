@@ -10,11 +10,7 @@
             {{ t('account.update_email_desc') }}
           </div>
         </div>
-        <UpdateEmailCard
-          :user="authStore.user"
-          class="col-12 col-md-7"
-          @update="authStore.refreshUser()"
-        />
+        <UpdateEmailCard :user="authStore.user" class="col-12 col-md-7" @update="authStore.refreshUser()" />
       </div>
       <div class="row justify-between q-mb-xl">
         <div class="col-12 col-md-5 q-mb-md">
@@ -25,11 +21,7 @@
             {{ t('account.update_password_desc') }}
           </div>
         </div>
-        <UpdatePasswordCard
-          :user="authStore.user"
-          class="col-12 col-md-7"
-          @update="authStore.refreshUser()"
-        />
+        <UpdatePasswordCard :user="authStore.user" class="col-12 col-md-7" @update="authStore.refreshUser()" />
       </div>
     </div>
   </div>

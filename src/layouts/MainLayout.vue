@@ -2,26 +2,10 @@
   <q-layout view="lHh LpR lfr">
     <q-header class="bg-white text-secondary shadow">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          :icon="mdiMenu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round :icon="mdiMenu" aria-label="Menu" @click="toggleLeftDrawer" />
         <q-space />
         <language-select class="q-mr-md"></language-select>
-        <q-btn
-          class="q-mr-xs"
-          flat
-          dense
-          size="18px"
-          round
-          padding="4px"
-          :icon="mdiAccountCircle"
-          :ripple="false"
-        >
+        <q-btn class="q-mr-xs" flat dense size="18px" round padding="4px" :icon="mdiAccountCircle" :ripple="false">
           <q-menu>
             <q-list style="min-width: 150px" class="text-secondary">
               <q-item>
@@ -61,56 +45,21 @@
     <q-drawer v-model="leftDrawerOpen" show-if-above class="shadow bg-white">
       <div class="column q-px-lg full-height">
         <router-link class="q-my-lg q-mx-auto full-width" to="/">
-          <q-img
-            src="../assets/logo.png"
-            height="3.7rem"
-            fit="contain"
-            no-spinner
-            no-transition
-          />
+          <q-img src="../assets/logo.png" height="3.7rem" fit="contain" no-spinner no-transition />
         </router-link>
         <div class="links">
-          <side-menu-button
-            to="/"
-            :exact="true"
-            :label="t('global.home')"
-            :icon="mdiHome"
-          />
-          <side-menu-button
-            to="/devices"
-            :label="t('device.label', 2)"
-            :icon="mdiCellphoneLink"
-          />
-          <side-menu-button
-            to="/collections"
-            :label="t('collection.label', 2)"
-            :icon="mdiHubspot"
-          />
+          <side-menu-button to="/" :exact="true" :label="t('global.home')" :icon="mdiHome" />
+          <side-menu-button to="/devices" :label="t('device.label', 2)" :icon="mdiCellphoneLink" />
+          <side-menu-button to="/collections" :label="t('collection.label', 2)" :icon="mdiHubspot" />
           <!-- <side-menu-button
             to="/company"
             label="Team"
             icon="mdi-account-group"
           /> -->
-          <side-menu-button
-            to="/jobs"
-            :label="t('job.label', 2)"
-            :icon="mdiListStatus"
-          />
-          <side-menu-button
-            to="/scenarios"
-            :label="t('scenario.label', 2)"
-            :icon="mdiVariable"
-          />
-          <side-menu-button
-            to="/recipes"
-            :label="t('recipe.label', 2)"
-            :icon="mdiBookMultipleOutline"
-          />
-          <side-menu-button
-            to="/commands"
-            :label="t('command.label', 2)"
-            :icon="mdiCodeTags"
-          />
+          <side-menu-button to="/jobs" :label="t('job.label', 2)" :icon="mdiListStatus" />
+          <side-menu-button to="/scenarios" :label="t('scenario.label', 2)" :icon="mdiVariable" />
+          <side-menu-button to="/recipes" :label="t('recipe.label', 2)" :icon="mdiBookMultipleOutline" />
+          <side-menu-button to="/commands" :label="t('command.label', 2)" :icon="mdiCodeTags" />
           <side-menu-button
             v-if="authStore.isAdmin"
             to="/user-management"

@@ -19,37 +19,19 @@ class RecipeService {
   }
 
   async getRecipes(sortBy: string, sortDirection: string): Promise<Recipe[]> {
-    return await api<Recipe[]>(
-      `jobs/recipe/getAllRecipes/${sortBy}/${sortDirection}`,
-    );
+    return await api<Recipe[]>(`jobs/recipe/getAllRecipes/${sortBy}/${sortDirection}`);
   }
 
-  async getNonSubRecipesByDeviceType(
-    deviceType: string,
-    sortBy: string,
-    sortDirection: string,
-  ): Promise<Recipe[]> {
-    return await api<Recipe[]>(
-      `jobs/recipe/getFullRecipesByDeviceType/${deviceType}/${sortBy}/${sortDirection}`,
-    );
+  async getNonSubRecipesByDeviceType(deviceType: string, sortBy: string, sortDirection: string): Promise<Recipe[]> {
+    return await api<Recipe[]>(`jobs/recipe/getFullRecipesByDeviceType/${deviceType}/${sortBy}/${sortDirection}`);
   }
 
-  async getSubRecipesByDeviceType(
-    deviceType: string,
-    sortBy: string,
-    sortDirection: string,
-  ): Promise<Recipe[]> {
-    return await api<Recipe[]>(
-      `jobs/recipe/getSubRecipesByDeviceType/${deviceType}/${sortBy}/${sortDirection}`,
-    );
+  async getSubRecipesByDeviceType(deviceType: string, sortBy: string, sortDirection: string): Promise<Recipe[]> {
+    return await api<Recipe[]>(`jobs/recipe/getSubRecipesByDeviceType/${deviceType}/${sortBy}/${sortDirection}`);
   }
 
-  async getFullRecipesByDeviceType(
-    deviceType: DeviceTypeEnum,
-  ): Promise<Recipe[]> {
-    return await api<Recipe[]>(
-      `jobs/recipe/getFullRecipesByDeviceType/${deviceType}/NONE/NONE`,
-    );
+  async getFullRecipesByDeviceType(deviceType: DeviceTypeEnum): Promise<Recipe[]> {
+    return await api<Recipe[]>(`jobs/recipe/getFullRecipesByDeviceType/${deviceType}/NONE/NONE`);
   }
 
   async deleteRecipeById(id: string): Promise<void> {
@@ -58,30 +40,16 @@ class RecipeService {
     });
   }
 
-  async removeCommandFromRecipe(
-    recipeId: string,
-    commandId: string,
-    index: number,
-  ): Promise<void> {
-    await api(
-      `jobs/recipe/removeCommandFromRecipe/${recipeId}/${commandId}/${index}`,
-      {
-        method: 'DELETE',
-      },
-    );
+  async removeCommandFromRecipe(recipeId: string, commandId: string, index: number): Promise<void> {
+    await api(`jobs/recipe/removeCommandFromRecipe/${recipeId}/${commandId}/${index}`, {
+      method: 'DELETE',
+    });
   }
 
-  async removeSubRecipeFromRecipe(
-    recipeId: string,
-    subRecipeId: string,
-    index: number,
-  ): Promise<void> {
-    await api(
-      `jobs/recipe/removeSubRecipeFromRecipe/${recipeId}/${subRecipeId}/${index}`,
-      {
-        method: 'DELETE',
-      },
-    );
+  async removeSubRecipeFromRecipe(recipeId: string, subRecipeId: string, index: number): Promise<void> {
+    await api(`jobs/recipe/removeSubRecipeFromRecipe/${recipeId}/${subRecipeId}/${index}`, {
+      method: 'DELETE',
+    });
   }
 
   async updateRecipe(recipe: RecipeFrame, id: string): Promise<Recipe> {
@@ -91,32 +59,18 @@ class RecipeService {
     });
   }
 
-  async addSubRecipeToRecipe(
-    recipe: RecipeFrame,
-    recipeId: string,
-    subRecipeId: string,
-  ): Promise<Recipe> {
-    return await api<Recipe>(
-      `jobs/recipe/addSubRecipeToRecipe/${recipeId}/${subRecipeId}`,
-      {
-        method: 'PUT',
-        body: recipe,
-      },
-    );
+  async addSubRecipeToRecipe(recipe: RecipeFrame, recipeId: string, subRecipeId: string): Promise<Recipe> {
+    return await api<Recipe>(`jobs/recipe/addSubRecipeToRecipe/${recipeId}/${subRecipeId}`, {
+      method: 'PUT',
+      body: recipe,
+    });
   }
 
-  async addCommandToRecipe(
-    recipe: RecipeFrame,
-    recipeId: string,
-    commandId: string,
-  ): Promise<Recipe> {
-    return await api<Recipe>(
-      `jobs/recipe/addCommandToRecipe/${recipeId}/${commandId}`,
-      {
-        method: 'PUT',
-        body: recipe,
-      },
-    );
+  async addCommandToRecipe(recipe: RecipeFrame, recipeId: string, commandId: string): Promise<Recipe> {
+    return await api<Recipe>(`jobs/recipe/addCommandToRecipe/${recipeId}/${commandId}`, {
+      method: 'PUT',
+      body: recipe,
+    });
   }
 }
 

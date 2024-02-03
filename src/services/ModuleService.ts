@@ -19,16 +19,10 @@ class ModuleService {
     });
   }
 
-  async addModuleToCollection(
-    collectionId: string,
-    moduleId: string,
-  ): Promise<Module> {
-    return await api<Module>(
-      `collection/addModule/${collectionId}/${moduleId}`,
-      {
-        method: 'PUT',
-      },
-    );
+  async addModuleToCollection(collectionId: string, moduleId: string): Promise<Module> {
+    return await api<Module>(`collection/addModule/${collectionId}/${moduleId}`, {
+      method: 'PUT',
+    });
   }
 
   async updateModule(uid: string, module: ModuleInput): Promise<Module> {
@@ -39,16 +33,10 @@ class ModuleService {
     });
   }
 
-  async removeModuleFromCollection(
-    collectionId: string,
-    moduleId: string,
-  ): Promise<Module> {
-    return await api<Module>(
-      `collection/removeModule/${collectionId}/${moduleId}`,
-      {
-        method: 'DELETE',
-      },
-    );
+  async removeModuleFromCollection(collectionId: string, moduleId: string): Promise<Module> {
+    return await api<Module>(`collection/removeModule/${collectionId}/${moduleId}`, {
+      method: 'DELETE',
+    });
   }
 
   async addDeviceToModule(moduleId: string, deviceId: string): Promise<Module> {
@@ -57,10 +45,7 @@ class ModuleService {
     });
   }
 
-  async removeDeviceFromModule(
-    moduleId: string,
-    deviceId: string,
-  ): Promise<Module> {
+  async removeDeviceFromModule(moduleId: string, deviceId: string): Promise<Module> {
     return await api<Module>(`module/removeDevice/${moduleId}/${deviceId}`, {
       method: 'DELETE',
     });

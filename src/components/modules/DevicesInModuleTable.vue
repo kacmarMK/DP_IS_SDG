@@ -41,10 +41,7 @@
 
       <template #body-cell-name="propsCellName">
         <q-td :props="propsCellName" no-hover>
-          <router-link
-            :to="`/devices/${propsCellName.row.uid}`"
-            class="text-black text-weight-regular"
-          >
+          <router-link :to="`/devices/${propsCellName.row.uid}`" class="text-black text-weight-regular">
             {{ propsCellName.row.name }}
           </router-link>
         </q-td>
@@ -52,12 +49,7 @@
 
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions" no-hover>
-          <q-btn
-            :icon="mdiOpenInNew"
-            color="grey-color"
-            flat
-            round
-            :to="`/devices/${propsActions.row.uid}`"
+          <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/devices/${propsActions.row.uid}`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               {{ t('global.open') }}
             </q-tooltip>
@@ -90,7 +82,7 @@
         </q-td>
       </template>
     </q-table>
-    <RemoveDeviceModuleDialog
+    <RemoveDeviceFromModuleDialog
       v-if="deviceToDelete"
       v-model="deleteDialog"
       :device="deviceToDelete"
@@ -108,52 +100,33 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import RemoveDeviceModuleDialog from './RemoveDeviceModuleDialog.vue';
+import RemoveDeviceFromModuleDialog from './RemoveDeviceFromModuleDialog.vue';
 import AddDeviceToModuleDialog from './AddDeviceToModuleDialog.vue';
 import { PropType, computed, ref } from 'vue';
 import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
-import {
-  mdiCellphoneLink,
-  mdiOpenInNew,
-  mdiPencil,
-  mdiPlus,
-  mdiTrashCanOutline,
-} from '@quasar/extras/mdi-v6';
+import { mdiCellphoneLink, mdiOpenInNew, mdiPencil, mdiPlus, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 
-const props = defineProps({
-  modelValue: {
-    type: Array as PropType<Device[]>,
-    required: true,
-  },
+defineProps({
   module: {
     type: Object as PropType<Module>,
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue', 'onChange']);
+const emit = defineEmits(['onChange']);
 
 const authStore = useAuthStore();
 
-const devices = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const devices = defineModel<Device[]>({ required: true });
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();
 function deviceDeleted() {
-  devices.value = devices.value.filter(
-    (device) => device.uid !== deviceToDelete.value?.uid,
-  );
+  devices.value = devices.value.filter((device) => device.uid !== deviceToDelete.value?.uid);
   emit('onChange', devices.value);
 }
 

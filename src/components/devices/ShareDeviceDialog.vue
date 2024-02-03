@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isDialogVisible">
+  <q-dialog v-model="isDialogOpen">
     <q-card style="min-width: 350px" class="q-pa-xs">
       <q-card-section>
         <div class="text-h6">{{ t('device.share_device') }}</div>
@@ -27,13 +27,7 @@
             <q-item v-for="user in sharedWithUsers" :key="user.uid">
               <q-item-section>{{ user.mail }}</q-item-section>
               <q-item-section side>
-                <q-btn
-                  round
-                  flat
-                  dense
-                  :icon="mdiClose"
-                  @click="removeSharedUser(user)"
-                />
+                <q-btn round flat dense :icon="mdiClose" @click="removeSharedUser(user)" />
               </q-item-section>
             </q-item>
           </q-list>
@@ -60,25 +54,13 @@ import { mdiClose } from '@quasar/extras/mdi-v6';
 const { t } = useI18n();
 
 const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
   device: {
     type: Object as PropType<Device>,
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue']);
 
-const isDialogVisible = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const isDialogOpen = defineModel<boolean>();
 
 const emailToShare = ref('');
 const sharedWithUsers = ref<User[]>([]);
@@ -104,9 +86,7 @@ async function shareDevice() {
 async function removeSharedUser(user: User) {
   try {
     await DeviceService.removeSharedUser(props.device.uid, user.uid);
-    sharedWithUsers.value = sharedWithUsers.value.filter(
-      (u) => u.uid !== user.uid,
-    );
+    sharedWithUsers.value = sharedWithUsers.value.filter((u) => u.uid !== user.uid);
     getSharedUsers();
     toast.success(t('device.toasts.share.user_remove_success'));
   } catch (error) {
@@ -116,9 +96,7 @@ async function removeSharedUser(user: User) {
 
 async function getSharedUsers() {
   try {
-    sharedWithUsers.value = await DeviceService.getSharedUsers(
-      props.device.uid,
-    );
+    sharedWithUsers.value = await DeviceService.getSharedUsers(props.device.uid);
   } catch (error) {
     handleError(error, t('device.toasts.share.shared_users_load_failed'));
   }

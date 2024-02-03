@@ -59,10 +59,7 @@
             </q-td>
             <q-td v-for="col in props2.cols" :key="col.name" :props="props2">
               <template v-if="col.name === 'name'">
-                <router-link
-                  :to="`/modules/${props2.row.uid}`"
-                  class="text-black text-weight-regular"
-                >
+                <router-link :to="`/modules/${props2.row.uid}`" class="text-black text-weight-regular">
                   {{ col.value }}
                 </router-link>
               </template>
@@ -71,12 +68,7 @@
               </template>
             </q-td>
             <q-td auto-width>
-              <q-btn
-                :icon="mdiOpenInNew"
-                color="grey-color"
-                flat
-                round
-                :to="`/modules/${props2.row.uid}`"
+              <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/modules/${props2.row.uid}`"
                 ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                   {{ t('global.open') }}
                 </q-tooltip>
@@ -112,14 +104,14 @@
             </q-td>
           </q-tr>
 
-          <q-tr class="bg-grey-1 no-height" :props="props">
+          <q-tr class="bg-grey-1 no-height" :props="props2">
             <q-td colspan="100%" class="no-height" no-hover>
               <q-slide-transition :duration="250">
                 <div v-show="props2.expand">
                   <DevicesInModuleTable
                     v-model="props2.row.devices"
                     :module="props2.row"
-                    class="q-pa-md"
+                    class="q-pa-lg"
                     @on-change="emit('onUpdate')"
                   />
                 </div>
@@ -129,11 +121,7 @@
         </template>
       </q-table>
     </div>
-    <CreateModuleDialog
-      v-model="createModuleDialog"
-      :collection="collection"
-      @on-create="emit('onUpdate')"
-    />
+    <CreateModuleDialog v-model="createModuleDialog" :collection="collection" @on-create="emit('onUpdate')" />
     <DeleteConfirmationDialog
       v-if="moduleToUpdate"
       v-model="deleteModuleDialog"
@@ -157,7 +145,7 @@
 <script setup lang="ts">
 import { Collection } from '@/models/Collection';
 import { QTableProps } from 'quasar';
-import { PropType, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 import CreateModuleDialog from './CreateModuleDialog.vue';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import EditModuleDialog from './EditModuleDialog.vue';
@@ -178,24 +166,10 @@ import {
 
 const { t } = useI18n();
 
-const props = defineProps({
-  modelValue: {
-    type: Object as PropType<Collection>,
-    required: true,
-  },
-});
-const emit = defineEmits(['update:modelValue', 'onUpdate']);
+const collection = defineModel<Collection>({ required: true });
+const emit = defineEmits(['onUpdate']);
 
 const authStore = useAuthStore();
-
-const collection = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
 
 const createModuleDialog = ref(false);
 const deleteModuleDialog = ref(false);

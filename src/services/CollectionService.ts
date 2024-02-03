@@ -8,13 +8,11 @@ class CollectionService {
     // Filter out null modules
     collections = collections.map((collection) => {
       if (collection.modules) {
-        collection.modules = collection.modules.filter(
-          (module) => module !== null,
-        );
+        collection.modules = collection.modules.filter((module) => module !== null);
         // Additional filter for null devices in each module
         collection.modules = collection.modules.map((module) => {
           if (module.devices) {
-            module.devices = module.devices.filter((device) => device !== null);
+            module.devices = module.devices.filter((device) => device !== null && device.deactivated === false);
           }
           return module;
         });
@@ -29,9 +27,14 @@ class CollectionService {
     const collection = await api<Collection>(`collection/${uid}`);
 
     if (collection.modules) {
-      collection.modules = collection.modules.filter(
-        (module) => module !== null,
-      );
+      collection.modules = collection.modules.filter((module) => module !== null);
+
+      collection.modules = collection.modules.map((module) => {
+        if (module.devices) {
+          module.devices = module.devices.filter((device) => device !== null && device.deactivated === false);
+        }
+        return module;
+      });
     }
 
     return collection;
@@ -44,10 +47,7 @@ class CollectionService {
     });
   }
 
-  async updateCollection(
-    uid: string,
-    collection: CollectionInput,
-  ): Promise<Collection> {
+  async updateCollection(uid: string, collection: CollectionInput): Promise<Collection> {
     collection.modules = null;
     return await api<Collection>(`collection/update/${uid}`, {
       method: 'PUT',

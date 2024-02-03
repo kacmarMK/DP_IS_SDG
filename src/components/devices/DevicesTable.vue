@@ -19,10 +19,7 @@
 
       <template #body-cell-name="propsCell">
         <q-td :props="propsCell">
-          <router-link
-            :to="`/devices/${propsCell.row.uid}`"
-            class="text-black text-weight-regular"
-          >
+          <router-link :to="`/devices/${propsCell.row.uid}`" class="text-black text-weight-regular">
             {{ propsCell.row.name }}
           </router-link>
         </q-td>
@@ -30,12 +27,7 @@
 
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions">
-          <q-btn
-            :icon="mdiOpenInNew"
-            color="grey-color"
-            flat
-            round
-            :to="`/devices/${propsActions.row.uid}`"
+          <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/devices/${propsActions.row.uid}`"
             ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
               {{ t('global.open') }}
             </q-tooltip>
@@ -65,20 +57,10 @@
               {{ t('global.delete') }}
             </q-tooltip>
           </q-btn>
-          <q-btn
-            v-if="authStore.isAdmin"
-            :icon="mdiDotsVertical"
-            color="grey-color"
-            flat
-            round
-          >
+          <q-btn v-if="authStore.isAdmin" :icon="mdiDotsVertical" color="grey-color" flat round>
             <q-menu anchor="bottom right" self="top right">
               <q-list>
-                <q-item
-                  v-close-popup
-                  clickable
-                  @click="initExpireTimeWindow(propsActions.row.uid)"
-                >
+                <q-item v-close-popup clickable @click="initExpireTimeWindow(propsActions.row.uid)">
                   <div class="row items-center q-gutter-sm">
                     <q-icon color="grey-9" size="24px" :name="mdiTimer" />
                     <div>{{ t('device.init_window') }}</div>
@@ -114,11 +96,7 @@
       :failed-message="t('device.toasts.delete_failed')"
       @on-deleted="deviceDeleted"
     />
-    <ShareDeviceDialog
-      v-if="deviceToShare"
-      v-model="shareDialog"
-      :device="deviceToShare"
-    />
+    <ShareDeviceDialog v-if="deviceToShare" v-model="shareDialog" :device="deviceToShare" />
   </div>
 </template>
 
@@ -126,7 +104,7 @@
 import { QTableProps } from 'quasar';
 import DeleteConfirmationDialog from '../core/DeleteConfirmationDialog.vue';
 import ShareDeviceDialog from './ShareDeviceDialog.vue';
-import { PropType, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Device } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
@@ -148,32 +126,19 @@ const { t } = useI18n();
 const authStore = useAuthStore();
 
 const props = defineProps({
-  modelValue: {
-    type: Array as PropType<Device[]>,
-    required: true,
-  },
   loading: {
     type: Boolean,
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue', 'onChange']);
+const emit = defineEmits(['onChange']);
 
-const devices = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const devices = defineModel<Device[]>({ required: true });
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();
 function deviceDeleted() {
-  devices.value = devices.value.filter(
-    (device) => device.uid !== deviceToDelete.value?.uid,
-  );
+  devices.value = devices.value.filter((device) => device.uid !== deviceToDelete.value?.uid);
   emit('onChange', devices.value);
 }
 

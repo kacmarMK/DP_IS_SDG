@@ -62,13 +62,7 @@ import jobService from '@/services/JobService';
 import JobControlButton from './JobControlButton.vue';
 import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
-import {
-  mdiPause,
-  mdiPlay,
-  mdiSkipNext,
-  mdiSkipForward,
-  mdiStop,
-} from '@quasar/extras/mdi-v6';
+import { mdiPause, mdiPlay, mdiSkipNext, mdiSkipForward, mdiStop } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 
@@ -103,22 +97,12 @@ async function performJobAction(
 
 const stoppingJob = ref(false);
 async function stopJob() {
-  await performJobAction(
-    jobService.cancelJob,
-    t('job.toasts.stop_success'),
-    t('job.toasts.stop_failed'),
-    stoppingJob,
-  );
+  await performJobAction(jobService.cancelJob, t('job.toasts.stop_success'), t('job.toasts.stop_failed'), stoppingJob);
 }
 
 const pausingJob = ref(false);
 async function pauseJob() {
-  await performJobAction(
-    jobService.pauseJob,
-    t('job.toasts.pause_success'),
-    t('job.toasts.pause_failed'),
-    pausingJob,
-  );
+  await performJobAction(jobService.pauseJob, t('job.toasts.pause_success'), t('job.toasts.pause_failed'), pausingJob);
 }
 
 const resumingJob = ref(false);

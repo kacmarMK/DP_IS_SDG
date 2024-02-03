@@ -18,10 +18,7 @@
           ><q-tooltip :offset="[0, 4]">{{ t('global.details') }}</q-tooltip>
         </q-btn>
       </div>
-      <div
-        v-if="runningJob"
-        class="column justify-between col-grow q-my-sm wrap"
-      >
+      <div v-if="runningJob" class="column justify-between col-grow q-my-sm wrap">
         <div class="row justify-start items-center q-mb-sm">
           <q-circular-progress
             show-value
@@ -36,30 +33,18 @@
             <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
             {{ (currentProgress * 100).toFixed(0) }}%
           </q-circular-progress>
-          <div
-            class="column q-ml-sm q-gutter-y-xs justify-center q-my-md items-start"
-          >
+          <div class="column q-ml-sm q-gutter-y-xs justify-center q-my-md items-start">
             <JobStatusBadges :job="runningJob" />
             <div class="text-weight-medium">
               {{ runningJob.name }}
             </div>
             <div>
-              {{
-                t('job.step_of', [
-                  runningJob.status?.currentStep ?? 1,
-                  runningJob.noOfCmds,
-                ])
-              }}
+              {{ t('job.step_of', [runningJob.status?.currentStep ?? 1, runningJob.noOfCmds]) }}
               <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
               <span>({{ currentCommandName }})</span>
             </div>
             <div>
-              {{
-                t('job.cycle_of', [
-                  runningJob.status?.currentCycle ?? 1,
-                  runningJob.noOfReps,
-                ])
-              }}
+              {{ t('job.cycle_of', [runningJob.status?.currentCycle ?? 1, runningJob.noOfReps]) }}
             </div>
           </div>
         </div>
@@ -84,11 +69,7 @@
         />
       </div>
     </div>
-    <StartJobDialog
-      v-model="openDialog"
-      :device="props.device"
-      @job-started="getRunningJob"
-    />
+    <StartJobDialog v-model="openDialog" :device="props.device" @job-started="getRunningJob" />
   </div>
 </template>
 
@@ -135,9 +116,7 @@ function findActiveJob(jobs: Job[]) {
   });
 
   return jobs.find(
-    (job) =>
-      job.currentStatus == JobStatusEnum.JOB_PROCESSING ||
-      job.currentStatus == JobStatusEnum.JOB_PENDING,
+    (job) => job.currentStatus == JobStatusEnum.JOB_PROCESSING || job.currentStatus == JobStatusEnum.JOB_PENDING,
   );
 }
 
@@ -158,8 +137,7 @@ const currentProgress = computed(() => {
     const { status, noOfReps, noOfCmds } = runningJob.value;
     const total = noOfReps * noOfCmds;
 
-    const current =
-      status.currentStep + ((status.currentCycle ?? 1) - 1) * noOfCmds;
+    const current = status.currentStep + ((status.currentCycle ?? 1) - 1) * noOfCmds;
 
     return Math.min(current / total, 1);
   }

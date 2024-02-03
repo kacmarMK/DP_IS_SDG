@@ -1,23 +1,15 @@
 <template>
-  <q-dialog v-model="isVisible">
+  <q-dialog v-model="isDialogOpen">
     <q-card>
       <q-card-section>
         <div class="text-h6">{{ t('module.remove_device_from_module') }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        {{
-          t('module.remove_device_from_module_desc', [device.name, module.name])
-        }}
+        {{ t('module.remove_device_from_module_desc', [device.name, module.name]) }}
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn
-          v-close-popup
-          flat
-          color="grey-9"
-          :label="t('global.cancel')"
-          no-caps
-        />
+        <q-btn v-close-popup flat color="grey-9" :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           :label="t('global.delete')"
@@ -35,7 +27,7 @@
 import { Device } from '@/models/Device';
 import { Module } from '@/models/Module';
 import { handleError } from '@/utils/error-handler';
-import { ref, computed, PropType } from 'vue';
+import { ref, PropType } from 'vue';
 import { toast } from 'vue3-toastify';
 import ModuleService from '@/services/ModuleService';
 import { useI18n } from 'vue-i18n';
@@ -43,10 +35,6 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
   device: {
     type: Object as PropType<Device>,
     required: true,
@@ -57,25 +45,15 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue', 'onDeleted']);
-const isVisible = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const emit = defineEmits(['onDeleted']);
+const isDialogOpen = defineModel<boolean>();
 
 const isDeleteInProgress = ref(false);
 async function handleDelete() {
   try {
     isDeleteInProgress.value = true;
-    await ModuleService.removeDeviceFromModule(
-      props.module.uid,
-      props.device.uid,
-    );
-    isVisible.value = false;
+    await ModuleService.removeDeviceFromModule(props.module.uid, props.device.uid);
+    isDialogOpen.value = false;
     emit('onDeleted');
     toast.success('Device removed from module');
   } catch (error) {

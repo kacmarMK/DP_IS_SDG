@@ -3,18 +3,8 @@
     <div class="row items-center justify-start q-mb-md q-gutter-x-md">
       <p class="text-weight-medium text-h6">{{ t('chart.label') }}</p>
       <q-space></q-space>
-      <chart-time-range-select
-        ref="timeRangeSelect"
-        @update:model-value="updateTimeRange"
-      ></chart-time-range-select>
-      <q-btn-dropdown
-        padding="0.5rem 1rem"
-        outline
-        no-caps
-        color="grey-7"
-        text-color="grey-5"
-        class="options-dropdown"
-      >
+      <chart-time-range-select ref="timeRangeSelect" @update:model-value="updateTimeRange"></chart-time-range-select>
+      <q-btn-dropdown padding="0.5rem 1rem" outline no-caps color="grey-7" text-color="grey-5" class="options-dropdown">
         <template #label>
           <div class="text-grey-10 text-weight-regular">
             {{ t('global.options') }}
@@ -22,11 +12,7 @@
         </template>
         <template #default>
           <q-list>
-            <q-item
-              v-close-popup
-              clickable
-              @click="download(csvConfig)(generateCSVData())"
-            >
+            <q-item v-close-popup clickable @click="download(csvConfig)(generateCSVData())">
               <q-item-section>
                 <q-item-label>{{ t('chart.export_csv') }}</q-item-label>
               </q-item-section>
@@ -208,10 +194,7 @@ const generateCSVData = () => {
   });
 
   // Sort the data by measureAdd (timestamp)
-  allData.sort(
-    (a, b) =>
-      new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime(),
-  );
+  allData.sort((a, b) => new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime());
 
   // Format the data for CSV export
   let csvData = allData.map((data) => ({
@@ -236,9 +219,7 @@ function setChartUpdate(chartContext: unknown) {
 
 function legendClick(_chartContext: unknown, seriesIndex: number) {
   seriesVisibility.value[seriesIndex] = !seriesVisibility.value[seriesIndex];
-  tickedNodes.value = props.dataPointTags
-    .filter((_, index) => seriesVisibility.value[index])
-    .map((tag) => tag.uid);
+  tickedNodes.value = props.dataPointTags.filter((_, index) => seriesVisibility.value[index]).map((tag) => tag.uid);
 }
 
 function updateSeriesVisibility(tags: DataPointTag[], ticked: string[]) {

@@ -1,15 +1,6 @@
 <template>
   <router-link :to="to" :exact="false" :class="{ active: subIsActive() }">
-    <q-btn
-      no-caps
-      flat
-      :label="label"
-      align="left"
-      class="menu-btn q-my-xs"
-      :icon="icon"
-      size="15px"
-      padding="10px"
-    >
+    <q-btn no-caps flat :label="label" align="left" class="menu-btn q-my-xs" :icon="icon" size="15px" padding="10px">
     </q-btn
   ></router-link>
 </template>

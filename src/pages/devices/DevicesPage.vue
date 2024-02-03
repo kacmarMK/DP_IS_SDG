@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { useDevicesStore } from '@/stores/devices-store';
+import { useDeviceStore } from '@/stores/device-store';
 import DevicesTable from '@/components/devices/DevicesTable.vue';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth-store';
@@ -36,6 +36,7 @@ import { mdiPlus } from '@quasar/extras/mdi-v6';
 const { t } = useI18n();
 
 const authStore = useAuthStore();
-const deviceStore = useDevicesStore();
+const deviceStore = useDeviceStore();
 deviceStore.getDevices();
 </script>
+@/stores/device-store

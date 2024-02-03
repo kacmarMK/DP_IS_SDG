@@ -7,9 +7,7 @@ class JobService {
   }
 
   async getJobsOnDevice(deviceId: string): Promise<Job[]> {
-    return await api<Job[]>(
-      `/jobs/job/getAllJobsOnDevice/${deviceId}/NONE/NONE`,
-    );
+    return await api<Job[]>(`/jobs/job/getAllJobsOnDevice/${deviceId}/NONE/NONE`);
   }
 
   async getJobById(deviceId: string): Promise<Job> {

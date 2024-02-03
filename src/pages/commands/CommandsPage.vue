@@ -78,11 +78,7 @@ import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
 import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {
-  mdiCodeTags,
-  mdiPencil,
-  mdiTrashCanOutline,
-} from '@quasar/extras/mdi-v6';
+import { mdiCodeTags, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const store = useCommandsStore();

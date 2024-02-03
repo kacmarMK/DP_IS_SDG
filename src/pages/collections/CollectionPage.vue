@@ -2,21 +2,13 @@
   <q-page class="main-padding">
     <div>
       <div class="q-mb-md row">
-        <router-link
-          class="main-text text-accent text-weight-medium z-fab"
-          to="/collections"
-        >
+        <router-link class="main-text text-accent text-weight-medium z-fab" to="/collections">
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ t('collection.label') }} >
         </router-link>
-        <p v-if="dataPointTagTree" class="main-text z-fab">
-          &nbsp;{{ dataPointTagTree.name }}
-        </p>
+        <p v-if="dataPointTagTree" class="main-text z-fab">&nbsp;{{ dataPointTagTree.name }}</p>
       </div>
-      <div
-        v-if="dataPointTagTree"
-        class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between"
-      >
+      <div v-if="dataPointTagTree" class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
         <div class="col-12">
           <sensor-selection-tree
             v-model:tickedNodes="tickedNodes"
@@ -45,10 +37,7 @@ import DataPointChart from '@/components/datapoints/DataPointChart.vue';
 import CollectionService from '@/services/CollectionService';
 import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
-import {
-  collectionToDataPointTagNode,
-  nodeToDataPointTags,
-} from '@/utils/data-point-tag-nodes';
+import { collectionToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
@@ -63,9 +52,7 @@ const isLoadingCollection = ref(false);
 async function getCollection() {
   try {
     isLoadingCollection.value = true;
-    const collection = await CollectionService.getCollection(
-      route.params.id.toString(),
-    );
+    const collection = await CollectionService.getCollection(route.params.id.toString());
     dataPointTagTree.value = collectionToDataPointTagNode(collection);
   } catch (error) {
     handleError(error, t('collection.toasts.load_failed'));

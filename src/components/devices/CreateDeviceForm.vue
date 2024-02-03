@@ -1,13 +1,6 @@
 <template>
   <q-card style="min-width: 350px" class="q-pa-sm q-pa-md-lg shadow">
-    <q-stepper
-      ref="stepper"
-      v-model="createStep"
-      animated
-      vertical
-      header-nav
-      keep-alive
-    >
+    <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav keep-alive>
       <q-step :name="1" :title="t('device.device_info')" :icon="mdiPencil">
         <q-form>
           <div class="q-pa-sm row q-col-gutter-lg">
@@ -46,11 +39,7 @@
               class="col-12 col-md-6"
               :label="t('device.firmware')"
             />
-            <q-input
-              v-model="deviceInput.version"
-              class="col-12 col-md-6"
-              :label="t('device.version')"
-            />
+            <q-input v-model="deviceInput.version" class="col-12 col-md-6" :label="t('device.version')" />
           </div>
           <q-card-actions align="left" class="text-primary q-mt-sm">
             <q-btn
@@ -67,10 +56,7 @@
       </q-step>
       <q-step :name="2" :title="t('device.add_sensors')" :icon="matSensors">
         <q-form>
-          <div
-            v-for="(dataPointTag, index) in remoteDataPointTags"
-            :key="index"
-          >
+          <div v-for="(dataPointTag, index) in remoteDataPointTags" :key="index">
             <data-point-tag-form
               ref="remoteDataPointTagFormRef"
               v-model:dataPointTagName="dataPointTag.name"
@@ -175,9 +161,7 @@ async function getEditingDevice() {
       deactivated: editingDevice.deactivated,
     };
     remoteDataPointTags.value = editingDevice.dataPointTags;
-    originalRemoteDataPointTags.value = cloneDataPointTags(
-      editingDevice.dataPointTags,
-    );
+    originalRemoteDataPointTags.value = cloneDataPointTags(editingDevice.dataPointTags);
   } catch (error) {
     handleError(error, t('device.toasts.loading_failed'));
   }
@@ -189,9 +173,7 @@ const originalRemoteDataPointTags = ref<DataPointTag[]>([]);
 async function deleteRemoteDataPointTag(id: string) {
   try {
     await dataPointTagService.deleteDataPointTag(id);
-    remoteDataPointTags.value = remoteDataPointTags.value.filter(
-      (dataPointTag) => dataPointTag.uid !== id,
-    );
+    remoteDataPointTags.value = remoteDataPointTags.value.filter((dataPointTag) => dataPointTag.uid !== id);
   } catch (error) {
     handleError(error, t('device.toasts.tag.delete_failed'));
   }
@@ -218,8 +200,7 @@ async function createDataPointTags(): Promise<DataPointTag[]> {
 
   for (const dataPointTag of localDataPointTags.value) {
     try {
-      const createdDataPointTag =
-        await dataPointTagService.createDataPointTag(dataPointTag);
+      const createdDataPointTag = await dataPointTagService.createDataPointTag(dataPointTag);
       dataPointTags.push(createdDataPointTag);
     } catch (error) {
       handleError(error, t('device.toasts.tag.create_failed'));
@@ -243,10 +224,7 @@ async function updateDevice(): Promise<Device | undefined> {
   if (!props.isEditing || !props.editingDeviceId) return;
 
   try {
-    editedDevice = await deviceService.updateDevice(
-      deviceInput.value,
-      props.editingDeviceId,
-    );
+    editedDevice = await deviceService.updateDevice(deviceInput.value, props.editingDeviceId);
   } catch (error) {
     handleError(error, t('device.toasts.update_failed'));
   }
@@ -283,10 +261,7 @@ async function submitForm() {
   const dataPointTags: DataPointTag[] = await createDataPointTags();
   for (const dataPointTag of dataPointTags) {
     try {
-      await dataPointTagService.addDataPointTagToDevice(
-        device.uid,
-        dataPointTag.uid,
-      );
+      await dataPointTagService.addDataPointTagToDevice(device.uid, dataPointTag.uid);
     } catch (error) {
       handleError(error, t('device.toasts.tag.add_tag_to_device_failed'));
     }
@@ -294,9 +269,7 @@ async function submitForm() {
 
   //Update remoteDataPointTags
   for (const dataPointTag of remoteDataPointTags.value) {
-    const originalTag = originalRemoteDataPointTags.value.find(
-      (tag) => tag.uid === dataPointTag.uid,
-    );
+    const originalTag = originalRemoteDataPointTags.value.find((tag) => tag.uid === dataPointTag.uid);
 
     //Update only if tag has changed
     if (JSON.stringify(originalTag) !== JSON.stringify(dataPointTag)) {
@@ -307,10 +280,7 @@ async function submitForm() {
           unit: dataPointTag.unit,
           decimal: dataPointTag.decimal,
         };
-        await dataPointTagService.updateDataPointTag(
-          updatedDataPointTag,
-          dataPointTag.uid,
-        );
+        await dataPointTagService.updateDataPointTag(updatedDataPointTag, dataPointTag.uid);
       } catch (error) {
         handleError(error, t('device.toasts.tag.update_failed'));
       }
@@ -344,15 +314,9 @@ const typeRef = ref<QField>();
 const localDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
 const remoteDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
 
-const nameRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
-const macRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
-const typeRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const macRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const typeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
 function allDataPointTagRefs() {
   const allRefs: QInput[] = [];

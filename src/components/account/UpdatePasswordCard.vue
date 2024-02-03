@@ -28,11 +28,7 @@
         :rules="newPasswordRules"
       >
         <template #append>
-          <q-icon
-            :name="hidePwNew ? mdiEyeOff : mdiEye"
-            class="cursor-pointer"
-            @click="hidePwNew = !hidePwNew"
-          />
+          <q-icon :name="hidePwNew ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="hidePwNew = !hidePwNew" />
         </template>
       </q-input>
       <q-btn
@@ -88,13 +84,10 @@ const changingPassword = ref(false);
 
 const currentPasswordRules = [
   (val: string) => (val && val.length > 0) || t('global.rules.required'),
-  (val: string) =>
-    val === props.user?.password || t('account.rules.password_current_wrong'),
+  (val: string) => val === props.user?.password || t('account.rules.password_current_wrong'),
 ];
 
-const newPasswordRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const newPasswordRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
 async function updatePassword() {
   const form = [newPwRef.value];

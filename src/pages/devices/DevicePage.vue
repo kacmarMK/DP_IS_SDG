@@ -2,10 +2,7 @@
   <q-page class="main-padding">
     <div v-if="device">
       <div class="q-mb-md row">
-        <router-link
-          class="main-text text-accent text-weight-medium z-fab"
-          to="/devices"
-        >
+        <router-link class="main-text text-accent text-weight-medium z-fab" to="/devices">
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
           {{ t('device.label', 2) }} >
         </router-link>
@@ -35,10 +32,7 @@
       </div>
       <div class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
         <div class="col-12 col-md-12 col-lg-6 col-xl-3">
-          <device-info-card
-            :device="device"
-            class="shadow container q-pa-lg full-height"
-          ></device-info-card>
+          <device-info-card :device="device" class="shadow container q-pa-lg full-height"></device-info-card>
         </div>
         <div class="col-12 col-md-12 col-lg-6 col-xl-6">
           <current-job-card
@@ -57,6 +51,7 @@
         </div>
         <div class="col-12">
           <data-point-chart
+            v-if="dataPointTagTree"
             v-model:tickedNodes="tickedNodes"
             class="bg-white shadow q-pa-lg"
             :data-point-tags="device.dataPointTags"
@@ -77,21 +72,35 @@ import { ref } from 'vue';
 import deviceService from 'src/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
 import { Device } from '@/models/Device';
-import { deviceToDataPointTagNode } from '@/utils/data-point-tag-nodes';
+import { deviceToDataPointTagNode, extractNodeKeys } from '@/utils/data-point-tag-nodes';
 import SensorSelectionTree from '@/components/datapoints/SensorSelectionTree.vue';
 import CurrentJobCard from '@/components/jobs/CurrentJobCard.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiPencil } from '@quasar/extras/mdi-v6';
+import { useDeviceStore } from '@/stores/device-store';
 
 const { t } = useI18n();
 
 const route = useRoute();
 const authStore = useAuthStore();
+const deviceStore = useDeviceStore();
 
 const device = ref<Device | null>(null);
 const isLoadingDevice = ref(false);
 const isRefreshingDevice = ref(false);
+
+const dataPointTagTree = ref<DataPointTagNode>();
+const tickedNodes = ref<string[]>();
+
+function loadStoreDevice(uid: string) {
+  const storedDevice = deviceStore.getDeviceById(uid);
+  if (storedDevice) {
+    device.value = storedDevice;
+    dataPointTagTree.value = deviceToDataPointTagNode(device.value);
+  }
+}
+loadStoreDevice(route.params.id.toString());
 
 async function getDevice(uid: string) {
   try {
@@ -101,6 +110,7 @@ async function getDevice(uid: string) {
     }
     device.value = await deviceService.getDevice(uid);
     dataPointTagTree.value = deviceToDataPointTagNode(device.value);
+    tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
   } catch (error) {
     handleError(error, t('device.toasts.loading_failed'));
   } finally {
@@ -122,9 +132,7 @@ async function refreshDevice() {
     isRefreshingDevice.value = false;
   }
 }
-
-const dataPointTagTree = ref<DataPointTagNode>();
-const tickedNodes = ref<string[]>();
 </script>
 
 <style lang="scss" scoped></style>
+@/stores/device-store

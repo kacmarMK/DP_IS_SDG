@@ -1,33 +1,21 @@
 <template>
-  <q-dialog v-model="isDialogVisible">
-    <q-card style="min-width: 350px" class="q-pa-xs">
-      <q-card-section>
-        <div class="text-h6">{{ t('device.add_device') }}</div>
-      </q-card-section>
-      <q-card-section class="q-pt-none column q-gutter-md">
-        <q-select
-          v-model="selectedDeviceId"
-          :options="filteredDevices"
-          :label="t('device.label')"
-          emit-value
-          map-options
-          option-value="uid"
-          option-label="name"
-        />
-      </q-card-section>
-      <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
-        <q-btn
-          unelevated
-          color="primary"
-          :label="t('global.add')"
-          no-caps
-          :loading="addingInProgress"
-          @click="addDevice"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <dialog-common
+    v-model="isDialogOpen"
+    :title="t('device.add_device')"
+    :action-label="t('global.add')"
+    :loading="addingInProgress"
+    @on-submit="addDevice"
+  >
+    <q-select
+      v-model="selectedDeviceId"
+      :options="filteredDevices"
+      :label="t('device.label')"
+      emit-value
+      map-options
+      option-value="uid"
+      option-label="name"
+    />
+  </dialog-common>
 </template>
 
 <script setup lang="ts">
@@ -37,9 +25,10 @@ import { handleError } from '@/utils/error-handler';
 import { computed } from 'vue';
 import { toast } from 'vue3-toastify';
 import { Module } from '@/models/Module';
-import { useDevicesStore } from '@/stores/devices-store';
+import { useDeviceStore } from '@/stores/device-store';
 import { Device } from '@/models/Device';
 import { useI18n } from 'vue-i18n';
+import DialogCommon from '@/components/core/DialogCommon.vue';
 
 const { t } = useI18n();
 
@@ -57,27 +46,18 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(['update:modelValue', 'onAdded']);
 
-const isDialogVisible = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const isDialogOpen = defineModel<boolean>();
+
+const emit = defineEmits(['onAdded']);
 
 const filteredDevices = computed(() => {
   return deviceStore.devices.filter(
-    (device) =>
-      !props.alreadyAddedDevices.find(
-        (alreadyAddedDevice) => alreadyAddedDevice.uid === device.uid,
-      ),
+    (device) => !props.alreadyAddedDevices.find((alreadyAddedDevice) => alreadyAddedDevice.uid === device.uid),
   );
 });
 
-const deviceStore = useDevicesStore();
+const deviceStore = useDeviceStore();
 const selectedDeviceId = ref<string>();
 const addingInProgress = ref(false);
 
@@ -85,13 +65,10 @@ async function addDevice() {
   if (!selectedDeviceId.value) return;
   addingInProgress.value = true;
   try {
-    await ModuleService.addDeviceToModule(
-      props.module.uid,
-      selectedDeviceId.value,
-    );
+    await ModuleService.addDeviceToModule(props.module.uid, selectedDeviceId.value);
     toast.success(t('module.toasts.add_device_to_module_success'));
     emit('onAdded');
-    isDialogVisible.value = false;
+    isDialogOpen.value = false;
   } catch (error) {
     handleError(error, t('module.toasts.add_device_to_module_failed'));
   } finally {
@@ -112,3 +89,4 @@ if (deviceStore.devices.length === 0) deviceStore.getDevices();
 </script>
 
 <style lang="scss" scoped></style>
+@/stores/device-store

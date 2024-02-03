@@ -59,10 +59,7 @@ export const useCommandsStore = defineStore('commands', () => {
   async function editCommand() {
     try {
       isEditingCommand.value = true;
-      await commandService.updateCommand(
-        editedCommand.value,
-        editedCommand.value.id,
-      );
+      await commandService.updateCommand(editedCommand.value, editedCommand.value.id);
       toast.success(t('command.toasts.update_success'));
       getCommands();
       editDialog.value = false;

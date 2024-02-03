@@ -7,15 +7,9 @@
         <p v-if="job" class="job-name text-weight-medium">({{ job.name }})</p>
         <q-badge class="q-pa-xs q-ml-sm" color="primary">
           <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{
-            job?.noOfReps
-          }}
+          {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
         </q-badge>
-        <job-status-badges
-          v-if="job"
-          class="q-ml-sm"
-          :job="job"
-        ></job-status-badges>
+        <job-status-badges v-if="job" class="q-ml-sm" :job="job"></job-status-badges>
         <q-space></q-space>
         <job-controls
           v-if="job && authStore.isAdmin"
@@ -43,15 +37,9 @@
         </template>
         <template #body-cell-progress="props">
           <q-td auto-width :props="props">
-            <div
-              style="min-height: 45px"
-              class="row items-center justify-center"
-            >
+            <div style="min-height: 45px" class="row items-center justify-center">
               <div
-                v-if="
-                  currentStep >= props.row.step &&
-                  currentStep < props.row.step + props.row.cycles
-                "
+                v-if="currentStep >= props.row.step && currentStep < props.row.step + props.row.cycles"
                 class="row items-center justify-center"
               >
                 <q-circular-progress
@@ -59,10 +47,7 @@
                   :thickness="0.15"
                   color="primary"
                   show-value
-                  :indeterminate="
-                    !job?.paused &&
-                    job?.currentStatus == JobStatusEnum.JOB_PROCESSING
-                  "
+                  :indeterminate="!job?.paused && job?.currentStatus == JobStatusEnum.JOB_PROCESSING"
                 >
                   <div class="current-step-progress">
                     <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
@@ -70,12 +55,7 @@
                   </div>
                 </q-circular-progress>
               </div>
-              <q-icon
-                v-else-if="props.row.step < currentStep"
-                :name="mdiCheck"
-                size="28px"
-                color="green"
-              ></q-icon>
+              <q-icon v-else-if="props.row.step < currentStep" :name="mdiCheck" size="28px" color="green"></q-icon>
               <q-icon v-else :name="mdiCheck" size="28px" color="grey"></q-icon>
             </div>
           </q-td>
@@ -129,8 +109,7 @@ async function getJob() {
 getJob();
 
 const currentStep = computed(() => {
-  if (!job.value || !job.value.status || !job.value.status.currentStep)
-    return 1;
+  if (!job.value || !job.value.status || !job.value.status.currentStep) return 1;
   return job.value.status.currentStep;
 });
 
@@ -138,9 +117,7 @@ const currentStepCycle = computed(() => {
   if (!job.value?.status || !steps.value.length) return 1;
 
   const currentStepIndex = steps.value.findIndex(
-    (step) =>
-      currentStep.value > step.step &&
-      currentStep.value < step.step + step.cycles,
+    (step) => currentStep.value > step.step && currentStep.value < step.step + step.cycles,
   );
 
   if (currentStepIndex === -1) return 1;

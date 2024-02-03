@@ -1,14 +1,7 @@
 <template>
   <div class="data-point-container q-my-md">
     <div class="row items-center justify-end">
-      <q-btn
-        flat
-        round
-        color="grey-color"
-        :icon="mdiTrashCanOutline"
-        dense
-        @click="emit('remove')"
-      />
+      <q-btn flat round color="grey-color" :icon="mdiTrashCanOutline" dense @click="emit('remove')" />
     </div>
     <div class="row q-col-gutter-lg">
       <q-input
@@ -18,13 +11,7 @@
         class="col-12 col-md-6"
         :label="t('global.name')"
       />
-      <q-input
-        ref="tagRef"
-        v-model="dataPointTag"
-        :rules="tagRules"
-        class="col-12 col-md-6"
-        :label="t('device.tag')"
-      />
+      <q-input ref="tagRef" v-model="dataPointTag" :rules="tagRules" class="col-12 col-md-6" :label="t('device.tag')" />
       <q-input
         ref="unitRef"
         v-model="dataPointTagUnit"
@@ -74,26 +61,14 @@ const tagRef = ref<QInput>();
 const unitRef = ref<QInput>();
 const decimalRef = ref<QInput>();
 
-const getAllRefs = () => [
-  dataTagNameRef.value,
-  tagRef.value,
-  unitRef.value,
-  decimalRef.value,
-];
+const getAllRefs = () => [dataTagNameRef.value, tagRef.value, unitRef.value, decimalRef.value];
 
-const nameRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
-const tagRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
-const unitRules = [
-  (val: string) => (val && val.length > 0) || t('global.rules.required'),
-];
+const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const tagRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const unitRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 
 const decimalRules = [
-  (val: string) =>
-    (val != null && isNumeric(val)) || t('global.rules.required'),
+  (val: string) => (val != null && isNumeric(val)) || t('global.rules.required'),
   (val: number) => val >= 0 || t('device.rules.decimal_min'),
 ];
 

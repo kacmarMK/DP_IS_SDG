@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isVisible">
+  <q-dialog v-model="isDialogOpen">
     <q-card>
       <q-card-section>
         <div class="text-h6">{{ title }}</div>
@@ -10,13 +10,7 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn
-          v-close-popup
-          flat
-          color="grey-9"
-          :label="t('global.cancel')"
-          no-caps
-        />
+        <q-btn v-close-popup flat color="grey-9" :label="t('global.cancel')" no-caps />
         <q-btn
           unelevated
           :label="t('global.delete')"
@@ -32,17 +26,13 @@
 
 <script setup lang="ts">
 import { handleError } from '@/utils/error-handler';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { toast } from 'vue3-toastify';
 
 const { t } = useI18n();
 
 const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true,
-  },
   itemUid: {
     type: String,
     required: true,
@@ -69,15 +59,9 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue', 'onDeleted']);
-const isVisible = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(value) {
-    emit('update:modelValue', value);
-  },
-});
+const emit = defineEmits(['onDeleted']);
+
+const isDialogOpen = defineModel<boolean>();
 
 const isDeleteInProgress = ref(false);
 
@@ -85,7 +69,7 @@ async function handleDelete() {
   try {
     isDeleteInProgress.value = true;
     await props.deleteFunction(props.itemUid);
-    isVisible.value = false;
+    isDialogOpen.value = false;
     emit('onDeleted');
     toast.success(props.successMessage);
   } catch (error) {

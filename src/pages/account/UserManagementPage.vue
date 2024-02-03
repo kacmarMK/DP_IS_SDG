@@ -4,31 +4,16 @@
       <div class="q-mb-md row">
         <p class="main-text">{{ t('global.user_management') }}</p>
       </div>
-      <q-table
-        :rows="users"
-        :columns="columns"
-        :loading="isLoadingUsers"
-        flat
-        :rows-per-page-options="[10, 20, 50]"
-      >
+      <q-table :rows="users" :columns="columns" :loading="isLoadingUsers" flat :rows-per-page-options="[10, 20, 50]">
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon
-              :name="mdiAccountGroup"
-              class="q-mb-md"
-              size="50px"
-            ></q-icon>
+            <q-icon :name="mdiAccountGroup" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn
-              :to="`/user-management/${props.row.uid}`"
-              :icon="mdiPencil"
-              color="grey-color"
-              flat
-              round
+            <q-btn :to="`/user-management/${props.row.uid}`" :icon="mdiPencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>
@@ -98,9 +83,7 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'center',
     sortable: false,
     format(val) {
-      const authorities = val.map(
-        (authority: GrantedAuthority) => authority.authority,
-      );
+      const authorities = val.map((authority: GrantedAuthority) => authority.authority);
       const roles: string[] = [];
       if (authorities.includes('admin')) {
         roles.push(t('account.role.admin'));

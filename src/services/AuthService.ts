@@ -4,12 +4,9 @@ import { Role } from '@/models/Role';
 
 class AuthService {
   async login(userLogin: UserLogin): Promise<string> {
-    const jwt = await api<string>(
-      `user/login/${userLogin.name}/${userLogin.password}`,
-      {
-        method: 'POST',
-      },
-    );
+    const jwt = await api<string>(`user/login/${userLogin.name}/${userLogin.password}`, {
+      method: 'POST',
+    });
     return jwt;
   }
 

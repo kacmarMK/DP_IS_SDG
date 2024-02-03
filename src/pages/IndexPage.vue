@@ -1,7 +1,5 @@
 <template>
-  <q-page class="row items-center justify-evenly">{{
-    t('global.hello')
-  }}</q-page>
+  <q-page class="row items-center justify-evenly">{{ t('global.hello') }}</q-page>
 </template>
 
 <script setup lang="ts">

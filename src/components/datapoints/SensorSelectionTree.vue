@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { DataPointTagNode } from '@/models/DataPointTagNode';
+import { extractNodeKeys } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
 import { PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -50,18 +51,8 @@ const tickedNodes = defineModel<string[]>('tickedNodes');
 const expanded = ref<string[]>(extractNodeKeys(props.dataPointTagTree));
 
 const noChildren = computed(() => {
-  return (
-    props.dataPointTagTree.children?.every((node) => node.dataPointTag) ?? false
-  );
+  return props.dataPointTagTree.children?.every((node) => node.dataPointTag) ?? false;
 });
-
-function extractNodeKeys(node: DataPointTagNode): string[] {
-  if (!node.children) {
-    return [node.uid];
-  }
-  return [node.uid, ...node.children.flatMap(extractNodeKeys)];
-}
-tickedNodes.value = extractNodeKeys(props.dataPointTagTree);
 </script>
 
 <style lang="scss">
