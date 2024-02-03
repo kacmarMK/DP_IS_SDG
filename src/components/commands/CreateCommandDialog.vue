@@ -1,44 +1,55 @@
 <template>
-  <q-dialog v-model="store.createDialog">
-    <q-card style="min-width: 350px" class="q-pa-xs">
-      <q-card-section>
-        <div class="text-h6">{{ t('command.create_command') }}</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="store.commandCreate.name" :label="t('global.name')" />
-        <!--<q-input label="Parameters" v-model="store.commandCreate.params" />TODO-->
-        <q-select
-          v-model="store.commandCreate.deviceType"
-          :label="t('device.device_type')"
-          :options="Object.values(DeviceTypeEnum)"
-        >
-        </q-select>
-      </q-card-section>
-
-      <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
-        <q-btn
-          unelevated
-          color="secondary"
-          :label="t('global.create')"
-          no-caps
-          :loading="store.isCreatingCommand"
-          @click="store.createCommand"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <dialog-common
+    v-model="isDialogOpen"
+    :action-label="t('global.create')"
+    :loading="creatingCommand"
+    @on-submit="createCommand"
+  >
+    <template #title>{{ t('command.create_command') }}</template>
+    <template #default>
+      <command-form v-model="command" />
+    </template>
+  </dialog-common>
 </template>
 
 <script setup lang="ts">
-import DeviceTypeEnum from '@/models/DeviceType';
-import { useCommandsStore } from '@/stores/commands-store';
+import { ref } from 'vue';
+import CommandService from '@/services/CommandService';
+import { handleError } from '@/utils/error-handler';
+import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
+import DialogCommon from '@/components/core/DialogCommon.vue';
+import CommandForm from './CommandForm.vue';
+import { CommandInput } from '@/models/Command';
+
+const isDialogOpen = defineModel<boolean>();
+const emit = defineEmits(['onCreate']);
 
 const { t } = useI18n();
-const store = useCommandsStore();
-store.getCommands();
+
+const getDefaultCommand = (): CommandInput => ({
+  name: '',
+  deviceType: undefined,
+  params: [],
+});
+
+const creatingCommand = ref(false);
+const command = ref<CommandInput>(getDefaultCommand());
+
+async function createCommand() {
+  try {
+    creatingCommand.value = true;
+    await CommandService.createCommand(command.value);
+    command.value = getDefaultCommand();
+    isDialogOpen.value = false;
+    emit('onCreate');
+    toast.success(t('command.toasts.create_success'));
+  } catch (error) {
+    handleError(error, t('command.toasts.create_failed'));
+  } finally {
+    creatingCommand.value = false;
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

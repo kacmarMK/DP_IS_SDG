@@ -1,44 +1,65 @@
 <template>
-  <q-dialog v-model="store.editDialog">
-    <q-card style="min-width: 350px" class="q-pa-xs">
-      <q-card-section>
-        <div class="text-h6">{{ t('command.edit_command') }}</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none column q-gutter-md">
-        <q-input v-model="store.editedCommand.name" :label="t('global.name')" />
-        <!--<q-input label="Parameters" v-model="store.commandCreate.params" />TODO-->
-        <q-select
-          v-model="store.editedCommand.deviceType"
-          :label="t('device.device_type')"
-          :options="Object.values(DeviceTypeEnum)"
-        >
-        </q-select>
-      </q-card-section>
-
-      <q-card-actions align="right" class="text-primary">
-        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
-        <q-btn
-          unelevated
-          style="background: #164924; color: white"
-          :label="t('global.save')"
-          no-caps
-          :loading="store.isEditingCommand"
-          @click="store.editCommand"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <dialog-common
+    v-model="isDialogOpen"
+    :action-label="t('global.save')"
+    :loading="updatingCommand"
+    @on-submit="updateCommand"
+  >
+    <template #title>{{ t('command.edit_command') }}</template>
+    <template #default>
+      <command-form v-model="commandInput" />
+    </template>
+  </dialog-common>
 </template>
 
 <script setup lang="ts">
-import DeviceTypeEnum from 'src/models/DeviceType';
-import { useCommandsStore } from '../../stores/commands-store';
+import { PropType, ref, watch } from 'vue';
+import { handleError } from '@/utils/error-handler';
+import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
+import DialogCommon from '@/components/core/DialogCommon.vue';
+import CommandService from '@/services/CommandService';
+import { Command, CommandInput } from '@/models/Command';
+import CommandForm from './CommandForm.vue';
+import { toRaw } from 'vue';
+
+const isDialogOpen = defineModel<boolean>();
+const props = defineProps({
+  command: {
+    type: Object as PropType<Command>,
+    required: true,
+  },
+});
+const emit = defineEmits(['onUpdate']);
 
 const { t } = useI18n();
-const store = useCommandsStore();
-store.getCommands();
+
+const commandClone = (command: Command) => structuredClone(toRaw(command));
+
+const updatingCommand = ref(false);
+const commandInput = ref<CommandInput>(commandClone(props.command));
+
+async function updateCommand() {
+  try {
+    updatingCommand.value = true;
+    await CommandService.updateCommand(commandInput.value, props.command.id);
+    isDialogOpen.value = false;
+    emit('onUpdate');
+    toast.success(t('command.toasts.update_success'));
+  } catch (error) {
+    handleError(error, t('command.toasts.update_failed'));
+  } finally {
+    updatingCommand.value = false;
+  }
+}
+
+watch(
+  () => props.command,
+  (command) => {
+    commandInput.value = commandClone(command);
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped></style>

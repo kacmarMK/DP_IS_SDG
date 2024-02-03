@@ -41,7 +41,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/devices/:id',
-        component: () => import('pages/devices/DevicePage.vue'),
+        component: () => import('pages/devices/DeviceDetailPage.vue'),
       },
       {
         path: '/devices/:id/jobs',
@@ -74,11 +74,11 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/collections/:id/',
-        component: () => import('pages/collections/CollectionPage.vue'),
+        component: () => import('pages/collections/CollectionDetailPage.vue'),
       },
       {
         path: '/modules/:id/',
-        component: () => import('pages/modules/ModulePage.vue'),
+        component: () => import('pages/modules/ModuleDetailPage.vue'),
       },
       {
         path: 'scenarios',

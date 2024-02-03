@@ -57,9 +57,9 @@
             icon="mdi-account-group"
           /> -->
           <side-menu-button to="/jobs" :label="t('job.label', 2)" :icon="mdiListStatus" />
-          <side-menu-button to="/scenarios" :label="t('scenario.label', 2)" :icon="mdiVariable" />
           <side-menu-button to="/recipes" :label="t('recipe.label', 2)" :icon="mdiBookMultipleOutline" />
           <side-menu-button to="/commands" :label="t('command.label', 2)" :icon="mdiCodeTags" />
+          <side-menu-button to="/scenarios" :label="t('scenario.label', 2)" :icon="mdiVariable" />
           <side-menu-button
             v-if="authStore.isAdmin"
             to="/user-management"

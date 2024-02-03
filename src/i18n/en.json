@@ -13,6 +13,7 @@
     "hello": "Hello",
     "info": "Info",
     "name": "Name",
+    "value": "Value",
     "options": "Options",
     "refresh": "Refresh",
     "account": "Account",
@@ -250,6 +251,8 @@
     "edit_command": "Edit command",
     "delete_command": "Delete command",
     "delete_command_desc": "Are you sure you want to delete this command?",
+    "parameters": "Parameters",
+    "add_parameter": "Add parameter",
     "toasts": {
       "load_failed": "Loading commands failed!",
       "create_success": "Command created!",

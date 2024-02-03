@@ -27,18 +27,18 @@ const emit = defineEmits(['onCreate']);
 
 const { t } = useI18n();
 
-const getDefaultCollection = (): CollectionInput => ({
+const getEmptyCollection = (): CollectionInput => ({
   name: '',
 });
 
 const creatingCollection = ref(false);
-const collection = ref<CollectionInput>(getDefaultCollection());
+const collection = ref<CollectionInput>(getEmptyCollection());
 
 async function createCollection() {
   try {
     creatingCollection.value = true;
     await CollectionService.createCollection(collection.value);
-    collection.value = getDefaultCollection();
+    collection.value = getEmptyCollection();
     isDialogOpen.value = false;
     emit('onCreate');
     toast.success(t('collection.toasts.create_success'));

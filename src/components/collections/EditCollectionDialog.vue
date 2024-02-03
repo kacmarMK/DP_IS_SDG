@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, ref, toRaw, watch } from 'vue';
 import type { Collection, CollectionInput } from '@/models/Collection';
 import CollectionService from '@/services/CollectionService';
 import { handleError } from '@/utils/error-handler';
@@ -33,14 +33,10 @@ const emit = defineEmits(['onUpdate']);
 
 const { t } = useI18n();
 
-function getDefaultCollection(collection: Collection): CollectionInput {
-  return {
-    name: collection.name,
-  };
-}
+const collectionClone = (collection: Collection) => structuredClone(toRaw(collection));
 
 const updatingCollection = ref(false);
-const collectionInput = ref<CollectionInput>(getDefaultCollection(props.collection));
+const collectionInput = ref<CollectionInput>(collectionClone(props.collection));
 
 async function updateCollection() {
   try {
@@ -59,7 +55,7 @@ async function updateCollection() {
 watch(
   () => props.collection,
   (collection) => {
-    collectionInput.value = getDefaultCollection(collection);
+    collectionInput.value = collectionClone(collection);
   },
   { immediate: true },
 );

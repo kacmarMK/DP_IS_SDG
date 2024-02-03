@@ -11,7 +11,15 @@
       </q-card-section>
       <q-card-actions align="right" class="text-primary">
         <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
-        <q-btn unelevated color="primary" :label="actionLabel" no-caps :loading="loading" @click="emit('onSubmit')" />
+        <q-btn
+          unelevated
+          color="primary"
+          :label="actionLabel"
+          no-caps
+          :loading="loading"
+          padding="6px 20px"
+          @click="emit('onSubmit')"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>

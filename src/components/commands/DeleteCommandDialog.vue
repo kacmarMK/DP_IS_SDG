@@ -1,36 +1,42 @@
 <template>
-  <q-dialog v-model="store.deleteDialog">
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">{{ t('command.delete_command') }}</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none">
-        {{ t('command.delete_command_desc') }}
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn v-close-popup flat color="grey-9" :label="t('global.cancel')" no-caps />
-        <q-btn
-          unelevated
-          :label="t('global.delete')"
-          color="red"
-          :loading="store.isDeletingCommand"
-          no-caps
-          @click="store.deleteCommand()"
-        />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+  <DeleteConfirmationDialog v-model="isDialogOpen" :loading="isDeleteInProgress" @on-submit="handleDelete">
+    <template #title>{{ t('command.delete_command') }}</template>
+    <template #description>{{ t('command.delete_command_desc') }}</template>
+  </DeleteConfirmationDialog>
 </template>
 
 <script setup lang="ts">
+import { handleError } from '@/utils/error-handler';
+import { PropType, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useCommandsStore } from '../../stores/commands-store';
+import { toast } from 'vue3-toastify';
+import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
+import { Command } from '@/models/Command';
+import CommandService from '@/services/CommandService';
+
+const isDialogOpen = defineModel<boolean>();
+const props = defineProps({
+  command: {
+    type: Object as PropType<Command>,
+    required: true,
+  },
+});
+const emit = defineEmits(['onDeleted']);
 
 const { t } = useI18n();
-const store = useCommandsStore();
-store.getCommands();
-</script>
 
-<style lang="scss" scoped></style>
+const isDeleteInProgress = ref(false);
+async function handleDelete() {
+  try {
+    isDeleteInProgress.value = true;
+    await CommandService.deleteCommand(props.command.id);
+    isDialogOpen.value = false;
+    emit('onDeleted');
+    toast.success(t('command.toasts.delete_success'));
+  } catch (error) {
+    handleError(error, t('command.toasts.delete_failed'));
+  } finally {
+    isDeleteInProgress.value = false;
+  }
+}
+</script>

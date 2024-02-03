@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { PropType, ref, watch } from 'vue';
+import { PropType, ref, toRaw, watch } from 'vue';
 import ModuleService from '@/services/ModuleService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
@@ -33,14 +33,10 @@ const emit = defineEmits(['onUpdate']);
 
 const { t } = useI18n();
 
-function newModuleInput(module: Module): ModuleInput {
-  return {
-    name: module.name,
-  };
-}
+const moduleClone = (module: Module) => structuredClone(toRaw(module));
 
 const updatingModule = ref(false);
-const moduleInput = ref<ModuleInput>(newModuleInput(props.module));
+const moduleInput = ref<ModuleInput>(moduleClone(props.module));
 
 async function updateModule() {
   try {
@@ -59,7 +55,7 @@ async function updateModule() {
 watch(
   () => props.module,
   (value) => {
-    moduleInput.value = newModuleInput(value);
+    moduleInput.value = moduleClone(value);
   },
 );
 </script>

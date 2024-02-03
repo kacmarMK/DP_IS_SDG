@@ -9,7 +9,7 @@ interface Command {
   deactivated?: boolean;
 }
 
-interface CommandFrame {
+interface CommandInput {
   name: string;
   params?: Array<string>;
   deviceType?: DeviceTypeEnum;
@@ -17,4 +17,4 @@ interface CommandFrame {
   deactivated?: boolean;
 }
 
-export type { Command, CommandFrame };
+export type { Command, CommandInput };

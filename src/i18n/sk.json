@@ -13,6 +13,7 @@
     "hello": "Ahoj",
     "info": "Informácie",
     "name": "Názov",
+    "value": "Hodnota",
     "options": "Možnosti",
     "refresh": "Obnoviť",
     "account": "Účet",
@@ -236,11 +237,11 @@
     "subrecipe": "Podrecept | Podrecepty",
     "toasts": {
       "load_failed": "Načítanie receptov zlyhalo!",
-      "create_success": "Recept vytvorený!",
+      "create_success": "Recept bol vytvorený!",
       "create_failed": "Vytvorenie receptu zlyhalo!",
       "update_success": "Recept aktualizovaný!",
       "update_failed": "Aktualizácia receptu zlyhala!",
-      "delete_success": "Recept vymazaný!",
+      "delete_success": "Recept bol vymazaný!",
       "delete_failed": "Vymazanie receptu zlyhalo!"
     }
   },
@@ -250,13 +251,15 @@
     "edit_command": "Upraviť príkaz",
     "delete_command": "Vymazať príkaz",
     "delete_command_desc": "Ste si istý, že chcete vymazať tento príkaz?",
+    "parameters": "Parametre",
+    "add_parameter": "Pridať parameter",
     "toasts": {
       "load_failed": "Načítanie príkazov zlyhalo!",
-      "create_success": "Príkaz vytvorený!",
+      "create_success": "Príkaz bol vytvorený!",
       "create_failed": "Vytvorenie príkazu zlyhalo!",
-      "update_success": "Príkaz aktualizovaný!",
+      "update_success": "Príkaz bol aktualizovaný!",
       "update_failed": "Aktualizácia príkazu zlyhala!",
-      "delete_success": "Príkaz vymazaný!",
+      "delete_success": "Príkaz bol vymazaný!",
       "delete_failed": "Vymazanie príkazu zlyhalo!"
     }
   },
