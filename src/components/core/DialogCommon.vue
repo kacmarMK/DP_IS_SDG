@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="isDialogOpen">
-    <q-card style="min-width: 350px" class="q-pa-xs">
+    <q-card class="q-pa-xs full-width" :style="{ maxWidth }">
       <q-card-section>
         <div class="text-h6">
           <slot name="title" />
@@ -38,6 +38,11 @@ defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  maxWidth: {
+    type: String,
+    required: false,
+    default: '400px',
   },
 });
 const emit = defineEmits(['onSubmit']);

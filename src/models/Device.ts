@@ -32,4 +32,18 @@ interface DeviceInput {
   dataPointTags?: DataPointTag[] | null;
 }
 
+function deviceToInput(device: Device): DeviceInput {
+  return {
+    name: device.name,
+    mac: device.mac,
+    type: device.type,
+    version: device.version,
+    firmware: device.firmware,
+    initApiKey: device.initApiKey,
+    deactivated: device.deactivated,
+    dataPointTags: device.dataPointTags,
+  };
+}
+
 export type { Device, DeviceInput };
+export { deviceToInput };

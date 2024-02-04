@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="isDialogOpen">
-    <q-card style="min-width: 350px" class="q-pa-xs">
+    <q-card style="max-width: 350px" class="q-pa-xs full-width">
       <q-card-section>
         <div class="text-h6">{{ t('device.share_device') }}</div>
       </q-card-section>

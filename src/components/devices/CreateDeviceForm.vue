@@ -1,5 +1,5 @@
 <template>
-  <q-card style="min-width: 350px" class="q-pa-sm q-pa-md-lg shadow">
+  <q-card class="q-pa-sm q-pa-md-lg shadow">
     <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav keep-alive>
       <q-step :name="1" :title="t('device.device_info')" :icon="mdiPencil">
         <q-form>
@@ -102,7 +102,7 @@
 import DeviceTypeEnum from '@/models/DeviceType';
 import { DataPointTagInput, DataPointTag } from '@/models/DataPointTag';
 import { ref } from 'vue';
-import { Device, DeviceInput } from '@/models/Device';
+import { Device, DeviceInput, deviceToInput } from '@/models/Device';
 import { toast } from 'vue3-toastify';
 import deviceService from '@/services/DeviceService';
 import dataPointTagService from '@/services/DataPointTagService';
@@ -114,6 +114,7 @@ import { isFormValid } from '@/utils/form-validation';
 import DataPointTagForm from './DataPointTagForm.vue';
 import { mdiPencil, mdiPlusCircle } from '@quasar/extras/mdi-v6';
 import { matSensors } from '@quasar/extras/material-icons';
+import { useDeviceStore } from '@/stores/device-store';
 
 const props = defineProps({
   isEditing: {
@@ -128,31 +129,27 @@ const props = defineProps({
 
 const { t } = useI18n();
 const router = useRouter();
+const deviceStore = useDeviceStore();
+
+const deviceInput = ref<DeviceInput>(
+  deviceStore.getDeviceById(props.editingDeviceId) ?? {
+    name: '',
+    mac: '',
+    type: undefined,
+    version: '',
+    firmware: '',
+    initApiKey: '',
+    deactivated: false,
+  },
+);
 
 const createStep = ref(1);
-const deviceInput = ref<DeviceInput>({
-  name: '',
-  mac: '',
-  type: undefined,
-  version: '',
-  firmware: '',
-  initApiKey: '',
-  deactivated: false,
-});
 
 async function getEditingDevice() {
   if (!props.isEditing || !props.editingDeviceId) return;
   try {
     const editingDevice = await deviceService.getDevice(props.editingDeviceId);
-    deviceInput.value = {
-      name: editingDevice.name,
-      mac: editingDevice.mac,
-      type: editingDevice.type,
-      version: editingDevice.version,
-      firmware: editingDevice.firmware,
-      initApiKey: editingDevice.initApiKey,
-      deactivated: editingDevice.deactivated,
-    };
+    deviceInput.value = deviceToInput(editingDevice);
     remoteDataPointTags.value = editingDevice.dataPointTags;
     originalRemoteDataPointTags.value = cloneDataPointTags(editingDevice.dataPointTags);
   } catch (error) {

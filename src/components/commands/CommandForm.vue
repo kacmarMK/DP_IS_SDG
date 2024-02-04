@@ -9,24 +9,21 @@
         map-options
       />
       <div class="text-parameters">{{ t('command.parameters') }}</div>
-      <div v-if="localParams.length > 0">
-        <VueDraggable v-model="localParams" :animation="200" filter="not-draggable" handle=".handle">
-          <div v-for="(parameter, index) in localParams" :key="parameter.id">
-            <div class="command-container bg-white sortable-drag">
-              <q-icon class="handle drag-icon q-mr-md q-ml-sm" :name="mdiDrag" size="28px" />
-              <q-input v-model="parameter.value" :placeholder="t('global.value')" borderless class="col-grow" />
-              <q-btn
-                class="q-mr-md q-ml-md"
-                rounded
-                dense
-                unelevated
-                :icon="mdiClose"
-                @click="removeParameter(index)"
-              />
-            </div>
+      <VueDraggable
+        v-if="localParams.length > 0"
+        v-model="localParams"
+        :animation="200"
+        handle=".handle"
+        class="command-table"
+      >
+        <div v-for="(parameter, index) in localParams" :key="parameter.id">
+          <div class="command-container bg-white sortable-drag">
+            <q-icon class="handle drag-icon q-mr-md q-ml-sm" :name="mdiDrag" size="28px" />
+            <q-input v-model="parameter.value" :placeholder="t('global.value')" borderless class="col-grow" />
+            <q-btn class="q-mr-md q-ml-md" rounded dense unelevated :icon="mdiClose" @click="removeParameter(index)" />
           </div>
-        </VueDraggable>
-      </div>
+        </div>
+      </VueDraggable>
       <div>
         <q-btn
           class="full-width q-mb-md"
@@ -82,11 +79,10 @@ watch(
 }
 
 .command-container {
-  border-radius: 4px;
   display: flex;
-  align-items: center;
   border: 1px solid #ccc;
-  margin-bottom: 5px;
+  align-items: center;
+  margin-bottom: -1px;
 }
 
 .drag-icon {
