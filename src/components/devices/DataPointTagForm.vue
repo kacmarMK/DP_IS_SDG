@@ -45,6 +45,7 @@ import { mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 import { QInput } from 'quasar';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { isFormValid } from '@/utils/form-validation';
 
 const dataPointTag = defineModel<DataPointTagInput>({
   required: true,
@@ -59,8 +60,10 @@ const tagRef = ref<QInput>();
 const unitRef = ref<QInput>();
 const decimalRef = ref<QInput>();
 
-//For outside validation
-const getAllRefs = () => [dataTagNameRef.value, tagRef.value, unitRef.value, decimalRef.value];
+function validate() {
+  const refs = [dataTagNameRef.value, tagRef.value, unitRef.value, decimalRef.value];
+  return isFormValid(refs);
+}
 
 const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const tagRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
@@ -76,6 +79,6 @@ const isNumeric = (value: string) => {
 };
 
 defineExpose({
-  getAllRefs,
+  validate,
 });
 </script>

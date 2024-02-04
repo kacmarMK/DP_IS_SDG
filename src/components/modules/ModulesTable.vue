@@ -144,6 +144,7 @@ import { computed, ref } from 'vue';
 import CreateModuleDialog from './CreateModuleDialog.vue';
 import EditModuleDialog from './EditModuleDialog.vue';
 import DevicesInModuleTable from '@/components/modules/DevicesInModuleTable.vue';
+import DeleteModuleDialog from './DeleteModuleDialog.vue';
 import { Module } from '@/models/Module';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';

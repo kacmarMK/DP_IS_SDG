@@ -224,12 +224,19 @@ async function updateDevice(): Promise<Device | undefined> {
 const submittingForm = ref(false);
 async function submitForm() {
   const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
-  if (!isFormValid(firstStepForm)) {
+  const firstStepValid = isFormValid(firstStepForm);
+
+  const allDataPointTagsValid = localDataPointTagFormRef.value
+    .concat(remoteDataPointTagFormRef.value)
+    .map((form) => form.validate())
+    .every((isValid) => isValid);
+
+  if (!firstStepValid) {
     createStep.value = 1;
     return;
   }
 
-  if (!isFormValid(allDataPointTagRefs())) {
+  if (!allDataPointTagsValid) {
     createStep.value = 2;
     return;
   }
@@ -307,17 +314,6 @@ const remoteDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
 const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const macRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const typeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
-
-function allDataPointTagRefs() {
-  const allRefs: QInput[] = [];
-  for (const dataPointTagForm of localDataPointTagFormRef.value) {
-    allRefs.push(...dataPointTagForm.getAllRefs());
-  }
-  for (const dataPointTagForm of remoteDataPointTagFormRef.value) {
-    allRefs.push(...dataPointTagForm.getAllRefs());
-  }
-  return allRefs;
-}
 </script>
 
 <style lang="scss" scoped>
