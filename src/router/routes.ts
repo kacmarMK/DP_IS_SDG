@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('pages/devices/DevicesPage.vue'),
+        redirect: '/devices',
       },
       {
         path: '/account',
