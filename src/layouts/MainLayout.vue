@@ -48,7 +48,7 @@
           <q-img src="../assets/logo.png" height="3.7rem" fit="contain" no-spinner no-transition />
         </router-link>
         <div class="links">
-          <side-menu-button to="/" :exact="true" :label="t('global.home')" :icon="mdiHome" />
+          <!-- <side-menu-button to="/" :exact="true" :label="t('global.home')" :icon="mdiHome" /> -->
           <side-menu-button to="/devices" :label="t('device.label', 2)" :icon="mdiCellphoneLink" />
           <side-menu-button to="/collections" :label="t('collection.label', 2)" :icon="mdiHubspot" />
           <!-- <side-menu-button
@@ -86,7 +86,6 @@ import {
   mdiAccountCircle,
   mdiLogout,
   mdiAccountOutline,
-  mdiHome,
   mdiCellphoneLink,
   mdiHubspot,
   mdiListStatus,
