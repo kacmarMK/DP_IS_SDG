@@ -18,9 +18,18 @@
       >
         <div v-for="(parameter, index) in localParams" :key="parameter.id">
           <div class="command-container bg-white sortable-drag">
-            <q-icon class="handle drag-icon q-mr-md q-ml-sm" :name="mdiDrag" size="28px" />
-            <q-input v-model="parameter.value" :placeholder="t('global.value')" borderless class="col-grow" />
-            <q-btn class="q-mr-md q-ml-md" rounded dense unelevated :icon="mdiClose" @click="removeParameter(index)" />
+            <q-icon class="handle drag-icon q-mr-md q-ml-sm col-auto" :name="mdiDrag" size="28px" />
+            <q-input v-model="parameter.value" :placeholder="t('global.value')" borderless class="col" />
+            <q-btn
+              class="q-mr-md q-ml-md col-auto"
+              rounded
+              flat
+              dense
+              unelevated
+              :icon="mdiClose"
+              color="red"
+              @click="removeParameter(index)"
+            />
           </div>
         </div>
       </VueDraggable>
@@ -83,6 +92,7 @@ watch(
   border: 1px solid #ccc;
   align-items: center;
   margin-bottom: -1px;
+  height: 3.2rem;
 }
 
 .drag-icon {

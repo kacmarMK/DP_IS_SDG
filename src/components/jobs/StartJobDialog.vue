@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { PropType, computed, ref } from 'vue';
 import recipeService from '@/services/RecipeService';
-import jobService from '@/services/JobService';
+import JobService from '@/services/JobService';
 import { Recipe } from '@/models/Recipe';
 import { QInput } from 'quasar';
 import { JobToRun } from '@/models/Job';
@@ -112,7 +112,8 @@ async function runJob() {
     jobToRun.value.scheduledHour = date.getHours();
     jobToRun.value.scheduledMinute = date.getMinutes();
 
-    await jobService.runJobFromRecipe(jobToRun.value);
+    await JobService.runJobFromRecipe(jobToRun.value);
+
     isDialogOpen.value = false;
     toast.success(t('job.toasts.start_success'));
     emit('jobStarted');

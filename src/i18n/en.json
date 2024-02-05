@@ -31,7 +31,7 @@
   "table": {
     "no_data_label": "No data available",
     "loading_label": "Loading...",
-    "rows_per_page_label": "Records per page:"
+    "rows_per_page_label": "Rows per page:"
   },
   "days_short": {
     "mon": "mon",

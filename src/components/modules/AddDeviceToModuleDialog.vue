@@ -64,6 +64,7 @@ async function addDevice() {
     await ModuleService.addDeviceToModule(props.module.uid, selectedDeviceId.value);
     toast.success(t('module.toasts.add_device_to_module_success'));
     emit('onAdded');
+    selectedDeviceId.value = undefined;
     isDialogOpen.value = false;
   } catch (error) {
     handleError(error, t('module.toasts.add_device_to_module_failed'));

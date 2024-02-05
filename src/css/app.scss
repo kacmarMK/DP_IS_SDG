@@ -28,15 +28,15 @@ a:link {
 
 .main-padding {
   body.screen--xs & {
-    padding: 1rem 1rem;
+    padding: 2rem 2rem;
   }
   body.screen--sm & {
-    padding: 1.5rem 2rem;
+    padding: 3rem 4rem;
   }
   body.screen--md & {
-    padding: 2rem 4rem;
+    padding: 3rem 5rem;
   }
-  padding: 4rem 6rem;
+  padding: 4rem 7rem;
 }
 
 .main-text {
@@ -52,4 +52,12 @@ a:link {
 }
 .bg-grey-color {
   background: #677797;
+}
+
+.q-table td {
+  font-size: 0.95em !important;
+}
+
+.q-table th {
+  font-size: 0.9em !important;
 }

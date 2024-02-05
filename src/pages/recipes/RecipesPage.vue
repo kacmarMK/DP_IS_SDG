@@ -6,6 +6,7 @@
         color="primary"
         :icon="mdiPlus"
         :label="t('recipe.create_recipe')"
+        to="/recipes/create"
         unelevated
         no-caps
         size="15px"
