@@ -1,10 +1,5 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row">
-        <p class="main-text">{{ t('account.account_settings') }}</p>
-      </div>
-    </div>
+  <page-layout :title="t('account.account_settings')">
     <q-card class="shadow q-mb-lg">
       <q-tabs dense class="text-grey" active-color="primary" indicator-color="primary" align="left">
         <q-route-tab
@@ -18,12 +13,13 @@
       </q-tabs>
     </q-card>
     <router-view />
-  </q-page>
+  </page-layout>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { mdiAccount } from '@quasar/extras/mdi-v6';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 </script>

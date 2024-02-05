@@ -1,23 +1,16 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row items-center">
-        <p class="main-text">{{ t('job.label') }}</p>
+  <PageLayout v-if="job" :title="job.name" :previous-title="t('job.label', 2)" previous-route="/jobs">
+    <template #description>
+      <q-badge class="q-pa-xs q-ml-sm" color="primary">
         <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-        <p v-if="job" class="job-name text-weight-medium">({{ job.name }})</p>
-        <q-badge class="q-pa-xs q-ml-sm" color="primary">
-          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
-        </q-badge>
-        <job-status-badges v-if="job" class="q-ml-sm" :job="job"></job-status-badges>
-        <q-space></q-space>
-        <job-controls
-          v-if="job && authStore.isAdmin"
-          class="col-grow"
-          :running-job="job"
-          @action-performed="getJob"
-        ></job-controls>
-      </div>
+        {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
+      </q-badge>
+      <job-status-badges v-if="job" class="q-ml-sm" :job="job"></job-status-badges>
+    </template>
+    <template #actions>
+      <job-controls v-if="job && authStore.isAdmin" class="col-grow" :running-job="job" @action-performed="getJob" />
+    </template>
+    <template #default>
       <q-table
         :rows="steps"
         :columns="columns"
@@ -71,8 +64,8 @@
           </q-td>
         </template>
       </q-table>
-    </div>
-  </q-page>
+    </template>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
@@ -87,6 +80,7 @@ import JobStatusBadges from '@/components/jobs/JobStatusBadges.vue';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiCheck, mdiListStatus } from '@quasar/extras/mdi-v6';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 

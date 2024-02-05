@@ -18,4 +18,14 @@ interface DataPointTagInput {
   decimal: number;
 }
 
+function dataPointTagToInput(dataPointTag: DataPointTag): DataPointTagInput {
+  return {
+    tag: dataPointTag.tag,
+    name: dataPointTag.name,
+    unit: dataPointTag.unit,
+    decimal: dataPointTag.decimal,
+  };
+}
+
 export type { DataPointTag, DataPointTagInput };
+export { dataPointTagToInput };

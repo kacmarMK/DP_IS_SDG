@@ -1,21 +1,19 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row">
-        <p class="main-text">{{ t('collection.label', 2) }}</p>
-        <q-space></q-space>
-        <q-btn
-          v-if="authStore.isAdmin"
-          class="shadow"
-          color="primary"
-          unelevated
-          no-caps
-          size="15px"
-          :label="t('collection.create_collection')"
-          :icon="mdiPlus"
-          @click="createCollectionDialog = true"
-        />
-      </div>
+  <PageLayout :title="t('collection.label', 2)">
+    <template #actions>
+      <q-btn
+        v-if="authStore.isAdmin"
+        class="shadow"
+        color="primary"
+        unelevated
+        no-caps
+        size="15px"
+        :label="t('collection.create_collection')"
+        :icon="mdiPlus"
+        @click="createCollectionDialog = true"
+      />
+    </template>
+    <template #default>
       <q-table
         :rows="collections"
         :columns="columns"
@@ -119,21 +117,21 @@
           </q-tr>
         </template>
       </q-table>
-    </div>
-    <CreateCollectionDialog v-model="createCollectionDialog" @on-create="getCollections" />
-    <EditCollectionDialog
-      v-if="collectionToUpdate"
-      v-model="editCollectionDialog"
-      :collection="collectionToUpdate"
-      @on-update="getCollections"
-    />
-    <DeleteCollectionDialog
-      v-if="collectionToUpdate"
-      v-model="deleteCollectionDialog"
-      :collection="collectionToUpdate"
-      @on-deleted="getCollections"
-    />
-  </q-page>
+    </template>
+  </PageLayout>
+  <CreateCollectionDialog v-model="createCollectionDialog" @on-create="getCollections" />
+  <EditCollectionDialog
+    v-if="collectionToUpdate"
+    v-model="editCollectionDialog"
+    :collection="collectionToUpdate"
+    @on-update="getCollections"
+  />
+  <DeleteCollectionDialog
+    v-if="collectionToUpdate"
+    v-model="deleteCollectionDialog"
+    :collection="collectionToUpdate"
+    @on-deleted="getCollections"
+  />
 </template>
 
 <script setup lang="ts">
@@ -157,6 +155,7 @@ import {
   mdiPlus,
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 

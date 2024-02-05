@@ -1,20 +1,18 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row">
-        <p class="main-text">{{ t('command.label', 2) }}</p>
-        <q-space></q-space>
-        <q-btn
-          class="shadow"
-          color="primary"
-          :icon="mdiPlus"
-          :label="t('command.create_command')"
-          unelevated
-          no-caps
-          size="15px"
-          @click="createDialogOpen = true"
-        />
-      </div>
+  <PageLayout :title="t('command.label', 2)">
+    <template #actions>
+      <q-btn
+        class="shadow"
+        color="primary"
+        :icon="mdiPlus"
+        :label="t('command.create_command')"
+        unelevated
+        no-caps
+        size="15px"
+        @click="createDialogOpen = true"
+      />
+    </template>
+    <template #default>
       <q-table
         :rows="store.commands"
         :columns="columns"
@@ -63,21 +61,21 @@
           </q-td>
         </template>
       </q-table>
-      <create-command-dialog v-model="createDialogOpen" @on-create="store.getCommands" />
-      <edit-command-dialog
-        v-if="commandToEdit"
-        v-model="editDialogOpen"
-        :command="commandToEdit"
-        @on-update="store.getCommands"
-      />
-      <delete-command-dialog
-        v-if="commandToDelete"
-        v-model="deleteDialogOpen"
-        :command="commandToDelete"
-        @on-deleted="store.getCommands"
-      />
-    </div>
-  </q-page>
+    </template>
+  </PageLayout>
+  <create-command-dialog v-model="createDialogOpen" @on-create="store.getCommands" />
+  <edit-command-dialog
+    v-if="commandToEdit"
+    v-model="editDialogOpen"
+    :command="commandToEdit"
+    @on-update="store.getCommands"
+  />
+  <delete-command-dialog
+    v-if="commandToDelete"
+    v-model="deleteDialogOpen"
+    :command="commandToDelete"
+    @on-deleted="store.getCommands"
+  />
 </template>
 
 <script setup lang="ts">
@@ -91,6 +89,7 @@ import { mdiPlus } from '@quasar/extras/mdi-v6';
 import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
 import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
 import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 const store = useCommandsStore();

@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="isDialogOpen">
-    <q-card class="q-pa-xs full-width" :style="{ maxWidth }">
+    <q-card class="q-pa-xs" :style="dialogStyle">
       <q-card-section>
         <div class="text-h6">
           <slot name="title" />
@@ -27,9 +27,11 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
+import { computed } from 'vue';
 
 const isDialogOpen = defineModel<boolean>();
-defineProps({
+const props = defineProps({
   actionLabel: {
     type: String,
     required: true,
@@ -39,13 +41,21 @@ defineProps({
     required: false,
     default: false,
   },
-  maxWidth: {
+  minWidth: {
     type: String,
     required: false,
-    default: '400px',
+    default: '350px',
   },
 });
 const emit = defineEmits(['onSubmit']);
 
 const { t } = useI18n();
+const $q = useQuasar();
+
+const dialogStyle = computed(() => {
+  return {
+    minWidth: $q.screen.gt.sm ? props.minWidth : undefined,
+    width: $q.screen.gt.sm ? undefined : '100%',
+  };
+});
 </script>

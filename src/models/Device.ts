@@ -45,5 +45,15 @@ function deviceToInput(device: Device): DeviceInput {
   };
 }
 
+function getEmptyDeviceInput(): DeviceInput {
+  return {
+    name: '',
+    mac: '',
+    version: '',
+    firmware: '',
+    deactivated: false,
+  };
+}
+
 export type { Device, DeviceInput };
-export { deviceToInput };
+export { deviceToInput, getEmptyDeviceInput };

@@ -19,8 +19,7 @@
         :rules="recipeRules"
         emit-value
         map-options
-      >
-      </q-select>
+      />
       <q-input
         ref="repetitionsRef"
         v-model="jobToRun.repetitions"
@@ -36,6 +35,7 @@
           :key="index"
           :label="button.label.toUpperCase()"
           :color="button.onOff ? 'primary' : 'grey'"
+          class="full-width"
           @click="dayButtons[index].onOff = !dayButtons[index].onOff"
         ></q-btn>
       </q-btn-group>

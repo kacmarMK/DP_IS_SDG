@@ -1,35 +1,29 @@
 <template>
-  <q-page class="main-padding">
-    <div v-if="device">
-      <div class="q-mb-md row">
-        <router-link class="main-text text-accent text-weight-medium z-fab" to="/devices">
-          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ t('device.label', 2) }} >
-        </router-link>
-        <p class="main-text z-fab">&nbsp;{{ device.name }}</p>
-        <q-space></q-space>
-        <q-btn
-          class="shadow bg-white q-ml-md"
-          :to="`/devices/${device?.uid}/jobs`"
-          text-color="grey-color"
-          unelevated
-          no-caps
-          size="15px"
-          :label="t('job.label', 2)"
-          :icon="mdiListStatus"
-        />
-        <q-btn
-          v-if="authStore.isAdmin"
-          class="shadow q-ml-md"
-          color="primary"
-          unelevated
-          no-caps
-          size="15px"
-          :label="t('global.edit')"
-          :icon="mdiPencil"
-          :to="`/devices/${device?.uid}/edit`"
-        />
-      </div>
+  <PageLayout v-if="device" :title="device.name" :previous-title="t('device.label', 2)" previous-route="/devices">
+    <template #actions>
+      <q-btn
+        class="shadow bg-white q-ml-md"
+        :to="`/devices/${device?.uid}/jobs`"
+        text-color="grey-color"
+        unelevated
+        no-caps
+        size="15px"
+        :label="t('job.label', 2)"
+        :icon="mdiListStatus"
+      />
+      <q-btn
+        v-if="authStore.isAdmin"
+        class="shadow q-ml-md"
+        color="primary"
+        unelevated
+        no-caps
+        size="15px"
+        :label="t('global.edit')"
+        :icon="mdiPencil"
+        :to="`/devices/${device?.uid}/edit`"
+      />
+    </template>
+    <template #default>
       <div class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
         <div class="col-12 col-md-12 col-lg-6 col-xl-3">
           <device-info-card :device="device" class="shadow container q-pa-lg full-height"></device-info-card>
@@ -59,8 +53,8 @@
           ></data-point-chart>
         </div>
       </div>
-    </div>
-  </q-page>
+    </template>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
@@ -79,6 +73,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiPencil } from '@quasar/extras/mdi-v6';
 import { useDeviceStore } from '@/stores/device-store';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 

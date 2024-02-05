@@ -1,19 +1,17 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row">
-        <p class="main-text">{{ t('recipe.label', 2) }}</p>
-        <q-space></q-space>
-        <q-btn
-          class="shadow"
-          color="secondary"
-          :label="t('recipe.create_recipe')"
-          unelevated
-          no-caps
-          size="15px"
-          @click="store.createDialog = true"
-        />
-      </div>
+  <PageLayout :title="t('recipe.label', 2)">
+    <template #actions>
+      <q-btn
+        class="shadow"
+        color="primary"
+        :icon="mdiPlus"
+        :label="t('recipe.create_recipe')"
+        unelevated
+        no-caps
+        size="15px"
+      />
+    </template>
+    <template #default>
       <q-table
         :rows="store.recipes"
         :columns="columns"
@@ -27,22 +25,13 @@
       >
         <template #no-data="{ message }">
           <div class="full-width column flex-center q-pa-lg nothing-found-text">
-            <q-icon :name="mdiBookMultipleOutline" class="q-mb-md" size="50px"></q-icon>
+            <q-icon :name="mdiCodeTags" class="q-mb-md" size="50px"></q-icon>
             {{ message }}
           </div>
         </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn
-              :icon="mdiPencil"
-              color="grey-color"
-              flat
-              round
-              @click.stop="
-                store.editDialog = true;
-                //store.editingCommand = props.row;
-                store.editRecipeId = props.row.value?.id;
-              "
+            <q-btn :icon="mdiPencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>
@@ -53,8 +42,8 @@
               flat
               round
               @click.stop="
-                store.deleteDialog = true;
-                store.deletingRecipe = props.row;
+                deleteDialogOpen = true;
+                recipeToDelete = props.row;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.delete') }}
@@ -63,26 +52,33 @@
           </q-td>
         </template>
       </q-table>
-    </div>
-    <create-recipe-dialog />
-    <edit-recipe-dialog />
-    <delete-recipe-dialog />
-  </q-page>
+    </template>
+  </PageLayout>
+  <DeleteRecipeDialog
+    v-if="recipeToDelete"
+    v-model="deleteDialogOpen"
+    :recipe="recipeToDelete"
+    @on-delete="store.getRecipes()"
+  />
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { useRecipesStore } from '@/stores/recipes-store';
-import CreateRecipeDialog from '@/components/recipes/CreateRecipeDialog.vue';
-import EditRecipeDialog from '@/components/recipes/EditRecipeDialog.vue';
-import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import { mdiCodeTags, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import { mdiPlus } from '@quasar/extras/mdi-v6';
+import { useRecipeStore } from '@/stores/recipe-store';
+import { Recipe } from '@/models/Recipe';
+import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
-const store = useRecipesStore();
+const store = useRecipeStore();
 store.getRecipes();
+
+const deleteDialogOpen = ref(false);
+const recipeToDelete = ref<Recipe>();
 
 const columns = computed<QTableProps['columns']>(() => [
   {
@@ -93,23 +89,9 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'left',
   },
   {
-    name: 'cmds',
-    label: t('command.label', 2),
-    field: 'cmds',
-    sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'subRecipes',
-    label: t('recipe.subrecipe', 2),
-    field: 'subRecipes',
-    sortable: false,
-    align: 'left',
-  },
-  {
-    name: 'deviceType',
-    label: t('device.device_type'),
-    field: 'deviceType',
+    name: 'subrecipe',
+    label: t('recipe.subrecipe'),
+    field: 'subRecipe',
     sortable: true,
     align: 'left',
   },
@@ -122,4 +104,3 @@ const columns = computed<QTableProps['columns']>(() => [
   },
 ]);
 </script>
-<style lang="scss" scoped></style>

@@ -1,33 +1,28 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="q-mb-md row">
-        <router-link class="main-text text-accent text-weight-medium z-fab" to="/collections">
-          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          {{ t('module.label') }} >
-        </router-link>
-        <p v-if="dataPointTagTree" class="main-text z-fab">&nbsp;{{ dataPointTagTree.name }}</p>
+  <PageLayout
+    v-if="dataPointTagTree"
+    :title="dataPointTagTree.name"
+    :previous-title="t('module.label')"
+    :previous-route="'/collections'"
+  >
+    <div v-if="dataPointTagTree" class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
+      <div class="col-12">
+        <sensor-selection-tree
+          v-model:tickedNodes="tickedNodes"
+          :data-point-tag-tree="dataPointTagTree"
+          class="shadow container q-pa-lg full-height"
+        ></sensor-selection-tree>
       </div>
-      <div v-if="dataPointTagTree" class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
-        <div class="col-12">
-          <sensor-selection-tree
-            v-model:tickedNodes="tickedNodes"
-            :data-point-tag-tree="dataPointTagTree"
-            class="shadow container q-pa-lg full-height"
-          ></sensor-selection-tree>
-        </div>
-        <div class="col-12">
-          <data-point-chart
-            v-model:tickedNodes="tickedNodes"
-            :data-point-tags="dataPointTags"
-            class="bg-white shadow q-pa-lg"
-            @refresh="getModule()"
-          ></data-point-chart>
-        </div>
+      <div class="col-12">
+        <data-point-chart
+          v-model:tickedNodes="tickedNodes"
+          :data-point-tags="dataPointTags"
+          class="bg-white shadow q-pa-lg"
+          @refresh="getModule()"
+        ></data-point-chart>
       </div>
-      <div></div>
     </div>
-  </q-page>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +36,7 @@ import { computed } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import ModuleService from '@/services/ModuleService';
 import { useI18n } from 'vue-i18n';
+import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 const route = useRoute();

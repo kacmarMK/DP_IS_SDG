@@ -1,19 +1,11 @@
 <template>
-  <q-page class="main-padding">
-    <div>
-      <div class="top-row row items-center">
-        <router-link :to="`/devices/${route.params.id.toString()}`">
-          <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-          <p class="main-text text-accent">{{ t('device.label') }} ></p>
-        </router-link>
-        <p class="main-text">&nbsp;{{ t('global.edit') }}</p>
-      </div>
-      <create-device-form :is-editing="true" :editing-device-id="route.params.id.toString()" class="q-mt-md" />
-    </div>
-  </q-page>
+  <PageLayout :title="t('global.add')" :previous-title="t('device.label', 2)" previous-route="/devices">
+    <create-device-form class="q-mt-md" :editing-device-id="route.params.id.toString()" />
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
+import PageLayout from '@/layouts/PageLayout.vue';
 import CreateDeviceForm from '@/components/devices/CreateDeviceForm.vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';

@@ -70,28 +70,26 @@
               @remove="deleteLocalDataPointTag(index)"
             />
           </div>
-          <div class="text-primary">
-            <q-btn
-              class="full-width q-mb-md q-mt-sm"
-              outline
-              :icon="mdiPlusCircle"
-              color="primary"
-              no-caps
-              padding="12px 30px"
-              :label="t('device.add_sensor')"
-              @click="addLocalDataPointTag"
-            />
-            <q-btn
-              unelevated
-              color="primary"
-              :label="t('global.save')"
-              padding="7px 35px"
-              :loading="submittingForm"
-              no-caps
-              type="submit"
-              @click.prevent="submitForm"
-            />
-          </div>
+          <q-btn
+            class="full-width q-mb-md q-mt-sm"
+            outline
+            :icon="mdiPlusCircle"
+            color="primary"
+            no-caps
+            padding="12px 30px"
+            :label="t('device.add_sensor')"
+            @click="addLocalDataPointTag"
+          />
+          <q-btn
+            unelevated
+            color="primary"
+            :label="t('global.save')"
+            padding="7px 35px"
+            :loading="submittingForm"
+            no-caps
+            type="submit"
+            @click.prevent="submitForm"
+          />
         </q-form>
       </q-step>
     </q-stepper>
@@ -101,8 +99,8 @@
 <script setup lang="ts">
 import DeviceTypeEnum from '@/models/DeviceType';
 import { DataPointTagInput, DataPointTag } from '@/models/DataPointTag';
-import { ref } from 'vue';
-import { Device, DeviceInput, deviceToInput } from '@/models/Device';
+import { ref, toRaw } from 'vue';
+import { Device, DeviceInput, deviceToInput, getEmptyDeviceInput } from '@/models/Device';
 import { toast } from 'vue3-toastify';
 import deviceService from '@/services/DeviceService';
 import dataPointTagService from '@/services/DataPointTagService';
@@ -117,10 +115,6 @@ import { matSensors } from '@quasar/extras/material-icons';
 import { useDeviceStore } from '@/stores/device-store';
 
 const props = defineProps({
-  isEditing: {
-    type: Boolean,
-    default: false,
-  },
   editingDeviceId: {
     type: String,
     default: null,
@@ -131,72 +125,20 @@ const { t } = useI18n();
 const router = useRouter();
 const deviceStore = useDeviceStore();
 
-const deviceInput = ref<DeviceInput>(
-  deviceStore.getDeviceById(props.editingDeviceId) ?? {
-    name: '',
-    mac: '',
-    type: undefined,
-    version: '',
-    firmware: '',
-    initApiKey: '',
-    deactivated: false,
-  },
-);
-
+const deviceInput = ref<DeviceInput>(deviceStore.getDeviceById(props.editingDeviceId) ?? getEmptyDeviceInput());
 const createStep = ref(1);
-
-async function getEditingDevice() {
-  if (!props.isEditing || !props.editingDeviceId) return;
-  try {
-    const editingDevice = await deviceService.getDevice(props.editingDeviceId);
-    deviceInput.value = deviceToInput(editingDevice);
-    remoteDataPointTags.value = editingDevice.dataPointTags;
-    originalRemoteDataPointTags.value = cloneDataPointTags(editingDevice.dataPointTags);
-  } catch (error) {
-    handleError(error, t('device.toasts.loading_failed'));
-  }
-}
-getEditingDevice();
+const submittingForm = ref(false);
 
 const remoteDataPointTags = ref<DataPointTag[]>([]);
 const originalRemoteDataPointTags = ref<DataPointTag[]>([]);
-async function deleteRemoteDataPointTag(id: string) {
-  try {
-    await dataPointTagService.deleteDataPointTag(id);
-    remoteDataPointTags.value = remoteDataPointTags.value.filter((dataPointTag) => dataPointTag.uid !== id);
-  } catch (error) {
-    handleError(error, t('device.toasts.tag.delete_failed'));
-  }
-}
-
-function cloneDataPointTags(tags: DataPointTag[]) {
-  return tags.map((tag) => ({ ...tag }));
-}
-
 const localDataPointTags = ref<DataPointTagInput[]>([]);
-function addLocalDataPointTag() {
-  localDataPointTags.value.push({
-    tag: '',
-    name: '',
-    unit: '',
-    decimal: 0,
-  });
-}
-function deleteLocalDataPointTag(index: number) {
-  localDataPointTags.value.splice(index, 1);
-}
-async function createDataPointTags(): Promise<DataPointTag[]> {
-  const dataPointTags: DataPointTag[] = [];
 
-  for (const dataPointTag of localDataPointTags.value) {
-    try {
-      const createdDataPointTag = await dataPointTagService.createDataPointTag(dataPointTag);
-      dataPointTags.push(createdDataPointTag);
-    } catch (error) {
-      handleError(error, t('device.toasts.tag.create_failed'));
-    }
+function goToStep(step: number) {
+  if (createStep.value == 1) {
+    const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
+    if (!isFormValid(firstStepForm)) return;
   }
-  return dataPointTags;
+  createStep.value = step;
 }
 
 async function createDevice(): Promise<Device | undefined> {
@@ -209,9 +151,21 @@ async function createDevice(): Promise<Device | undefined> {
   return createdDevice;
 }
 
+async function getEditingDevice() {
+  try {
+    const editingDevice = await deviceService.getDevice(props.editingDeviceId);
+    deviceInput.value = deviceToInput(editingDevice);
+    remoteDataPointTags.value = editingDevice.dataPointTags;
+    originalRemoteDataPointTags.value = structuredClone(toRaw(remoteDataPointTags.value));
+  } catch (error) {
+    handleError(error, t('device.toasts.loading_failed'));
+  }
+}
+if (props.editingDeviceId) getEditingDevice();
+
 async function updateDevice(): Promise<Device | undefined> {
   let editedDevice!: Device;
-  if (!props.isEditing || !props.editingDeviceId) return;
+  if (!props.editingDeviceId) return;
 
   try {
     editedDevice = await deviceService.updateDevice(deviceInput.value, props.editingDeviceId);
@@ -221,7 +175,6 @@ async function updateDevice(): Promise<Device | undefined> {
   return editedDevice;
 }
 
-const submittingForm = ref(false);
 async function submitForm() {
   const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
   const firstStepValid = isFormValid(firstStepForm);
@@ -242,29 +195,57 @@ async function submitForm() {
   }
 
   submittingForm.value = true;
-  let device: Device | undefined;
-  if (props.isEditing) {
-    device = await updateDevice();
-  } else {
-    device = await createDevice();
-  }
+  const device = props.editingDeviceId ? await updateDevice() : await createDevice();
 
   if (!device) {
     submittingForm.value = false;
     return;
   }
 
-  //Create data point tags from localDataPointTags and add them to device
-  const dataPointTags: DataPointTag[] = await createDataPointTags();
-  for (const dataPointTag of dataPointTags) {
+  await Promise.all([createDataPointTags(device.uid), updateDataPointTags()]);
+
+  submittingForm.value = false;
+
+  toast.success(props.editingDeviceId ? t('device.toasts.update_success') : t('device.toasts.create_success'));
+
+  router.push(`/devices/${device.uid}`);
+}
+
+async function deleteRemoteDataPointTag(id: string) {
+  try {
+    await dataPointTagService.deleteDataPointTag(id);
+    remoteDataPointTags.value = remoteDataPointTags.value.filter((dataPointTag) => dataPointTag.uid !== id);
+  } catch (error) {
+    handleError(error, t('device.toasts.tag.delete_failed'));
+  }
+}
+
+function addLocalDataPointTag() {
+  localDataPointTags.value.push({
+    tag: '',
+    name: '',
+    unit: '',
+    decimal: 0,
+  });
+}
+function deleteLocalDataPointTag(index: number) {
+  localDataPointTags.value.splice(index, 1);
+}
+async function createDataPointTags(deviceUid: string) {
+  for (const dataPointTag of localDataPointTags.value) {
     try {
-      await dataPointTagService.addDataPointTagToDevice(device.uid, dataPointTag.uid);
+      const createdDataPointTag = await dataPointTagService.createDataPointTag(dataPointTag);
+      try {
+        await dataPointTagService.addDataPointTagToDevice(deviceUid, createdDataPointTag.uid);
+      } catch (error) {
+        handleError(error, t('device.toasts.tag.add_tag_to_device_failed'));
+      }
     } catch (error) {
-      handleError(error, t('device.toasts.tag.add_tag_to_device_failed'));
+      handleError(error, t('device.toasts.tag.create_failed'));
     }
   }
-
-  //Update remoteDataPointTags
+}
+async function updateDataPointTags() {
   for (const dataPointTag of remoteDataPointTags.value) {
     const originalTag = originalRemoteDataPointTags.value.find((tag) => tag.uid === dataPointTag.uid);
 
@@ -283,24 +264,6 @@ async function submitForm() {
       }
     }
   }
-
-  submittingForm.value = false;
-
-  if (props.isEditing) {
-    toast.success(t('device.toasts.update_success'));
-  } else {
-    toast.success(t('device.toasts.create_success'));
-  }
-
-  router.push(`/devices/${device.uid}`);
-}
-
-function goToStep(step: number) {
-  if (createStep.value == 1) {
-    const firstStepForm = [nameRef.value, macRef.value, typeRef.value];
-    if (!isFormValid(firstStepForm)) return;
-  }
-  createStep.value = step;
 }
 
 // Input validation
