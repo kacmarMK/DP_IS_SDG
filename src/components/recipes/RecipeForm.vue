@@ -78,9 +78,7 @@
         >
           <template #body-cell-actions="propsActions">
             <q-td auto-width :props="propsActions">
-              <div>
-                <q-btn dense :icon="mdiPlus" color="primary" flat round @click="addCommandToRecipe(propsActions.row)" />
-              </div>
+              <q-btn dense :icon="mdiPlus" color="primary" flat round @click="addCommandToRecipe(propsActions.row)" />
             </q-td>
           </template>
         </q-table>
@@ -92,7 +90,7 @@
 <script setup lang="ts">
 import { RecipeInput, getEmptyRecipeInput } from '@/models/Recipe';
 import { QTableProps } from 'quasar';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DeviceTypeEnum from '@/models/DeviceType';
 import { Command } from '@/models/Command';
@@ -130,6 +128,14 @@ function addCommandToRecipe(command: Command) {
 function removeCommandFromRecipe(index: number) {
   localRecipeCommands.value.splice(index, 1);
 }
+
+watch(
+  localRecipeCommands,
+  (newLocalCommands) => {
+    recipe.value.commands = newLocalCommands.map((item) => item.value);
+  },
+  { deep: true },
+);
 
 const stepColumns = computed<QTableProps['columns']>(() => [
   {

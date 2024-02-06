@@ -32,7 +32,7 @@
         </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn :icon="mdiPencil" color="grey-color" flat round
+            <q-btn :to="`/recipes/${props.row.id}/edit`" :icon="mdiPencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>

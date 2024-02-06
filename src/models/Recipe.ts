@@ -4,10 +4,10 @@ import { Command } from './Command';
 interface Recipe {
   id: string;
   name: string;
-  commands?: Array<Command>;
+  commands: Array<Command>;
   subRecipes?: Array<Recipe>;
   deviceType?: DeviceTypeEnum;
-  hasSubRecipes: boolean;
+  subRecipe: boolean;
   createdAt?: number;
   deactivated?: boolean;
 }

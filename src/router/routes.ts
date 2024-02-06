@@ -73,6 +73,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/recipes/CreateRecipePage.vue'),
       },
       {
+        path: '/recipes/:id/edit',
+        component: () => import('pages/recipes/UpdateRecipePage.vue'),
+      },
+      {
         path: '/collections',
         component: () => import('pages/collections/CollectionsPage.vue'),
       },

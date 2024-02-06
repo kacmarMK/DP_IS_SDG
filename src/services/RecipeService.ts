@@ -1,17 +1,17 @@
-import { Recipe, RecipeFrame } from 'src/models/Recipe';
+import { Recipe, RecipeInput } from 'src/models/Recipe';
 import { api } from '@/utils/api';
 import DeviceTypeEnum from 'src/models/DeviceType';
 
 class RecipeService {
-  async createRecipe(recipe: RecipeFrame): Promise<Recipe> {
+  async createRecipe(recipe: RecipeInput): Promise<Recipe> {
     return await api<Recipe>('jobs/recipe/createRecipe', {
       method: 'POST',
       body: recipe,
     });
   }
 
-  async getRecipeById(id: string): Promise<Recipe[]> {
-    return await api<Recipe[]>(`jobs/recipe/getRecipeById/${id}`);
+  async getRecipeById(id: string): Promise<Recipe> {
+    return await api<Recipe>(`jobs/recipe/getRecipeById/${id}`);
   }
 
   async getRecipeByName(name: string): Promise<Recipe[]> {
@@ -52,21 +52,21 @@ class RecipeService {
     });
   }
 
-  async updateRecipe(recipe: RecipeFrame, id: string): Promise<Recipe> {
+  async updateRecipe(recipe: RecipeInput, id: string): Promise<Recipe> {
     return await api<Recipe>(`jobs/recipe/updateRecipe/${id}`, {
       method: 'PUT',
       body: recipe,
     });
   }
 
-  async addSubRecipeToRecipe(recipe: RecipeFrame, recipeId: string, subRecipeId: string): Promise<Recipe> {
+  async addSubRecipeToRecipe(recipe: RecipeInput, recipeId: string, subRecipeId: string): Promise<Recipe> {
     return await api<Recipe>(`jobs/recipe/addSubRecipeToRecipe/${recipeId}/${subRecipeId}`, {
       method: 'PUT',
       body: recipe,
     });
   }
 
-  async addCommandToRecipe(recipe: RecipeFrame, recipeId: string, commandId: string): Promise<Recipe> {
+  async addCommandToRecipe(recipe: RecipeInput, recipeId: string, commandId: string): Promise<Recipe> {
     return await api<Recipe>(`jobs/recipe/addCommandToRecipe/${recipeId}/${commandId}`, {
       method: 'PUT',
       body: recipe,
