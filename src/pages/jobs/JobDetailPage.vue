@@ -1,20 +1,25 @@
 <template>
-  <PageLayout v-if="job" :title="job.name" :previous-title="t('job.label', 2)" previous-route="/jobs">
+  <PageLayout v-if="job.data" :title="job.data.name" :previous-title="t('job.label', 2)" previous-route="/jobs">
     <template #description>
       <q-badge class="q-pa-xs q-ml-sm" color="primary">
         <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-        {{ t('job.cycle') }}: {{ job?.status.currentCycle ?? 1 }}/{{ job?.noOfReps }}
+        {{ t('job.cycle') }}: {{ job?.data.status.currentCycle ?? 1 }}/{{ job?.data.noOfReps }}
       </q-badge>
-      <job-status-badges v-if="job" class="q-ml-sm" :job="job"></job-status-badges>
+      <job-status-badges v-if="job" class="q-ml-sm" :job="job.data"></job-status-badges>
     </template>
     <template #actions>
-      <job-controls v-if="job && authStore.isAdmin" class="col-grow" :running-job="job" @action-performed="getJob" />
+      <job-controls
+        v-if="job && authStore.isAdmin"
+        class="col-grow"
+        :running-job="job.data"
+        @action-performed="job.refresh"
+      />
     </template>
     <template #default>
       <q-table
         :rows="steps"
         :columns="columns"
-        :loading="isLoadingJob"
+        :loading="job.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -40,7 +45,7 @@
                   :thickness="0.15"
                   color="primary"
                   show-value
-                  :indeterminate="!job?.paused && job?.currentStatus == JobStatusEnum.JOB_PROCESSING"
+                  :indeterminate="!job?.data.paused && job?.data.currentStatus == JobStatusEnum.JOB_PROCESSING"
                 >
                   <div class="current-step-progress">
                     <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
@@ -70,8 +75,7 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { Job } from '@/models/Job';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import jobService from '@/services/JobService';
 import JobControls from '@/components/jobs/JobControls.vue';
@@ -81,34 +85,24 @@ import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiCheck, mdiListStatus } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 
 const route = useRoute();
 const authStore = useAuthStore();
 
-const job = ref<Job>();
-
-const isLoadingJob = ref(false);
-async function getJob() {
-  try {
-    isLoadingJob.value = true;
-    job.value = await jobService.getJobById(route.params.id.toString());
-  } catch (error) {
-    console.log(error);
-  } finally {
-    isLoadingJob.value = false;
-  }
-}
-getJob();
+const job = reactive(
+  useAsyncData(() => jobService.getJobById(route.params.id.toString()), t('job.toasts.load_failed')),
+);
 
 const currentStep = computed(() => {
-  if (!job.value || !job.value.status || !job.value.status.currentStep) return 1;
-  return job.value.status.currentStep;
+  if (!job.data || !job.data.status || !job.data.status.currentStep) return 1;
+  return job.data.status.currentStep;
 });
 
 const currentStepCycle = computed(() => {
-  if (!job.value?.status || !steps.value.length) return 1;
+  if (!job.data?.status || !steps.value.length) return 1;
 
   const currentStepIndex = steps.value.findIndex(
     (step) => currentStep.value > step.step && currentStep.value < step.step + step.cycles,
@@ -121,17 +115,17 @@ const currentStepCycle = computed(() => {
 });
 
 const steps = computed(() => {
-  if (!job.value || !job.value.commands) return [];
+  if (!job.data || !job.data.commands) return [];
 
   const groupedCommands: { step: number; name?: string; cycles: number }[] = [];
-  let lastCommandId: string = job.value.commands[0].id;
+  let lastCommandId: string = job.data.commands[0].id;
   let cycleCount = 0;
 
-  job.value.commands.forEach((command, index) => {
+  job.data.commands.forEach((command, index) => {
     if (command.id !== lastCommandId) {
       groupedCommands.push({
         step: index - cycleCount + 1,
-        name: job.value?.commands[index - 1].name,
+        name: job.data?.commands[index - 1].name,
         cycles: cycleCount,
       });
       lastCommandId = command.id;
@@ -141,10 +135,10 @@ const steps = computed(() => {
     }
   });
 
-  if (job.value.commands.length > 0 && cycleCount > 0) {
+  if (job.data.commands.length > 0 && cycleCount > 0) {
     groupedCommands.push({
-      step: job.value.commands.length,
-      name: job.value.commands[job.value.commands.length - 1].name,
+      step: job.data.commands.length,
+      name: job.data.commands[job.data.commands.length - 1].name,
       cycles: cycleCount,
     });
   }
@@ -187,7 +181,7 @@ const columns = computed<QTableProps['columns']>(() => [
 const refreshInterval = 10; // in seconds
 const intervalId = ref();
 onMounted(() => {
-  intervalId.value = setInterval(getJob, refreshInterval * 1000);
+  intervalId.value = setInterval(job.refresh, refreshInterval * 1000);
 });
 
 onUnmounted(() => {

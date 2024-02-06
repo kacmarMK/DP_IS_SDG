@@ -66,9 +66,9 @@
       <div class="col-12 col-md-6">
         <div class="table-name text-secondary">Available Commands</div>
         <q-table
-          :rows="availableCommands"
+          :rows="filteredCommands"
           :columns="availableCommandsColumns"
-          :loading="loadingAllCommands"
+          :loading="commands.isLoading"
           flat
           :no-data-label="`No commands available for this device type`"
           :loading-label="t('table.loading_label')"
@@ -92,14 +92,14 @@
 <script setup lang="ts">
 import { RecipeInput, getEmptyRecipeInput } from '@/models/Recipe';
 import { QTableProps } from 'quasar';
-import { computed, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DeviceTypeEnum from '@/models/DeviceType';
 import { Command } from '@/models/Command';
 import CommandService from '@/services/CommandService';
-import { handleError } from '@/utils/error-handler';
 import { mdiPlus, mdiClose, mdiDrag } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const recipe = defineModel<RecipeInput>({ required: true, default: getEmptyRecipeInput() });
 
@@ -107,27 +107,19 @@ const { t } = useI18n();
 
 const localRecipeCommands = ref(recipe.value.commands?.map((c, index) => ({ id: index, value: c })) ?? []);
 
-const allCommands = ref<Command[]>([]);
-const loadingAllCommands = ref(false);
-async function fetchAvailableCommands() {
-  try {
-    loadingAllCommands.value = true;
-    allCommands.value = await CommandService.getCommands('NONE', 'NONE');
-  } catch (error) {
-    handleError(error, t('command.toasts.load_failed'));
-  } finally {
-    loadingAllCommands.value = false;
-  }
-}
-fetchAvailableCommands();
+const commands = reactive(
+  useAsyncData(() => CommandService.getCommands('NONE', 'NONE'), t('command.toasts.load_failed')),
+);
 
-const availableCommands = computed<Command[]>(() => {
-  return allCommands.value.filter((command) => {
-    if (!recipe.value.deviceType) {
-      return true;
-    }
-    return command.deviceType === recipe.value.deviceType;
-  });
+const filteredCommands = computed<Command[]>(() => {
+  return (
+    commands.data?.filter((command) => {
+      if (!recipe.value.deviceType) {
+        return true;
+      }
+      return command.deviceType === recipe.value.deviceType;
+    }) ?? []
+  );
 });
 
 function addCommandToRecipe(command: Command) {

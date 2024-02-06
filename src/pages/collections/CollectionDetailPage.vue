@@ -18,7 +18,7 @@
           v-model:tickedNodes="tickedNodes"
           :data-point-tags="dataPointTags"
           class="bg-white shadow q-pa-lg"
-          @refresh="getCollection()"
+          @refresh="refresh"
         ></data-point-chart>
       </div>
     </div>
@@ -34,30 +34,23 @@ import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
 import { collectionToDataPointTagNode, extractNodeKeys, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
-import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 const route = useRoute();
 
 const tickedNodes = ref<string[]>();
 const dataPointTagTree = ref<DataPointTagNode>();
-const isLoadingCollection = ref(false);
+
+const { refresh } = useAsyncData(getCollection, t('collection.toasts.load_failed'));
 
 async function getCollection() {
-  try {
-    isLoadingCollection.value = true;
-    const collection = await CollectionService.getCollection(route.params.id.toString());
-    dataPointTagTree.value = collectionToDataPointTagNode(collection);
-    tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
-  } catch (error) {
-    handleError(error, t('collection.toasts.load_failed'));
-  } finally {
-    isLoadingCollection.value = false;
-  }
+  const collection = await CollectionService.getCollection(route.params.id.toString());
+  dataPointTagTree.value = collectionToDataPointTagNode(collection);
+  tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
 }
-getCollection();
 
 const dataPointTags = computed(() => {
   if (!dataPointTagTree.value) {

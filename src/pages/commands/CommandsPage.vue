@@ -14,9 +14,9 @@
     </template>
     <template #default>
       <q-table
-        :rows="store.commands"
+        :rows="store.commands.data"
         :columns="columns"
-        :loading="store.isLoadingCommands"
+        :loading="store.commands.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -63,24 +63,24 @@
       </q-table>
     </template>
   </PageLayout>
-  <create-command-dialog v-model="createDialogOpen" @on-create="store.getCommands" />
+  <create-command-dialog v-model="createDialogOpen" @on-create="store.commands.refresh" />
   <edit-command-dialog
     v-if="commandToEdit"
     v-model="editDialogOpen"
     :command="commandToEdit"
-    @on-update="store.getCommands"
+    @on-update="store.commands.refresh"
   />
   <delete-command-dialog
     v-if="commandToDelete"
     v-model="deleteDialogOpen"
     :command="commandToDelete"
-    @on-deleted="store.getCommands"
+    @on-deleted="store.commands.refresh"
   />
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { useCommandsStore } from '@/stores/commands-store';
+import { useCommandStore } from '@/stores/command-store';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiCodeTags, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
@@ -92,8 +92,8 @@ import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
-const store = useCommandsStore();
-store.getCommands();
+const store = useCommandStore();
+store.commands.refresh();
 
 const createDialogOpen = ref(false);
 

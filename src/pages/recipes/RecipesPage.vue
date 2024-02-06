@@ -14,9 +14,9 @@
     </template>
     <template #default>
       <q-table
-        :rows="store.recipes"
+        :rows="store.recipes.data"
         :columns="columns"
-        :loading="store.isLoadingRecipes"
+        :loading="store.recipes.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -59,7 +59,7 @@
     v-if="recipeToDelete"
     v-model="deleteDialogOpen"
     :recipe="recipeToDelete"
-    @on-delete="store.getRecipes()"
+    @on-delete="store.recipes.refresh"
   />
 </template>
 
@@ -76,7 +76,7 @@ import PageLayout from '@/layouts/PageLayout.vue';
 
 const { t } = useI18n();
 const store = useRecipeStore();
-store.getRecipes();
+store.recipes.refresh();
 
 const deleteDialogOpen = ref(false);
 const recipeToDelete = ref<Recipe>();

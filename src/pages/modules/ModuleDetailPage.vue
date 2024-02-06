@@ -18,7 +18,7 @@
           v-model:tickedNodes="tickedNodes"
           :data-point-tags="dataPointTags"
           class="bg-white shadow q-pa-lg"
-          @refresh="getModule()"
+          @refresh="refresh"
         ></data-point-chart>
       </div>
     </div>
@@ -33,31 +33,23 @@ import { ref } from 'vue';
 import { DataPointTagNode } from '@/models/DataPointTagNode';
 import { extractNodeKeys, moduleToDataPointTagNode, nodeToDataPointTags } from '@/utils/data-point-tag-nodes';
 import { computed } from 'vue';
-import { handleError } from '@/utils/error-handler';
 import ModuleService from '@/services/ModuleService';
 import { useI18n } from 'vue-i18n';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 const route = useRoute();
 
 const tickedNodes = ref<string[]>();
 const dataPointTagTree = ref<DataPointTagNode>();
-const isLoadingModule = ref(false);
+const { refresh } = useAsyncData(getModule, t('module.toasts.load_failed'));
 
 async function getModule() {
-  try {
-    isLoadingModule.value = true;
-    const collection = await ModuleService.getModule(route.params.id.toString());
-    dataPointTagTree.value = moduleToDataPointTagNode(collection);
-    tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
-  } catch (error) {
-    handleError(error, t('module.toasts.load_failed'));
-  } finally {
-    isLoadingModule.value = false;
-  }
+  const collection = await ModuleService.getModule(route.params.id.toString());
+  dataPointTagTree.value = moduleToDataPointTagNode(collection);
+  tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
 }
-getModule();
 
 const dataPointTags = computed(() => {
   if (!dataPointTagTree.value) {

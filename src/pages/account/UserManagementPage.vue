@@ -1,6 +1,6 @@
 <template>
   <PageLayout :title="t('global.user_management')">
-    <q-table :rows="users" :columns="columns" :loading="isLoadingUsers" flat :rows-per-page-options="[10, 20, 50]">
+    <q-table :rows="data" :columns="columns" :loading="isLoading" flat :rows-per-page-options="[10, 20, 50]">
       <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
           <q-icon :name="mdiAccountGroup" class="q-mb-md" size="50px"></q-icon>
@@ -21,32 +21,20 @@
 </template>
 
 <script setup lang="ts">
-import { GrantedAuthority, User } from '@/models/User';
+import { GrantedAuthority } from '@/models/User';
 import AuthService from '@/services/AuthService';
-import { handleError } from '@/utils/error-handler';
 import { QTableProps } from 'quasar';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { format } from 'date-fns';
 import { mdiAccountGroup, mdiPencil } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 
-const users = ref<User[]>([]);
-const isLoadingUsers = ref(false);
+const { data, isLoading } = useAsyncData(() => AuthService.getUsers(), t('account.toasts.get_user_failed', 2));
 
-async function getUsers() {
-  try {
-    isLoadingUsers.value = true;
-    users.value = await AuthService.getUsers();
-  } catch (error) {
-    handleError(error, 'Loading users failed!');
-  } finally {
-    isLoadingUsers.value = false;
-  }
-}
-getUsers();
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'Username',

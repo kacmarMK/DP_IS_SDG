@@ -7,18 +7,18 @@
         </div>
         <q-space></q-space>
         <q-btn
-          v-if="runningJob"
+          v-if="activeJob"
           dense
           size="14px"
           :icon="mdiOpenInNew"
           color="grey-color"
-          :to="`/jobs/${runningJob?.uid}`"
+          :to="`/jobs/${activeJob.uid}`"
           flat
           round
           ><q-tooltip :offset="[0, 4]">{{ t('global.details') }}</q-tooltip>
         </q-btn>
       </div>
-      <div v-if="runningJob" class="column justify-between col-grow q-my-sm wrap">
+      <div v-if="activeJob" class="column justify-between col-grow q-my-sm wrap">
         <div class="row justify-start items-center q-mb-sm">
           <q-circular-progress
             show-value
@@ -34,25 +34,25 @@
             {{ (currentProgress * 100).toFixed(0) }}%
           </q-circular-progress>
           <div class="column q-ml-sm q-gutter-y-xs justify-center q-my-md items-start">
-            <JobStatusBadges :job="runningJob" />
+            <JobStatusBadges :job="activeJob" />
             <div class="text-weight-medium">
-              {{ runningJob.name }}
+              {{ activeJob.name }}
             </div>
             <div>
-              {{ t('job.step_of', [runningJob.status?.currentStep ?? 1, runningJob.noOfCmds]) }}
+              {{ t('job.step_of', [activeJob.status?.currentStep ?? 1, activeJob.noOfCmds]) }}
               <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
               <span>({{ currentCommandName }})</span>
             </div>
             <div>
-              {{ t('job.cycle_of', [runningJob.status?.currentCycle ?? 1, runningJob.noOfReps]) }}
+              {{ t('job.cycle_of', [activeJob.status?.currentCycle ?? 1, activeJob.noOfReps]) }}
             </div>
           </div>
         </div>
         <JobControls
           v-if="authStore.isAdmin"
           class="col-grow"
-          :running-job="runningJob"
-          @action-performed="getRunningJob"
+          :running-job="activeJob"
+          @action-performed="jobs.refresh"
         />
       </div>
       <div v-else class="column items-center justify-center col-grow">
@@ -69,13 +69,13 @@
         />
       </div>
     </div>
-    <StartJobDialog v-model="openDialog" :device="props.device" @job-started="getRunningJob" />
+    <StartJobDialog v-model="openDialog" :device="props.device" @job-started="jobs.refresh" />
   </div>
 </template>
 
 <script setup lang="ts">
 import StartJobDialog from '@/components/jobs/StartJobDialog.vue';
-import { computed, ref, onMounted, onUnmounted, PropType } from 'vue';
+import { computed, ref, onMounted, onUnmounted, PropType, reactive } from 'vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import { Job } from '@/models/Job';
 import jobService from '@/services/JobService';
@@ -85,55 +85,38 @@ import { Device } from '@/models/Device';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiOpenInNew } from '@quasar/extras/mdi-v6';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const props = defineProps({
   device: {
     type: Object as PropType<Device>,
     required: true,
   },
-  initialJobs: {
-    type: Array as PropType<Job[]>,
-    required: true,
-  },
 });
 
 const { t } = useI18n();
 const authStore = useAuthStore();
-
+const jobs = reactive(useAsyncData(() => jobService.getJobsOnDevice(props.device.uid)));
 const openDialog = ref(false);
-const runningJob = ref<Job | undefined>(findActiveJob(props.initialJobs));
 
 function findActiveJob(jobs: Job[]) {
-  jobs = jobs.sort((a, b) => {
-    if (a.currentStatus == JobStatusEnum.JOB_PENDING) {
-      return 1;
-    }
-    if (b.currentStatus == JobStatusEnum.JOB_PENDING) {
-      return -1;
-    }
-    return 0;
-  });
-
   return jobs.find(
     (job) => job.currentStatus == JobStatusEnum.JOB_PROCESSING || job.currentStatus == JobStatusEnum.JOB_PENDING,
   );
 }
 
-async function getRunningJob() {
-  if (props.device) {
-    try {
-      const jobs: Job[] = await jobService.getJobsOnDevice(props.device.uid);
-      runningJob.value = findActiveJob(jobs);
-    } catch (error) {
-      console.log(error);
-    }
+const activeJob = computed(() => {
+  if (jobs.data) {
+    return findActiveJob(jobs.data);
+  } else if (props.device.jobs) {
+    return findActiveJob(props.device.jobs);
   }
-}
-getRunningJob();
+  return null;
+});
 
 const currentProgress = computed(() => {
-  if (runningJob.value && runningJob.value.status) {
-    const { status, noOfReps, noOfCmds } = runningJob.value;
+  if (activeJob.value && activeJob.value.status) {
+    const { status, noOfReps, noOfCmds } = activeJob.value;
     const total = noOfReps * noOfCmds;
 
     const current = status.currentStep + ((status.currentCycle ?? 1) - 1) * noOfCmds;
@@ -144,8 +127,8 @@ const currentProgress = computed(() => {
 });
 
 const currentCommandName = computed(() => {
-  if (runningJob.value && runningJob.value.status) {
-    const { status, commands } = runningJob.value;
+  if (activeJob.value && activeJob.value.status) {
+    const { status, commands } = activeJob.value;
     return commands[(status.currentStep ?? 1) - 1].name ?? '';
   }
   return '';
@@ -155,7 +138,7 @@ const currentCommandName = computed(() => {
 const refreshInterval = 10; // in seconds
 const intervalId = ref();
 onMounted(() => {
-  intervalId.value = setInterval(getRunningJob, refreshInterval * 1000);
+  intervalId.value = setInterval(jobs.refresh, refreshInterval * 1000);
 });
 
 onUnmounted(() => {

@@ -96,7 +96,7 @@
     "change_role": "Change role",
     "change_role_desc": "Change user's role.",
     "toasts": {
-      "get_user_failed": "Loading user failed!",
+      "get_user_failed": "Loading user failed! | Loading users failed!",
       "email_update_success": "Email updated!",
       "email_update_failed": "Updating email failed!",
       "password_change_success": "Password changed!",

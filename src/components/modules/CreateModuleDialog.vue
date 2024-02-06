@@ -22,6 +22,7 @@ import { ModuleInput } from '@/models/Module';
 import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
 import ModuleForm from '@/components/modules/ModuleForm.vue';
+import { getEmptyModuleInput } from '@/models/Module';
 
 const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
@@ -34,19 +35,15 @@ const emit = defineEmits(['onCreate']);
 
 const { t } = useI18n();
 
-const getEmptyModule = (): ModuleInput => ({
-  name: '',
-});
-
 const creatingModule = ref(false);
-const moduleObj = ref<ModuleInput>(getEmptyModule());
+const moduleObj = ref<ModuleInput>(getEmptyModuleInput());
 
 async function createModule() {
   try {
     creatingModule.value = true;
     const createdModule = await ModuleService.createModule(moduleObj.value);
     await ModuleService.addModuleToCollection(props.collection.uid, createdModule.uid);
-    moduleObj.value = getEmptyModule();
+    moduleObj.value = getEmptyModuleInput();
     isDialogOpen.value = false;
     emit('onCreate');
     toast.success(t('module.toasts.create_success'));

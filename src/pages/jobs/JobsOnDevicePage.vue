@@ -1,9 +1,9 @@
 <template>
   <PageLayout :title="t('job.job_history')">
     <q-table
-      :rows="jobs"
+      :rows="jobs.data"
       :columns="columns"
-      :loading="isLoadingJobs"
+      :loading="jobs.isLoading"
       flat
       :rows-per-page-options="[10, 20, 50]"
       class="shadow"
@@ -42,33 +42,23 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
-import { computed, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import jobService from '@/services/JobService';
+import JobService from '@/services/JobService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from 'src/models/JobStatusEnum';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 
 const route = useRoute();
 
-const jobs = ref<Job[]>([]);
-
-const isLoadingJobs = ref(false);
-async function getJobs() {
-  try {
-    isLoadingJobs.value = true;
-    jobs.value = await jobService.getJobsOnDevice(route.params.id.toString());
-  } catch (error) {
-    console.error(error);
-  } finally {
-    isLoadingJobs.value = false;
-  }
-}
-getJobs();
+const jobs = reactive(
+  useAsyncData(() => JobService.getJobsOnDevice(route.params.id.toString()), t('job.toasts.load_failed')),
+);
 
 const columns = computed<QTableProps['columns']>(() => [
   {

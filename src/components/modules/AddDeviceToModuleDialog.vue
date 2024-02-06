@@ -49,7 +49,8 @@ const { t } = useI18n();
 const deviceStore = useDeviceStore();
 
 const filteredDevices = computed(() => {
-  return deviceStore.devices.filter(
+  if (!deviceStore.devices.data) return [];
+  return deviceStore.devices.data.filter(
     (device) => !props.alreadyAddedDevices.find((alreadyAddedDevice) => alreadyAddedDevice.uid === device.uid),
   );
 });
@@ -82,7 +83,7 @@ watch(
   },
 );
 
-if (deviceStore.devices.length === 0) deviceStore.getDevices();
+if (!deviceStore.devices.data) deviceStore.devices.refresh();
 </script>
 
 <style lang="scss" scoped></style>

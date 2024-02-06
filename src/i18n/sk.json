@@ -96,7 +96,7 @@
     "change_role": "Zmeniť rolu",
     "change_role_desc": "Zmeniť rolu používateľa.",
     "toasts": {
-      "get_user_failed": "Načítanie používateľa zlyhalo!",
+      "get_user_failed": "Načítanie používateľa zlyhalo! | Načítanie používateľov zlyhalo!",
       "email_update_success": "E-mail bol aktualizovaný!",
       "email_update_failed": "Aktualizácia e-mailu zlyhala!",
       "password_change_success": "Heslo bolo zmenené!",

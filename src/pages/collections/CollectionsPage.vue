@@ -15,9 +15,9 @@
     </template>
     <template #default>
       <q-table
-        :rows="collections"
+        :rows="collections.data"
         :columns="columns"
-        :loading="isLoadingCollections"
+        :loading="collections.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -109,7 +109,7 @@
                     v-model="props.row"
                     class="q-pa-lg"
                     @update:model-value="updateCollection"
-                    @on-update="getCollections"
+                    @on-update="collections.refresh"
                   />
                 </div>
               </q-slide-transition>
@@ -119,26 +119,25 @@
       </q-table>
     </template>
   </PageLayout>
-  <CreateCollectionDialog v-model="createCollectionDialog" @on-create="getCollections" />
+  <CreateCollectionDialog v-model="createCollectionDialog" @on-create="collections.refresh" />
   <EditCollectionDialog
     v-if="collectionToUpdate"
     v-model="editCollectionDialog"
     :collection="collectionToUpdate"
-    @on-update="getCollections"
+    @on-update="collections.refresh"
   />
   <DeleteCollectionDialog
     v-if="collectionToUpdate"
     v-model="deleteCollectionDialog"
     :collection="collectionToUpdate"
-    @on-deleted="getCollections"
+    @on-deleted="collections.refresh"
   />
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Collection } from '@/models/Collection';
-import { computed, ref } from 'vue';
-import { handleError } from '@/utils/error-handler';
+import { computed, reactive, ref } from 'vue';
 import CollectionService from '@/services/CollectionService';
 import CreateCollectionDialog from '@/components/collections/CreateCollectionDialog.vue';
 import EditCollectionDialog from '@/components/collections/EditCollectionDialog.vue';
@@ -156,30 +155,20 @@ import {
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 
 const authStore = useAuthStore();
-
-const collections = ref<Collection[]>([]);
-const isLoadingCollections = ref(false);
-
-async function getCollections() {
-  try {
-    isLoadingCollections.value = true;
-    collections.value = await CollectionService.getCollections();
-  } catch (error) {
-    handleError(error, t('collection.toasts.load_failed'));
-  } finally {
-    isLoadingCollections.value = false;
-  }
-}
-getCollections();
+const collections = reactive(
+  useAsyncData(() => CollectionService.getCollections(), t('collection.toasts.load_failed')),
+);
 
 function updateCollection(collection: Collection) {
-  const index = collections.value.findIndex((c) => c.uid === collection.uid);
+  if (!collections.data) return;
+  const index = collections.data.findIndex((c) => c.uid === collection.uid);
   if (index === -1) return;
-  collections.value[index] = collection;
+  collections.data[index] = collection;
 }
 
 const createCollectionDialog = ref(false);

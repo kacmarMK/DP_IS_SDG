@@ -8,7 +8,7 @@ const ignoreErrorMessages = [
   'There are not any recipes in the database yet!',
 ];
 
-function handleError(error: unknown, defaultErrorMessage: string): void {
+function handleError(error: unknown, defaultErrorMessage: string): unknown {
   let message = defaultErrorMessage;
 
   const authStore = useAuthStore();
@@ -30,6 +30,8 @@ function handleError(error: unknown, defaultErrorMessage: string): void {
   if (message.length > 0) {
     toast.error(message);
   }
+
+  return error;
 }
 
 export { handleError };
