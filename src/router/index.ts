@@ -2,8 +2,7 @@ import { route } from 'quasar/wrappers';
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
 import routes from './routes';
-import { authGuard } from './authGuard';
-import { adminGuard } from './adminGuard';
+import { useAuthStore } from '@/stores/auth-store';
 
 /*
  * If not building with SSR mode, you can
@@ -31,16 +30,17 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach((to) => {
     const requiresAuth = to.matched.some((r) => r.meta.requiresAuth);
     const requiresAdmin = to.matched.some((r) => r.meta.requiresAdmin);
 
-    if (requiresAdmin) {
-      adminGuard(to, from, next);
-    } else if (requiresAuth) {
-      authGuard(to, from, next);
-    } else {
-      next();
+    const authStore = useAuthStore();
+
+    if (requiresAuth && !authStore.isAuthenticated) {
+      return '/login';
+    }
+    if (requiresAdmin && !authStore.isAdmin) {
+      return '/';
     }
   });
 
