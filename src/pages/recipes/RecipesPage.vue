@@ -30,6 +30,13 @@
             {{ message }}
           </div>
         </template>
+
+        <template #body-cell-name="props">
+          <q-td :props="props">
+            <RouterLink class="text-black" :to="`/recipes/${props.row.id}/edit`">{{ props.row.name }}</RouterLink>
+          </q-td>
+        </template>
+
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn :to="`/recipes/${props.row.id}/edit`" :icon="mdiPencil" color="grey-color" flat round

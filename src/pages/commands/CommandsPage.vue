@@ -30,6 +30,7 @@
             {{ message }}
           </div>
         </template>
+
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn

@@ -3,7 +3,7 @@
     <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav keep-alive>
       <q-step :name="1" :title="t('device.device_info')" :icon="mdiPencil">
         <q-form>
-          <div class="q-pa-sm row q-col-gutter-lg">
+          <div class="q-pa-sm row q-col-gutter-y-lg q-col-gutter-x-xl">
             <q-input
               ref="nameRef"
               v-model="deviceInput.name"

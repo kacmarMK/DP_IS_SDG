@@ -38,7 +38,7 @@ async function createRecipe() {
     const createdRecipe = await RecipeService.createRecipe(recipe.value);
     await RecipeService.updateRecipe(createdRecipe, createdRecipe.id); // Must call update to set new commands
     toast.success(t('recipe.toasts.create_success'));
-    router.push(`/recipes/${createdRecipe.id}/edit`);
+    router.push('/recipes/');
   } catch (error) {
     handleError(error, t('recipe.toasts.create_failed'));
   } finally {

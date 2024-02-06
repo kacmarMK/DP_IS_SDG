@@ -42,7 +42,14 @@ const commandInput = ref<CommandInput>(commandClone(props.command));
 async function updateCommand() {
   try {
     updatingCommand.value = true;
-    await CommandService.updateCommand(commandInput.value, props.command.id);
+
+    const updateCommand = commandInput.value;
+
+    if (updateCommand.deviceType === props.command.deviceType) {
+      delete updateCommand.deviceType;
+    }
+
+    await CommandService.updateCommand(updateCommand, props.command.id);
     isDialogOpen.value = false;
     emit('onUpdate');
     toast.success(t('command.toasts.update_success'));
