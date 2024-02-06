@@ -300,6 +300,25 @@
     }
   },
   "scenario": {
-    "label": "Scenario | Scenarios"
+    "label": "Scenario | Scenarios",
+    "all": "All",
+    "active": "Active",
+    "create_scenario": "Create scenario",
+    "delete_scenario": "Delete scenario",
+    "delete_scenario_desc": "Are you sure you want to delete this scenario?",
+    "edit_scenario": "Edit scenario",
+    "toasts": {
+      "load_failed": "Scenario loading failed!",
+      "create_success": "Scenario created!",
+      "create_failed": "Scenario creation failed!",
+      "update_success": "Scenario updated!",
+      "update_failed": "Scenario update failed!",
+      "delete_success": "Scenario deleted!",
+      "delete_failed": "Scenario delete failed!"
+    },
+    "options": {
+      "option1": "All",
+      "option2": "Active"
+    }
   }
 }

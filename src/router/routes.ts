@@ -89,8 +89,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/modules/ModuleDetailPage.vue'),
       },
       {
-        path: 'scenarios',
+        path: '/scenarios',
         component: () => import('pages/scenarios/ScenariosPage.vue'),
+      },
+      {
+        path: '/scenarios/create',
+        component: () => import('pages/scenarios/CreateScenarioPage.vue'),
       },
     ],
   },
