@@ -1,9 +1,9 @@
 <template>
   <PageLayout :title="t('job.job_history')">
     <q-table
-      :rows="jobs"
+      :rows="jobs.data"
       :columns="columns"
-      :loading="isLoadingJobs"
+      :loading="jobs.isLoading"
       flat
       :rows-per-page-options="[10, 20, 50]"
       class="shadow"
@@ -41,38 +41,28 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
-import { ref, computed } from 'vue';
+import { computed, reactive } from 'vue';
 import deviceService from '@/services/DeviceService';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
-import { JobDevice } from '@/models/Job';
-import { handleError } from '@/utils/error-handler';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
+import { useAsyncData } from '@/composables/useAsyncData';
 
 const { t } = useI18n();
 
-const jobs = ref<JobDevice[]>([]);
-const isLoadingJobs = ref(false);
+const jobs = reactive(useAsyncData(getJobs, t('job.toasts.load_failed')));
 
-async function getJobs() {
-  try {
-    isLoadingJobs.value = true;
-    const devices = await deviceService.getDevices();
-    jobs.value = devices.flatMap((device) =>
-      device.jobs.map((job) => ({
-        ...job,
-        deviceName: device.name,
-      })),
-    );
-  } catch (error) {
-    handleError(error, t('job.toasts.load_failed'));
-  } finally {
-    isLoadingJobs.value = false;
-  }
+async function getJobs(): Promise<Job[]> {
+  const devices = await deviceService.getDevices();
+  return devices.flatMap((device) =>
+    device.jobs.map((job) => ({
+      ...job,
+      deviceName: device.name,
+    })),
+  );
 }
-getJobs();
 
 const columns = computed<QTableProps['columns']>(() => [
   {

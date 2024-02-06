@@ -15,10 +15,11 @@
     </template>
     <template #default>
       <DevicesTable
-        v-model="deviceStore.devices"
-        :loading="deviceStore.isLoadingDevices"
+        v-if="deviceStore.devices.data"
+        v-model="deviceStore.devices.data"
+        :loading="deviceStore.devices.isLoading"
         class="shadow"
-        @on-change="deviceStore.getDevices"
+        @on-change="deviceStore.devices.refresh"
       />
     </template>
   </PageLayout>
@@ -36,5 +37,5 @@ const { t } = useI18n();
 
 const authStore = useAuthStore();
 const deviceStore = useDeviceStore();
-deviceStore.getDevices();
+deviceStore.devices.refresh();
 </script>

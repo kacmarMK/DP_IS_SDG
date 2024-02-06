@@ -12,7 +12,7 @@
         ref="recipeRef"
         v-model="jobToRun.recipeId"
         :label="t('recipe.label')"
-        :options="recipesAvailable"
+        :options="recipeStore.recipes.data"
         option-value="id"
         option-label="name"
         lazy-rules
@@ -58,8 +58,7 @@
 
 <script setup lang="ts">
 import { PropType, computed, ref } from 'vue';
-import recipeService from '@/services/RecipeService';
-import jobService from '@/services/JobService';
+import JobService from '@/services/JobService';
 import { Recipe } from '@/models/Recipe';
 import { QInput } from 'quasar';
 import { JobToRun } from '@/models/Job';
@@ -71,6 +70,7 @@ import { useI18n } from 'vue-i18n';
 import { isFormValid } from '@/utils/form-validation';
 import { mdiClock } from '@quasar/extras/mdi-v6';
 import DialogCommon from '../core/DialogCommon.vue';
+import { useRecipeStore } from '@/stores/recipe-store';
 
 const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
@@ -84,18 +84,10 @@ const emit = defineEmits(['jobStarted']);
 const { t } = useI18n();
 
 const jobToRun = ref<JobToRun>();
-const recipesAvailable = ref<Recipe[]>([]);
 const selectedRecipe = ref<Recipe | null>(null);
 const jobIsStarting = ref(false);
-async function getRecipes() {
-  if (!props.device) return;
-  try {
-    recipesAvailable.value = await recipeService.getFullRecipesByDeviceType(props.device.type);
-  } catch (e) {
-    console.log(e);
-  }
-}
-getRecipes();
+const recipeStore = useRecipeStore();
+recipeStore.recipes.refresh();
 
 async function runJob() {
   if (!jobToRun.value || !props.device) return;
@@ -112,7 +104,8 @@ async function runJob() {
     jobToRun.value.scheduledHour = date.getHours();
     jobToRun.value.scheduledMinute = date.getMinutes();
 
-    await jobService.runJobFromRecipe(jobToRun.value);
+    await JobService.runJobFromRecipe(jobToRun.value);
+
     isDialogOpen.value = false;
     toast.success(t('job.toasts.start_success'));
     emit('jobStarted');

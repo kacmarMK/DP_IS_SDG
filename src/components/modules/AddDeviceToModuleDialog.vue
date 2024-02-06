@@ -49,7 +49,8 @@ const { t } = useI18n();
 const deviceStore = useDeviceStore();
 
 const filteredDevices = computed(() => {
-  return deviceStore.devices.filter(
+  if (!deviceStore.devices.data) return [];
+  return deviceStore.devices.data.filter(
     (device) => !props.alreadyAddedDevices.find((alreadyAddedDevice) => alreadyAddedDevice.uid === device.uid),
   );
 });
@@ -64,6 +65,7 @@ async function addDevice() {
     await ModuleService.addDeviceToModule(props.module.uid, selectedDeviceId.value);
     toast.success(t('module.toasts.add_device_to_module_success'));
     emit('onAdded');
+    selectedDeviceId.value = undefined;
     isDialogOpen.value = false;
   } catch (error) {
     handleError(error, t('module.toasts.add_device_to_module_failed'));
@@ -81,7 +83,7 @@ watch(
   },
 );
 
-if (deviceStore.devices.length === 0) deviceStore.getDevices();
+if (!deviceStore.devices.data) deviceStore.devices.refresh();
 </script>
 
 <style lang="scss" scoped></style>

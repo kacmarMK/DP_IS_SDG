@@ -23,7 +23,7 @@
               v-model="deviceInput.type"
               :rules="typeRules"
               class="col-12 col-md-6"
-              :label="t('device.type')"
+              :label="t('device.device_type')"
               :options="Object.values(DeviceTypeEnum)"
             >
             </q-select>

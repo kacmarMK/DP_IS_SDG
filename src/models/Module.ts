@@ -11,4 +11,12 @@ interface ModuleInput {
   devices?: Array<Device> | null;
 }
 
+function getEmptyModuleInput(): ModuleInput {
+  return {
+    name: '',
+    devices: null,
+  };
+}
+
 export type { Module, ModuleInput };
+export { getEmptyModuleInput };

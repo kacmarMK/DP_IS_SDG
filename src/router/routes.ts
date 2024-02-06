@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('pages/devices/DevicesPage.vue'),
+        redirect: '/devices',
       },
       {
         path: '/account',
@@ -67,6 +67,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/recipes',
         component: () => import('pages/recipes/RecipesPage.vue'),
+      },
+      {
+        path: '/recipes/create',
+        component: () => import('pages/recipes/CreateRecipePage.vue'),
       },
       {
         path: '/collections',

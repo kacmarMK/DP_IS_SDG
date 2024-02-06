@@ -12,14 +12,21 @@ interface Recipe {
   deactivated?: boolean;
 }
 
-interface RecipeFrame {
+interface RecipeInput {
   name: string;
-  commands?: Array<Command>;
+  commands: Array<Command>;
   subRecipes?: Array<Recipe>;
   deviceType?: DeviceTypeEnum;
   subRecipe: boolean;
-  createdAt?: number;
-  deactivated?: boolean;
 }
 
-export type { Recipe, RecipeFrame };
+function getEmptyRecipeInput(): RecipeInput {
+  return {
+    name: '',
+    subRecipe: false,
+    commands: [],
+  };
+}
+
+export type { Recipe, RecipeInput };
+export { getEmptyRecipeInput };
