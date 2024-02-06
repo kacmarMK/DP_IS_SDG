@@ -300,6 +300,25 @@
     }
   },
   "scenario": {
-    "label": "Scenár | Scenáre"
+    "label": "Scenár | Scenáre",
+    "all": "Všetky",
+    "active": "Aktívne",
+    "create_scenario": "Vytvoriť scenár",
+    "delete_scenario": "Vymazať scenár",
+    "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",
+    "edit_scenario": "Upraviť scenár",
+    "toasts": {
+      "load_failed": "Načítanie scenárov zlyhalo!",
+      "create_success": "Scenár bol vytvorený!",
+      "create_failed": "Vytvorenie scenáru zlyhalo!",
+      "update_success": "Scenár bol aktualizovaný!",
+      "update_failed": "Aktualizácia scenáru zlyhala!",
+      "delete_success": "Scenár bol vymazaný!",
+      "delete_failed": "Vymazanie scenáru zlyhalo!"
+    },
+    "options": {
+      "option1": "Všetky",
+      "option2": "Aktívne"
+    }
   }
 }
