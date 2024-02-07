@@ -36,6 +36,9 @@ export default route(function (/* { store, ssrContext } */) {
 
     const authStore = useAuthStore();
 
+    if ((to.path === '/login' || to.path === '/register') && authStore.isAuthenticated) {
+      return '/';
+    }
     if (requiresAuth && !authStore.isAuthenticated) {
       return '/login';
     }

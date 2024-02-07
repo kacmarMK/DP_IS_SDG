@@ -6,8 +6,10 @@ import { computed, nextTick, ref, watch } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 import { Role } from '@/models/Role';
 import { JwtPayload } from '@/models/JwtPayload';
+import { useStoreRouter } from '@/composables/useStoreRouter';
 
 export const useAuthStore = defineStore('authStore', () => {
+  const router = useStoreRouter();
   const jwt = useStorage('jwt', '');
   const user = ref<User | null>(null);
 
@@ -18,10 +20,26 @@ export const useAuthStore = defineStore('authStore', () => {
     jwt.value = res;
   }
 
-  function logout(this: AuthUserStore) {
+  function clearJwt() {
     jwt.value = '';
-    this.router.push('/login');
   }
+
+  function logout() {
+    clearJwt();
+    router.push('/login');
+  }
+
+  const decodeJwt = () => {
+    if (!jwt.value) return null;
+    try {
+      const decodedToken = jwtDecode<JwtPayload>(jwt.value);
+      return decodedToken;
+    } catch (e) {
+      logout();
+      console.error('Invalid JWT');
+      return null;
+    }
+  };
 
   async function getCurrentUser() {
     if (!userId.value) return null;
@@ -34,28 +52,25 @@ export const useAuthStore = defineStore('authStore', () => {
   }
 
   const userId = computed(() => {
-    if (!jwt.value) return null;
-
-    const decodedToken = jwtDecode(jwt.value) as JwtPayload;
+    const decodedToken = decodeJwt();
+    if (!decodedToken) return null;
     return decodedToken.sub;
   });
 
-  const isTokenExpired = computed(() => {
-    if (!jwt.value) return true;
+  const isTokenExpired = () => {
+    const decodedToken = decodeJwt();
+    if (!decodedToken) return true;
 
-    const decodedToken = jwtDecode(jwt.value);
     const currentTime = Date.now() / 1000; // Convert to seconds
 
     if (!decodedToken.exp) return true;
 
     return decodedToken.exp < currentTime;
-  });
+  };
 
   const isAdmin = computed(() => {
-    if (!jwt.value) return false;
-    const decodedToken = jwtDecode(jwt.value) as JwtPayload;
-
-    if (!decodedToken.authorities) return false;
+    const decodedToken = decodeJwt();
+    if (!decodedToken || !decodedToken.authorities) return false;
 
     const isAdmin = decodedToken.authorities.some((authority) => authority.authority === Role.ADMIN);
     return isAdmin;
@@ -79,7 +94,6 @@ export const useAuthStore = defineStore('authStore', () => {
     userId,
     refreshUser,
     isAdmin,
+    clearJwt,
   };
 });
-
-type AuthUserStore = ReturnType<typeof useAuthStore>;

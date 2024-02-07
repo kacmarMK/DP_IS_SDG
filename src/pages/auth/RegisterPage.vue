@@ -77,9 +77,11 @@ import { Role } from '@/models/Role';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { mdiEye, mdiEyeOff } from '@quasar/extras/mdi-v6';
+import { useAuthStore } from '@/stores/auth-store';
 
 const { t } = useI18n();
 const router = useRouter();
+const authStore = useAuthStore();
 
 const userRegister = ref<UserRegister>({
   name: '',
@@ -110,6 +112,7 @@ async function register() {
 
   try {
     isSubmitting.value = true;
+    authStore.clearJwt();
     await authService.register(userRegister.value, Role.ADMIN);
     toast.success(t('auth.register.toasts.register_success'));
     router.push('/');

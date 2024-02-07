@@ -7,7 +7,8 @@ async function onResponseError(context: FetchContext) {
 
   if (!response) return;
 
-  if (response.status === 403 && authStore.isTokenExpired && authStore.isAuthenticated) {
+  if (response.status === 403 && authStore.isTokenExpired()) {
+    console.error('Token expired');
     authStore.logout();
   }
 }
