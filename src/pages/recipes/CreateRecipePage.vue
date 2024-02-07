@@ -12,7 +12,7 @@
         @click="createRecipe"
       />
     </template>
-    <RecipeForm v-model="recipe" />
+    <RecipeForm ref="recipeForm" v-model="recipe" />
   </PageLayout>
 </template>
 
@@ -32,7 +32,11 @@ const router = useRouter();
 
 const recipe = ref<RecipeInput>(getEmptyRecipeInput());
 const creatingRecipe = ref(false);
+const recipeForm = ref();
+
 async function createRecipe() {
+  if (!recipeForm.value?.validate()) return;
+
   try {
     creatingRecipe.value = true;
     const createdRecipe = await RecipeService.createRecipe(recipe.value);

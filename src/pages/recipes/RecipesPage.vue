@@ -97,6 +97,13 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'left',
   },
   {
+    name: 'deviceType',
+    label: t('device.device_type'),
+    field: 'deviceType',
+    sortable: true,
+    align: 'left',
+  },
+  {
     name: 'subrecipe',
     label: t('recipe.subrecipe'),
     field: 'subRecipe',

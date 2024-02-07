@@ -12,7 +12,7 @@
         @click="updateRecipe"
       />
     </template>
-    <RecipeForm v-if="recipe.data" v-model="recipe.data" :loading="recipe.isLoading" />
+    <RecipeForm v-if="recipe.data" ref="recipeForm" v-model="recipe.data" :loading="recipe.isLoading" />
   </PageLayout>
 </template>
 
@@ -37,9 +37,12 @@ const uid = route.params.id.toString();
 const recipe = reactive(useAsyncData(() => RecipeService.getRecipeById(uid), t('recipe.toasts.load_failed')));
 recipe.data = store.getRecipeById(uid);
 
+const recipeForm = ref();
 const updatingRecipe = ref(false);
 async function updateRecipe() {
+  if (!recipeForm.value?.validate()) return;
   if (!recipe.data) return;
+
   try {
     updatingRecipe.value = true;
     await RecipeService.updateRecipe(recipe.data, recipe.data.id);
