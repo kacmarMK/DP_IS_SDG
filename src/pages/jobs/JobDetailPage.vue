@@ -86,15 +86,18 @@ import { useI18n } from 'vue-i18n';
 import { mdiCheck, mdiListStatus } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
+import { useJobStore } from '@/stores/job-store';
 
 const { t } = useI18n();
 
 const route = useRoute();
 const authStore = useAuthStore();
+const jobStore = useJobStore();
 
 const job = reactive(
   useAsyncData(() => jobService.getJobById(route.params.id.toString()), t('job.toasts.load_failed')),
 );
+job.data = jobStore.getJobById(route.params.id.toString());
 
 const currentStep = computed(() => {
   if (!job.data || !job.data.status || !job.data.status.currentStep) return 1;

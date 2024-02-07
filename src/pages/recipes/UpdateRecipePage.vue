@@ -12,7 +12,7 @@
         @click="updateRecipe"
       />
     </template>
-    <RecipeForm v-if="recipe.data" v-model="recipe.data" />
+    <RecipeForm v-if="recipe.data" v-model="recipe.data" :loading="recipe.isLoading" />
   </PageLayout>
 </template>
 
@@ -26,14 +26,16 @@ import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useAsyncData } from '@/composables/useAsyncData';
 import { useRoute, useRouter } from 'vue-router';
+import { useRecipeStore } from '@/stores/recipe-store';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
+const store = useRecipeStore();
 
-const recipe = reactive(
-  useAsyncData(() => RecipeService.getRecipeById(route.params.id.toString()), t('recipe.toasts.load_failed')),
-);
+const uid = route.params.id.toString();
+const recipe = reactive(useAsyncData(() => RecipeService.getRecipeById(uid), t('recipe.toasts.load_failed')));
+recipe.data = store.getRecipeById(uid);
 
 const updatingRecipe = ref(false);
 async function updateRecipe() {

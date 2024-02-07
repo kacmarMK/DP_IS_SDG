@@ -29,6 +29,8 @@ function handleError(error: unknown, defaultErrorMessage: string): unknown {
 
   if (message.length > 0) {
     toast.error(message);
+  } else {
+    console.error(error);
   }
 
   return error;

@@ -7,6 +7,7 @@
             <q-input
               ref="nameRef"
               v-model="deviceInput.name"
+              :disable="loadingDevice"
               :rules="nameRules"
               class="col-12 col-md-6"
               :label="t('global.name')"
@@ -14,6 +15,7 @@
             <q-input
               ref="macRef"
               v-model="deviceInput.mac"
+              :disable="loadingDevice"
               :rules="macRules"
               class="col-12 col-md-6"
               :label="t('device.mac_address')"
@@ -21,6 +23,7 @@
             <q-select
               ref="typeRef"
               v-model="deviceInput.type"
+              :disable="loadingDevice"
               :rules="typeRules"
               class="col-12 col-md-6"
               :label="t('device.device_type')"
@@ -30,16 +33,23 @@
             <q-input
               ref="initApiKeyRef"
               v-model="deviceInput.initApiKey"
+              :disable="loadingDevice"
               class="col-12 col-md-6"
               :label="t('device.api_key')"
             />
             <q-input
               ref="firmwareRef"
               v-model="deviceInput.firmware"
+              :disable="loadingDevice"
               class="col-12 col-md-6"
               :label="t('device.firmware')"
             />
-            <q-input v-model="deviceInput.version" class="col-12 col-md-6" :label="t('device.version')" />
+            <q-input
+              v-model="deviceInput.version"
+              :disable="loadingDevice"
+              class="col-12 col-md-6"
+              :label="t('device.version')"
+            />
           </div>
           <q-card-actions align="left" class="text-primary q-mt-sm">
             <q-btn
@@ -60,6 +70,7 @@
             <data-point-tag-form
               ref="remoteDataPointTagFormRef"
               v-model="remoteDataPointTags[index]"
+              :disable="loadingDevice"
               @remove="deleteRemoteDataPointTag(dataPointTag.uid)"
             />
           </div>
@@ -67,6 +78,7 @@
             <data-point-tag-form
               ref="remoteDataPointTagFormRef"
               v-model="localDataPointTags[index]"
+              :disable="loadingDevice"
               @remove="deleteLocalDataPointTag(index)"
             />
           </div>
@@ -74,6 +86,7 @@
             class="full-width q-mb-md q-mt-sm"
             outline
             :icon="mdiPlusCircle"
+            :disable="loadingDevice"
             color="primary"
             no-caps
             padding="12px 30px"
@@ -84,6 +97,7 @@
             unelevated
             color="primary"
             :label="t('global.save')"
+            :disable="loadingDevice"
             padding="7px 35px"
             :loading="submittingForm"
             no-caps
@@ -125,6 +139,7 @@ const { t } = useI18n();
 const router = useRouter();
 const deviceStore = useDeviceStore();
 
+const loadingDevice = ref(false);
 const deviceInput = ref<DeviceInput>(deviceStore.getDeviceById(props.editingDeviceId) ?? getEmptyDeviceInput());
 const createStep = ref(1);
 const submittingForm = ref(false);
@@ -153,12 +168,15 @@ async function createDevice(): Promise<Device | undefined> {
 
 async function getEditingDevice() {
   try {
+    loadingDevice.value = true;
     const editingDevice = await deviceService.getDevice(props.editingDeviceId);
     deviceInput.value = deviceToInput(editingDevice);
     remoteDataPointTags.value = editingDevice.dataPointTags;
     originalRemoteDataPointTags.value = structuredClone(toRaw(remoteDataPointTags.value));
   } catch (error) {
     handleError(error, t('device.toasts.loading_failed'));
+  } finally {
+    loadingDevice.value = false;
   }
 }
 if (props.editingDeviceId) getEditingDevice();

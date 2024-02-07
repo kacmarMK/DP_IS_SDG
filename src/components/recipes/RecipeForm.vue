@@ -2,15 +2,21 @@
   <div>
     <q-card class="q-pa-lg shadow">
       <div class="row items-center q-col-gutter-lg">
-        <q-input v-model="recipe.name" :label="t('global.name')" class="col-12 col-md-5 col-lg-4" />
+        <q-input
+          v-model="recipe.name"
+          :disable="props.loading"
+          :label="t('global.name')"
+          class="col-12 col-md-5 col-lg-4"
+        />
         <q-select
           ref="typeRef"
           v-model="recipe.deviceType"
+          :disable="props.loading"
           class="col-12 col-md-4 col-lg-3"
           :label="t('device.device_type')"
           :options="Object.values(DeviceTypeEnum)"
         />
-        <q-checkbox v-model="recipe.subRecipe" dense label="Subrecipe" class="col-auto" />
+        <q-checkbox v-model="recipe.subRecipe" :disable="props.loading" dense label="Subrecipe" class="col-auto" />
       </div>
     </q-card>
     <div class="q-mt-auto row q-col-gutter-xl">
@@ -55,6 +61,7 @@
                     color="red"
                     flat
                     round
+                    :disable="props.loading"
                     @click="removeCommandFromRecipe(propsRemove.rowIndex)"
                   />
                 </div>
@@ -68,7 +75,7 @@
         <q-table
           :rows="filteredCommands"
           :columns="availableCommandsColumns"
-          :loading="commands.isLoading"
+          :loading="commandStore.commands.isLoading"
           flat
           :no-data-label="`No commands available for this device type`"
           :loading-label="t('table.loading_label')"
@@ -78,7 +85,15 @@
         >
           <template #body-cell-actions="propsActions">
             <q-td auto-width :props="propsActions">
-              <q-btn dense :icon="mdiPlus" color="primary" flat round @click="addCommandToRecipe(propsActions.row)" />
+              <q-btn
+                :disable="props.loading"
+                dense
+                :icon="mdiPlus"
+                color="primary"
+                flat
+                round
+                @click="addCommandToRecipe(propsActions.row)"
+              />
             </q-td>
           </template>
         </q-table>
@@ -90,28 +105,31 @@
 <script setup lang="ts">
 import { RecipeInput, getEmptyRecipeInput } from '@/models/Recipe';
 import { QTableProps } from 'quasar';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DeviceTypeEnum from '@/models/DeviceType';
 import { Command } from '@/models/Command';
-import CommandService from '@/services/CommandService';
 import { mdiPlus, mdiClose, mdiDrag } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useAsyncData } from '@/composables/useAsyncData';
+import { useCommandStore } from '@/stores/command-store';
 
 const recipe = defineModel<RecipeInput>({ required: true, default: getEmptyRecipeInput() });
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const { t } = useI18n();
+const commandStore = useCommandStore();
+commandStore.commands.refresh();
 
 const localRecipeCommands = ref(recipe.value.commands?.map((c, index) => ({ id: index, value: c })) ?? []);
 
-const commands = reactive(
-  useAsyncData(() => CommandService.getCommands('NONE', 'NONE'), t('command.toasts.load_failed')),
-);
-
 const filteredCommands = computed<Command[]>(() => {
   return (
-    commands.data?.filter((command) => {
+    commandStore.commands.data?.filter((command) => {
       if (!recipe.value.deviceType) {
         return true;
       }

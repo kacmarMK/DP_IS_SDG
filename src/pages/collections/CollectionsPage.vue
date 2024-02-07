@@ -15,9 +15,9 @@
     </template>
     <template #default>
       <q-table
-        :rows="collections.data"
+        :rows="store.collections.data"
         :columns="columns"
-        :loading="collections.isLoading"
+        :loading="store.collections.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -108,8 +108,8 @@
                   <ModulesTable
                     v-model="props.row"
                     class="q-pa-lg"
-                    @update:model-value="updateCollection"
-                    @on-update="collections.refresh"
+                    @update:model-value="store.updateCollection"
+                    @on-update="store.collections.refresh"
                   />
                 </div>
               </q-slide-transition>
@@ -119,26 +119,25 @@
       </q-table>
     </template>
   </PageLayout>
-  <CreateCollectionDialog v-model="createCollectionDialog" @on-create="collections.refresh" />
+  <CreateCollectionDialog v-model="createCollectionDialog" @on-create="store.collections.refresh" />
   <EditCollectionDialog
     v-if="collectionToUpdate"
     v-model="editCollectionDialog"
     :collection="collectionToUpdate"
-    @on-update="collections.refresh"
+    @on-update="store.collections.refresh"
   />
   <DeleteCollectionDialog
     v-if="collectionToUpdate"
     v-model="deleteCollectionDialog"
     :collection="collectionToUpdate"
-    @on-deleted="collections.refresh"
+    @on-deleted="store.collections.refresh"
   />
 </template>
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Collection } from '@/models/Collection';
-import { computed, reactive, ref } from 'vue';
-import CollectionService from '@/services/CollectionService';
+import { computed, ref } from 'vue';
 import CreateCollectionDialog from '@/components/collections/CreateCollectionDialog.vue';
 import EditCollectionDialog from '@/components/collections/EditCollectionDialog.vue';
 import ModulesTable from '@/components/modules/ModulesTable.vue';
@@ -155,21 +154,13 @@ import {
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
-import { useAsyncData } from '@/composables/useAsyncData';
+import { useCollectionStore } from '@/stores/collection-store';
 
 const { t } = useI18n();
 
 const authStore = useAuthStore();
-const collections = reactive(
-  useAsyncData(() => CollectionService.getCollections(), t('collection.toasts.load_failed')),
-);
-
-function updateCollection(collection: Collection) {
-  if (!collections.data) return;
-  const index = collections.data.findIndex((c) => c.uid === collection.uid);
-  if (index === -1) return;
-  collections.data[index] = collection;
-}
+const store = useCollectionStore();
+store.collections.refresh();
 
 const createCollectionDialog = ref(false);
 const deleteCollectionDialog = ref(false);

@@ -1,7 +1,7 @@
 <template>
   <div v-if="props.device" class="column">
     <div class="text-weight-medium text-h6">{{ t('global.info') }}</div>
-    <div class="q-mt-sm q-gutter-y-xs column justify-between no-wrap">
+    <div class="q-mt-sm q-gutter-y-sm column justify-between no-wrap">
       <div class="row">
         <div class="col-5 text-grey-color">{{ t('global.name') }}</div>
         <div class="col-7">{{ props.device.name }}</div>

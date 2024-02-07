@@ -37,9 +37,12 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
+import { useCollectionStore } from '@/stores/collection-store';
+import { Collection } from '@/models/Collection';
 
 const { t } = useI18n();
 const route = useRoute();
+const store = useCollectionStore();
 
 const tickedNodes = ref<string[]>();
 const dataPointTagTree = ref<DataPointTagNode>();
@@ -47,7 +50,15 @@ const dataPointTagTree = ref<DataPointTagNode>();
 const { refresh } = useAsyncData(getCollection, t('collection.toasts.load_failed'));
 
 async function getCollection() {
-  const collection = await CollectionService.getCollection(route.params.id.toString());
+  let collection = store.getModuleById(route.params.id.toString());
+  if (collection) setTree(collection);
+
+  collection = await CollectionService.getCollection(route.params.id.toString());
+  setTree(collection);
+  return collection;
+}
+
+function setTree(collection: Collection) {
   dataPointTagTree.value = collectionToDataPointTagNode(collection);
   tickedNodes.value = extractNodeKeys(dataPointTagTree.value);
 }

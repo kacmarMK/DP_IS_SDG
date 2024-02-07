@@ -1,9 +1,9 @@
 <template>
-  <PageLayout :title="t('job.job_history')">
+  <PageLayout :title="t('job.label', 2)">
     <q-table
-      :rows="jobs.data"
+      :rows="store.jobs.data"
       :columns="columns"
-      :loading="jobs.isLoading"
+      :loading="store.jobs.isLoading"
       flat
       :rows-per-page-options="[10, 20, 50]"
       class="shadow"
@@ -41,28 +41,18 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
-import { computed, reactive } from 'vue';
-import deviceService from '@/services/DeviceService';
+import { computed } from 'vue';
 import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
-import { useAsyncData } from '@/composables/useAsyncData';
+import { useJobStore } from '@/stores/job-store';
 
 const { t } = useI18n();
 
-const jobs = reactive(useAsyncData(getJobs, t('job.toasts.load_failed')));
-
-async function getJobs(): Promise<Job[]> {
-  const devices = await deviceService.getDevices();
-  return devices.flatMap((device) =>
-    device.jobs.map((job) => ({
-      ...job,
-      deviceName: device.name,
-    })),
-  );
-}
+const store = useJobStore();
+store.jobs.refresh();
 
 const columns = computed<QTableProps['columns']>(() => [
   {
