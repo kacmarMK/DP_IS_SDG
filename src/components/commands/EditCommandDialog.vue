@@ -7,7 +7,7 @@
   >
     <template #title>{{ t('command.edit_command') }}</template>
     <template #default>
-      <command-form v-model="commandInput" />
+      <CommandForm ref="commandForm" v-model="commandInput" />
     </template>
   </dialog-common>
 </template>
@@ -38,11 +38,15 @@ const commandClone = (command: Command) => structuredClone(toRaw(command));
 
 const updatingCommand = ref(false);
 const commandInput = ref<CommandInput>(commandClone(props.command));
+const commandForm = ref();
 
 async function updateCommand() {
+  if (!commandForm.value?.validate()) {
+    return;
+  }
+
   try {
     updatingCommand.value = true;
-
     const updateCommand = commandInput.value;
 
     if (updateCommand.deviceType === props.command.deviceType) {
