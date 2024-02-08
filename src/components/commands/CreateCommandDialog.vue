@@ -7,7 +7,7 @@
   >
     <template #title>{{ t('command.create_command') }}</template>
     <template #default>
-      <command-form v-model="command" />
+      <CommandForm ref="commandForm" v-model="command" />
     </template>
   </dialog-common>
 </template>
@@ -19,7 +19,7 @@ import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useI18n } from 'vue-i18n';
 import DialogCommon from '@/components/core/DialogCommon.vue';
-import CommandForm from './CommandForm.vue';
+import CommandForm from '@/components/commands/CommandForm.vue';
 import { CommandInput } from '@/models/Command';
 
 const isDialogOpen = defineModel<boolean>();
@@ -35,8 +35,13 @@ const getDefaultCommand = (): CommandInput => ({
 
 const creatingCommand = ref(false);
 const command = ref<CommandInput>(getDefaultCommand());
+const commandForm = ref();
 
 async function createCommand() {
+  if (!commandForm.value?.validate()) {
+    return;
+  }
+
   try {
     creatingCommand.value = true;
     await CommandService.createCommand(command.value);

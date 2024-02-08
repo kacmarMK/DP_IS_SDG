@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="q-gutter-y-md">
-      <q-input v-model="command.name" autofocus :label="t('global.name')" />
+      <q-input ref="nameRef" v-model="command.name" :rules="nameRules" autofocus :label="t('global.name')" />
       <q-select
+        ref="deviceTypeRef"
         v-model="command.deviceType"
         :label="t('device.device_type')"
         :options="Object.values(DeviceTypeEnum)"
+        :rules="deviceTypeRules"
         map-options
       />
       <div class="text-parameters">{{ t('command.parameters') }}</div>
@@ -19,7 +21,15 @@
         <div v-for="(parameter, index) in localParams" :key="parameter.id">
           <div class="command-container bg-white sortable-drag">
             <q-icon class="handle drag-icon q-mr-md q-ml-sm col-auto" :name="mdiDrag" size="28px" />
-            <q-input v-model="parameter.value" :placeholder="t('global.value')" borderless class="col" />
+            <div>
+              <q-input
+                v-model="parameter.value"
+                type="number"
+                borderless
+                :placeholder="t('global.value')"
+                class="col"
+              />
+            </div>
             <q-btn
               class="q-mr-md q-ml-md col-auto"
               rounded
@@ -56,6 +66,7 @@ import { useI18n } from 'vue-i18n';
 import DeviceTypeEnum from '@/models/DeviceType';
 import { mdiPlusCircle, mdiDrag, mdiClose } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
+import { isFormValid } from '@/utils/form-validation';
 
 const command = defineModel<CommandInput>({ required: true });
 
@@ -72,6 +83,17 @@ const removeParameter = (index: number) => {
   localParams.value.splice(index, 1);
 };
 
+const nameRef = ref();
+const deviceTypeRef = ref();
+
+const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const deviceTypeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+
+function validate() {
+  const refs = [nameRef.value, deviceTypeRef.value];
+  return isFormValid(refs);
+}
+
 watch(
   localParams,
   (newParams) => {
@@ -79,6 +101,10 @@ watch(
   },
   { deep: true },
 );
+
+defineExpose({
+  validate,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -89,6 +115,7 @@ watch(
 
 .command-container {
   display: flex;
+  align-items: center;
   border: 1px solid #ccc;
   align-items: center;
   margin-bottom: -1px;

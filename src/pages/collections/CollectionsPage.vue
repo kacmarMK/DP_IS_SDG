@@ -104,7 +104,7 @@
           <q-tr class="bg-grey-1 no-height" :props="props">
             <q-td colspan="100%" class="no-height" no-hover>
               <q-slide-transition :duration="250">
-                <div v-show="props.expand">
+                <div v-if="props.expand">
                   <ModulesTable
                     v-model="props.row"
                     class="q-pa-lg"

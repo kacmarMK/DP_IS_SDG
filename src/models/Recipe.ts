@@ -13,6 +13,7 @@ interface Recipe {
 }
 
 interface RecipeInput {
+  id?: string;
   name: string;
   commands: Array<Command>;
   subRecipes?: Array<Recipe>;
