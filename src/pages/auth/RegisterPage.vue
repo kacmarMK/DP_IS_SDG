@@ -1,78 +1,72 @@
 <template>
-  <q-layout>
-    <q-page-container class="bg-img">
-      <q-page class="flex flex-center">
-        <div class="auth-bg fullscreen">
-          <div class="auth-container shadow">
-            <h1>{{ t('auth.register.label') }}</h1>
-            <div class="q-mt-md">
-              <q-form>
-                <q-input
-                  ref="nicknameRef"
-                  v-model="userRegister.name"
-                  :label="t('account.username')"
-                  type="text"
-                  lazy-rules
-                  :rules="nameRules"
-                >
-                  <template #prepend>
-                    <q-icon :name="mdiAccount" />
-                  </template>
-                </q-input>
-                <q-input
-                  ref="mailRef"
-                  v-model="userRegister.mail"
-                  :label="t('account.email')"
-                  type="email"
-                  lazy-rules
-                  :rules="mailRules"
-                >
-                  <template #prepend>
-                    <q-icon :name="mdiEmail" />
-                  </template>
-                </q-input>
-                <q-input
-                  ref="passwordRef"
-                  v-model="userRegister.password"
-                  :label="t('account.password')"
-                  :type="isPwd ? 'password' : 'text'"
-                  lazy-rules
-                  :rules="passwordRules"
-                >
-                  <template #prepend>
-                    <q-icon :name="mdiLock" />
-                  </template>
-                  <template #append>
-                    <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
-                  </template>
-                </q-input>
-                <q-btn
-                  class="q-my-md full-width"
-                  color="primary"
-                  :label="t('auth.register.register_btn')"
-                  type="submit"
-                  size="1rem"
-                  no-caps
-                  unelevated
-                  :loading="isSubmitting"
-                  @click.prevent="register"
-                />
-              </q-form>
-              <div class="column items-center q-my-lg links">
-                <div class="q-mb-md">
-                  <span>{{ t('auth.register.have_account') }}</span>
-                  <router-link to="/login" class="q-ml-sm">
-                    {{ t('auth.register.login') }}
-                  </router-link>
-                </div>
-                <language-select />
-              </div>
-            </div>
+  <div class="auth-bg">
+    <div class="auth-container shadow">
+      <h1>{{ t('auth.register.label') }}</h1>
+      <div class="q-mt-md">
+        <q-form>
+          <q-input
+            ref="nicknameRef"
+            v-model="userRegister.name"
+            :label="t('account.username')"
+            type="text"
+            lazy-rules
+            :rules="nameRules"
+          >
+            <template #prepend>
+              <q-icon :name="mdiAccount" />
+            </template>
+          </q-input>
+          <q-input
+            ref="mailRef"
+            v-model="userRegister.mail"
+            :label="t('account.email')"
+            type="email"
+            lazy-rules
+            :rules="mailRules"
+          >
+            <template #prepend>
+              <q-icon :name="mdiEmail" />
+            </template>
+          </q-input>
+          <q-input
+            ref="passwordRef"
+            v-model="userRegister.password"
+            :label="t('account.password')"
+            :type="isPwd ? 'password' : 'text'"
+            lazy-rules
+            :rules="passwordRules"
+          >
+            <template #prepend>
+              <q-icon :name="mdiLock" />
+            </template>
+            <template #append>
+              <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
+            </template>
+          </q-input>
+          <q-btn
+            class="q-my-md full-width"
+            color="primary"
+            :label="t('auth.register.register_btn')"
+            type="submit"
+            size="1rem"
+            no-caps
+            unelevated
+            :loading="isSubmitting"
+            @click.prevent="register"
+          />
+        </q-form>
+        <div class="column items-center q-my-lg links">
+          <div class="q-mb-md">
+            <span>{{ t('auth.register.have_account') }}</span>
+            <router-link to="/login" class="q-ml-sm">
+              {{ t('auth.register.login') }}
+            </router-link>
           </div>
+          <language-select />
         </div>
-      </q-page>
-    </q-page-container>
-  </q-layout>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

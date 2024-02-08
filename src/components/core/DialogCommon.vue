@@ -52,10 +52,8 @@ const emit = defineEmits(['onSubmit']);
 const { t } = useI18n();
 const $q = useQuasar();
 
-const dialogStyle = computed(() => {
-  return {
-    minWidth: $q.screen.gt.sm ? props.minWidth : undefined,
-    width: $q.screen.gt.sm ? undefined : '100%',
-  };
-});
+const dialogStyle = computed(() => ({
+  minWidth: $q.screen.gt.sm ? props.minWidth : undefined,
+  width: !$q.screen.gt.sm ? '100%' : undefined,
+}));
 </script>
