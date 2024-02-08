@@ -5,7 +5,7 @@
         <div class="auth-bg fullscreen">
           <div class="auth-container shadow">
             <h1>{{ t('auth.login.label') }}</h1>
-            <div class="q-mt-md">
+            <div class="q-mt-lg">
               <q-form>
                 <q-input
                   ref="nameRef"
@@ -14,7 +14,11 @@
                   type="text"
                   lazy-rules
                   :rules="nameRules"
-                />
+                >
+                  <template #prepend>
+                    <q-icon :name="mdiAccount" />
+                  </template>
+                </q-input>
                 <q-input
                   ref="passwordRef"
                   v-model="userLogin.password"
@@ -23,6 +27,9 @@
                   lazy-rules
                   :rules="passwordRules"
                 >
+                  <template #prepend>
+                    <q-icon :name="mdiLock" />
+                  </template>
                   <template #append>
                     <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
                   </template>
@@ -73,7 +80,7 @@ import { useAuthStore } from '@/stores/auth-store';
 import { isFormValid } from '@/utils/form-validation';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
-import { mdiEye, mdiEyeOff } from '@quasar/extras/mdi-v6';
+import { mdiAccount, mdiEye, mdiEyeOff, mdiLock } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 

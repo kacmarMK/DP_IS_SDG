@@ -1,23 +1,17 @@
 <template>
-  <div class="data-point-container q-my-md">
+  <div class="data-point-container q-my-md shadow">
     <div class="row items-center justify-end">
       <q-btn flat round color="grey-color" :icon="mdiTrashCanOutline" dense @click="emit('remove')" />
     </div>
-    <div class="row q-col-gutter-lg">
+    <div class="row q-col-gutter-y-sm q-col-gutter-x-xl">
       <q-input
         ref="dataTagNameRef"
         v-model="dataPointTag.name"
         :rules="nameRules"
-        class="col-12 col-md-6"
+        class="col-12"
         :label="t('global.name')"
       />
-      <q-input
-        ref="tagRef"
-        v-model="dataPointTag.tag"
-        :rules="tagRules"
-        class="col-12 col-md-6"
-        :label="t('device.tag')"
-      />
+      <q-input ref="tagRef" v-model="dataPointTag.tag" :rules="tagRules" class="col-12" :label="t('device.tag')" />
       <q-input
         ref="unitRef"
         v-model="dataPointTag.unit"
@@ -30,7 +24,7 @@
         v-model.number="dataPointTag.decimal"
         type="number"
         inputmode="numeric"
-        mask="#"
+        :error="false"
         :rules="decimalRules"
         class="col-12 col-md-6"
         :label="t('device.decimal')"
@@ -82,3 +76,11 @@ defineExpose({
   validate,
 });
 </script>
+
+<style lang="scss" scoped>
+.data-point-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 1rem 2.5rem 1.5rem 2.5rem;
+}
+</style>

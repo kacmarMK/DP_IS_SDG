@@ -1,21 +1,21 @@
 <template>
   <div>
     <q-card class="q-pa-lg shadow">
-      <div class="row items-center q-col-gutter-lg">
+      <div class="row items-center q-col-gutter-x-xl q-col-gutter-y-md">
         <q-input
           ref="nameRef"
           v-model="recipe.name"
           :rules="nameRules"
           :disable="props.loading"
           :label="t('global.name')"
-          class="col-12 col-md-5 col-lg-4"
+          class="col-12 col-lg-6"
         />
         <q-select
           ref="deviceTypeRef"
           v-model="recipe.deviceType"
           :rules="deviceTypeRules"
           :disable="props.loading"
-          class="col-12 col-md-4 col-lg-3"
+          class="col-12 col-lg-6"
           :label="t('device.device_type')"
           :options="Object.values(DeviceTypeEnum)"
         />
@@ -31,7 +31,7 @@
     <q-btn-toggle
       v-model="selectedStepType"
       spread
-      class="q-my-lg shadow custom-toggle"
+      class="q-mb-lg q-mt-xl shadow custom-toggle"
       no-caps
       rounded
       unelevated

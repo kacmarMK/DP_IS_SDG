@@ -1,17 +1,27 @@
 <template>
-  <q-card class="q-pa-sm q-pa-md-lg shadow">
+  <q-card class="q-pa-sm shadow">
     <q-stepper ref="stepper" v-model="createStep" animated vertical header-nav keep-alive>
       <q-step :name="1" :title="t('device.device_info')" :icon="mdiPencil">
-        <q-form>
-          <div class="q-pa-sm row q-col-gutter-y-lg q-col-gutter-x-xl">
+        <q-form class="q-py-md q-px-sm">
+          <div class="row q-col-gutter-y-sm q-col-gutter-x-lg">
             <q-input
               ref="nameRef"
               v-model="deviceInput.name"
               :disable="loadingDevice"
               :rules="nameRules"
-              class="col-12 col-md-6"
+              class="col-12"
               :label="t('global.name')"
             />
+            <q-select
+              ref="typeRef"
+              v-model="deviceInput.type"
+              :disable="loadingDevice"
+              :rules="typeRules"
+              class="col-12"
+              :label="t('device.device_type')"
+              :options="Object.values(DeviceTypeEnum)"
+            >
+            </q-select>
             <q-input
               ref="macRef"
               v-model="deviceInput.mac"
@@ -20,19 +30,10 @@
               class="col-12 col-md-6"
               :label="t('device.mac_address')"
             />
-            <q-select
-              ref="typeRef"
-              v-model="deviceInput.type"
-              :disable="loadingDevice"
-              :rules="typeRules"
-              class="col-12 col-md-6"
-              :label="t('device.device_type')"
-              :options="Object.values(DeviceTypeEnum)"
-            >
-            </q-select>
             <q-input
               ref="initApiKeyRef"
               v-model="deviceInput.initApiKey"
+              :error="false"
               :disable="loadingDevice"
               class="col-12 col-md-6"
               :label="t('device.api_key')"
@@ -40,6 +41,7 @@
             <q-input
               ref="firmwareRef"
               v-model="deviceInput.firmware"
+              :error="false"
               :disable="loadingDevice"
               class="col-12 col-md-6"
               :label="t('device.firmware')"
@@ -47,11 +49,12 @@
             <q-input
               v-model="deviceInput.version"
               :disable="loadingDevice"
+              :error="false"
               class="col-12 col-md-6"
               :label="t('device.version')"
             />
           </div>
-          <q-card-actions align="left" class="text-primary q-mt-sm">
+          <q-card-actions align="left" class="text-primary q-mt-sm q-px-none">
             <q-btn
               unelevated
               color="primary"
@@ -296,11 +299,3 @@ const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.r
 const macRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const typeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 </script>
-
-<style lang="scss" scoped>
-.data-point-container {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 1rem 2.5rem 4rem 2.5rem;
-}
-</style>

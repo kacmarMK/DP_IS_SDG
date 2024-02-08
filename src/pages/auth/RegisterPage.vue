@@ -14,7 +14,11 @@
                   type="text"
                   lazy-rules
                   :rules="nameRules"
-                />
+                >
+                  <template #prepend>
+                    <q-icon :name="mdiAccount" />
+                  </template>
+                </q-input>
                 <q-input
                   ref="mailRef"
                   v-model="userRegister.mail"
@@ -22,7 +26,11 @@
                   type="email"
                   lazy-rules
                   :rules="mailRules"
-                />
+                >
+                  <template #prepend>
+                    <q-icon :name="mdiEmail" />
+                  </template>
+                </q-input>
                 <q-input
                   ref="passwordRef"
                   v-model="userRegister.password"
@@ -31,6 +39,9 @@
                   lazy-rules
                   :rules="passwordRules"
                 >
+                  <template #prepend>
+                    <q-icon :name="mdiLock" />
+                  </template>
                   <template #append>
                     <q-icon :name="isPwd ? mdiEyeOff : mdiEye" class="cursor-pointer" @click="isPwd = !isPwd" />
                   </template>
@@ -76,7 +87,7 @@ import { isFormValid } from '@/utils/form-validation';
 import { Role } from '@/models/Role';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
-import { mdiEye, mdiEyeOff } from '@quasar/extras/mdi-v6';
+import { mdiAccount, mdiEmail, mdiEye, mdiEyeOff, mdiLock } from '@quasar/extras/mdi-v6';
 import { useAuthStore } from '@/stores/auth-store';
 
 const { t } = useI18n();
