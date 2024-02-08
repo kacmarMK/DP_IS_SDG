@@ -33,20 +33,13 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isLoadingScenarios.value = false;
     }
   }
-
-  const createDialog = ref(false);
   const scenarioFrame = ref<ScenarioFrame>({
     rules: '',
     name: '',
     devices: [],
     deactivated: false,
     isAlreadyTriggered: false,
-    mutedUntil: undefined,
-    forTimeCountingActivatedAt: undefined,
-    messageAndTriggerTime: undefined,
-    messageMultiplicityCounter: undefined,
-    deviceAndTag: undefined,
-    jobAndTriggerTime: undefined,
+    mutedUntil: 0,
     activeAtDay: [],
     activeAtHour: [],
   });
@@ -56,8 +49,6 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isCreatingScenario.value = true;
       await ScenarioService.createScenario(scenarioFrame.value);
       toast.success(t('scenario.toasts.create_success'));
-      getScenarios();
-      createDialog.value = false;
     } catch (error) {
       console.log(error);
       toast.error(t('scenario.toasts.create_failed'));
@@ -69,6 +60,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
   return {
     scenarios,
     isLoadingScenarios,
+    scenarioFrame,
     getScenarios,
     createScenario,
     getActiveScenarios,

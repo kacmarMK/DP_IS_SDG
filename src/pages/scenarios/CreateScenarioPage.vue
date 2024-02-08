@@ -1,12 +1,11 @@
 <template>
   <PageLayout :title="t('global.create')" :previous-title="t('scenario.label', 2)" previous-route="/scenarios">
-    <!--
-    TODO
-  -->
+    <ScenarioForm />
   </PageLayout>
 </template>
 
 <script setup lang="ts">
+import ScenarioForm from '@/components/scenarios/ScenarioForm.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useI18n } from 'vue-i18n';
 

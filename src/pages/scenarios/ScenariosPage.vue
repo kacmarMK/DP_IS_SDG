@@ -93,8 +93,8 @@ const store = useScenarioStore();
 store.getScenarios();
 
 const translatedOptions = computed(() => [
-  { value: 'all', label: t('scenario.options.option1') },
-  { value: 'active', label: t('scenario.options.option2') },
+  { value: 'all', label: t('scenario.type_options.option1') },
+  { value: 'active', label: t('scenario.type_options.option2') },
 ]);
 const selectedOption = ref('all');
 

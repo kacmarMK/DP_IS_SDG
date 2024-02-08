@@ -316,9 +316,23 @@
       "delete_success": "Scenár bol vymazaný!",
       "delete_failed": "Vymazanie scenáru zlyhalo!"
     },
-    "options": {
+    "type_options": {
       "option1": "Všetky",
       "option2": "Aktívne"
+    },
+    "day_options": {
+      "option1": "Pondelok",
+      "option2": "Utorok",
+      "option3": "Streda",
+      "option4": "Štvrtok",
+      "option5": "Piatok",
+      "option6": "Sobota",
+      "option7": "Nedeľa"
+    },
+    "form": {
+      "muted_until": "Stlmenie na (minúty):",
+      "scenario_active": "Scenár je deaktivovaný:",
+      "scenario_triggered": "Scenár bol už spustený:"
     }
   }
 }
