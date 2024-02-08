@@ -1,73 +1,76 @@
 <template>
-  <div class="q-pa-md" style="max-width: 600px">
-    <q-form class="q-gutter-md" @submit.prevent="onSubmit" @reset="onReset">
-      <q-card class="q-pa-lg">
-        <q-input
-          v-model="scenarioStore.scenarioFrame.name"
-          filled
-          :label="t('global.name')"
-          lazy-rules
-          :rules="[(val: string | any[]) => (val && val.length > 0) || t('global.rules.required')]"
-        />
+  <div class="q-pa-md">
+    <q-form @submit.prevent="onSubmit" @reset="onReset">
+      <div class="row items-center q-gutter-lg">
+        <q-card class="q-pa-lg">
+          <div>
+            <q-option-group
+              v-model="scenarioStore.scenarioFrame.activeAtDay"
+              :options="dayOptions"
+              type="checkbox"
+              left-label
+            />
+          </div>
+        </q-card>
 
-        <div class="q-pb-md" style="max-width: 600px">
-          <q-select
-            v-model="devicesFromOptions"
+        <q-card class="q-pa-lg" style="min-width: 800px">
+          <q-input
+            v-model="scenarioStore.scenarioFrame.name"
             filled
-            multiple
-            :options="deviceOptions"
-            :label="t('device.label', 2)"
+            :label="t('global.name')"
+            lazy-rules
+            :rules="[(val: string | any[]) => (val && val.length > 0) || t('global.rules.required')]"
           />
-        </div>
 
-        <q-input
-          v-model.number="scenarioStore.scenarioFrame.mutedUntil"
-          type="number"
-          filled
-          :label="t('scenario.form.muted_until')"
-          style="max-width: 200px"
-        />
-      </q-card>
-      <q-card class="q-pa-lg">
-        <div>
-          <q-checkbox
-            v-model="scenarioStore.scenarioFrame.deactivated"
-            left-label
-            :label="t('scenario.form.scenario_active')"
+          <div class="q-pb-md">
+            <q-select
+              v-model="devicesFromOptions"
+              filled
+              multiple
+              :options="deviceOptions"
+              :label="t('device.label', 2)"
+            />
+          </div>
+
+          <q-input
+            v-model.number="scenarioStore.scenarioFrame.mutedUntil"
+            type="number"
+            filled
+            :label="t('scenario.form.muted_until')"
+            style="max-width: 200px"
           />
-        </div>
-        <div>
-          <q-checkbox
-            v-model="scenarioStore.scenarioFrame.isAlreadyTriggered"
-            left-label
-            :label="t('scenario.form.scenario_triggered')"
-          />
-        </div>
-      </q-card>
-      <q-card class="q-pa-lg">
-        <div>
-          <q-option-group
-            v-model="scenarioStore.scenarioFrame.activeAtDay"
-            :options="dayOptions"
-            type="checkbox"
-            left-label
-          />
-        </div>
-      </q-card>
-      <q-card class="q-pa-lg">
-        <div>
-          <q-option-group
-            v-model="scenarioStore.scenarioFrame.activeAtHour"
-            size="xs"
-            :options="hourOptions"
-            type="checkbox"
-            left-label
-            inline
-            dense
-          />
-        </div>
-      </q-card>
-      <div>
+
+          <div class="q-pt-sm">
+            <q-checkbox
+              v-model="scenarioStore.scenarioFrame.deactivated"
+              left-label
+              :label="t('scenario.form.scenario_active')"
+            />
+            <q-checkbox
+              v-model="scenarioStore.scenarioFrame.isAlreadyTriggered"
+              left-label
+              :label="t('scenario.form.scenario_triggered')"
+              class="q-ml-lg"
+            />
+          </div>
+        </q-card>
+
+        <q-card class="q-pa-lg">
+          <div>
+            <q-option-group
+              v-model="scenarioStore.scenarioFrame.activeAtHour"
+              size="xs"
+              :options="hourOptions"
+              type="checkbox"
+              left-label
+              inline
+              dense
+            />
+          </div>
+        </q-card>
+      </div>
+
+      <div class="q-mt-lg">
         <q-btn :label="t('global.create')" type="submit" color="primary" />
         <q-btn :label="t('global.refresh')" type="reset" color="primary" flat class="q-ml-sm" />
       </div>
@@ -76,10 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ScenarioFrame } from '@/models/Scenario';
 import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { Device } from '@/models/Device';
