@@ -19,6 +19,7 @@
         v-if="deviceStore.devices.data"
         v-model="deviceStore.devices.data"
         :loading="deviceStore.devices.isLoading"
+        :filter="filter"
         class="shadow"
         @on-change="deviceStore.devices.refresh"
       />
