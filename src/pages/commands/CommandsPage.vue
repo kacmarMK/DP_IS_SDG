@@ -1,7 +1,9 @@
 <template>
   <PageLayout :title="t('command.label', 2)">
     <template #actions>
+      <SearchBar v-model="filter" />
       <q-btn
+        v-if="authStore.isAdmin"
         class="shadow"
         color="primary"
         :icon="mdiPlus"
@@ -14,7 +16,7 @@
     </template>
     <template #default>
       <q-table
-        :rows="store.commands.data"
+        :rows="filteredCommands"
         :columns="columns"
         :loading="store.commands.isLoading"
         flat
@@ -34,6 +36,7 @@
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn
+              v-if="authStore.isAdmin"
               :icon="mdiPencil"
               color="grey-color"
               flat
@@ -47,6 +50,7 @@
               </q-tooltip>
             </q-btn>
             <q-btn
+              v-if="authStore.isAdmin"
               :icon="mdiTrashCanOutline"
               color="grey-color"
               flat
@@ -91,10 +95,14 @@ import CreateCommandDialog from '@/components/commands/CreateCommandDialog.vue';
 import EditCommandDialog from '@/components/commands/EditCommandDialog.vue';
 import DeleteCommandDialog from '@/components/commands/DeleteCommandDialog.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
+import SearchBar from '@/components/core/SearchBar.vue';
+import { useAuthStore } from '@/stores/auth-store';
 
 const { t } = useI18n();
 const store = useCommandStore();
 store.commands.refresh();
+
+const authStore = useAuthStore();
 
 const createDialogOpen = ref(false);
 
@@ -103,6 +111,16 @@ const commandToDelete = ref<Command>();
 
 const editDialogOpen = ref(false);
 const commandToEdit = ref<Command>();
+const filter = ref('');
+
+const filteredCommands = computed(() => {
+  if (filter.value === '') {
+    return store.commands.data;
+  }
+  return (
+    store.commands.data?.filter((command) => command.name.toLowerCase().includes(filter.value.toLowerCase())) ?? []
+  );
+});
 
 const columns = computed<QTableProps['columns']>(() => [
   {

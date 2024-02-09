@@ -13,7 +13,9 @@
         <p class="main-text z-index">{{ props.title }}</p>
         <slot name="description" />
         <q-space></q-space>
-        <slot name="actions" />
+        <div class="actions">
+          <slot name="actions" />
+        </div>
       </div>
       <slot />
     </div>
@@ -40,5 +42,12 @@ const props = defineProps({
 <style lang="scss" scoped>
 .z-index {
   z-index: 1001;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 </style>

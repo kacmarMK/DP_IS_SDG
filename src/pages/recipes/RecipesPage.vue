@@ -1,7 +1,9 @@
 <template>
   <PageLayout :title="t('recipe.label', 2)">
     <template #actions>
+      <SearchBar v-model="filter" />
       <q-btn
+        v-if="authStore.isAdmin"
         class="shadow"
         color="primary"
         :icon="mdiPlus"
@@ -14,7 +16,7 @@
     </template>
     <template #default>
       <q-table
-        :rows="store.recipes.data"
+        :rows="filteredRecipes"
         :columns="columns"
         :loading="store.recipes.isLoading"
         flat
@@ -39,12 +41,19 @@
 
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn :to="`/recipes/${props.row.id}/edit`" :icon="mdiPencil" color="grey-color" flat round
+            <q-btn
+              v-if="authStore.isAdmin"
+              :to="`/recipes/${props.row.id}/edit`"
+              :icon="mdiPencil"
+              color="grey-color"
+              flat
+              round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>
             </q-btn>
             <q-btn
+              v-if="authStore.isAdmin"
               :icon="mdiTrashCanOutline"
               color="grey-color"
               flat
@@ -80,13 +89,25 @@ import { useRecipeStore } from '@/stores/recipe-store';
 import { Recipe } from '@/models/Recipe';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
+import SearchBar from '@/components/core/SearchBar.vue';
+import { useAuthStore } from '@/stores/auth-store';
 
 const { t } = useI18n();
 const store = useRecipeStore();
 store.recipes.refresh();
 
+const authStore = useAuthStore();
+
 const deleteDialogOpen = ref(false);
 const recipeToDelete = ref<Recipe>();
+const filter = ref('');
+
+const filteredRecipes = computed(() => {
+  if (filter.value === '') {
+    return store.recipes.data;
+  }
+  return store.recipes.data?.filter((recipe) => recipe.name.toLowerCase().includes(filter.value.toLowerCase())) ?? [];
+});
 
 const columns = computed<QTableProps['columns']>(() => [
   {

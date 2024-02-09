@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-table
-      :rows="devices"
+      :rows="filteredDevices"
       :columns="columns"
       :loading="props.loading"
       flat
@@ -122,6 +122,11 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  filter: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 const emit = defineEmits(['onChange']);
 
@@ -137,6 +142,13 @@ function deviceDeleted() {
 
 const shareDialog = ref(false);
 const deviceToShare = ref<Device>();
+
+const filteredDevices = computed(() => {
+  if (props.filter) {
+    return devices.value.filter((device) => device.name.toLowerCase().includes(props.filter.toLowerCase()));
+  }
+  return devices.value;
+});
 
 async function initExpireTimeWindow(deviceUid: string) {
   try {

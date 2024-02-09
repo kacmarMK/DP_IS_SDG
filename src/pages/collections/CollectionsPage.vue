@@ -1,6 +1,7 @@
 <template>
   <PageLayout :title="t('collection.label', 2)">
     <template #actions>
+      <SearchBar v-model="filter" />
       <q-btn
         v-if="authStore.isAdmin"
         class="shadow"
@@ -15,7 +16,7 @@
     </template>
     <template #default>
       <q-table
-        :rows="store.collections.data"
+        :rows="filteredCollections"
         :columns="columns"
         :loading="store.collections.isLoading"
         flat
@@ -155,6 +156,7 @@ import {
 } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useCollectionStore } from '@/stores/collection-store';
+import SearchBar from '@/components/core/SearchBar.vue';
 
 const { t } = useI18n();
 
@@ -166,6 +168,22 @@ const createCollectionDialog = ref(false);
 const deleteCollectionDialog = ref(false);
 const editCollectionDialog = ref(false);
 const collectionToUpdate = ref<Collection>();
+const filter = ref('');
+
+const filteredCollections = computed(() => {
+  const lowerFilter = filter.value.toLowerCase();
+  return (
+    store.collections.data?.filter(
+      ({ name, modules }) =>
+        name.toLowerCase().includes(lowerFilter) ||
+        modules?.some(
+          ({ name, devices }) =>
+            name.toLowerCase().includes(lowerFilter) ||
+            devices?.some((device) => device.name.toLowerCase().includes(lowerFilter)),
+        ),
+    ) ?? []
+  );
+});
 
 const columns = computed<QTableProps['columns']>(() => [
   {
