@@ -39,6 +39,6 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .z-index {
-  z-index: 2000;
+  z-index: 1001;
 }
 </style>

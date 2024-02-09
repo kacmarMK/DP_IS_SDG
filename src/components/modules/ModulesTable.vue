@@ -105,7 +105,7 @@
           </q-tr>
 
           <q-tr class="bg-grey-1 no-height" :props="props2">
-            <q-td colspan="100%" class="no-height" no-hover>
+            <q-td colspan="100%" class="no-height border-left-primary" no-hover>
               <q-slide-transition :duration="250">
                 <div v-if="props2.expand">
                   <DevicesInModuleTable
@@ -199,5 +199,9 @@ const columns = computed<QTableProps['columns']>(() => [
 .no-height {
   height: 0px;
   padding: 0px;
+}
+
+.border-left-primary {
+  border-left: 2px solid $primary;
 }
 </style>

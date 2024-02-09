@@ -5,15 +5,15 @@
     :previous-title="t('collection.label')"
     previous-route="/collections"
   >
-    <div class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
-      <div class="col-12">
+    <div class="row q-col-gutter-x-lg q-col-gutter-y-xl justify-between">
+      <div class="col-12 col-xl-3">
         <sensor-selection-tree
           v-model:tickedNodes="tickedNodes"
           :data-point-tag-tree="dataPointTagTree"
           class="shadow container q-pa-lg full-height"
         ></sensor-selection-tree>
       </div>
-      <div class="col-12">
+      <div class="col-12 col-xl-9">
         <data-point-chart
           v-model:tickedNodes="tickedNodes"
           :data-point-tags="dataPointTags"
