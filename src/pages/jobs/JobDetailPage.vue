@@ -3,7 +3,7 @@
     <template #description>
       <q-badge class="q-pa-xs q-ml-sm" color="primary">
         <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-        {{ t('job.cycle') }}: {{ job?.data.status.currentCycle ?? 1 }}/{{ job?.data.noOfReps }}
+        {{ t('job.job_cycle') }}: {{ job?.data.status.currentCycle ?? 1 }}/{{ job?.data.noOfReps }}
       </q-badge>
       <job-status-badges v-if="job" class="q-ml-sm" :job="job.data"></job-status-badges>
     </template>
@@ -21,7 +21,7 @@
         :columns="columns"
         :loading="job.isLoading"
         flat
-        :rows-per-page-options="[10, 20, 50]"
+        :rows-per-page-options="[0]"
         class="shadow"
         :no-data-label="t('table.no_data_label')"
         :loading-label="t('table.loading_label')"
@@ -118,33 +118,34 @@ const currentStepCycle = computed(() => {
 });
 
 const steps = computed(() => {
-  if (!job.data || !job.data.commands) return [];
+  if (!job.data || !job.data.commands || job.data.commands.length === 0) return [];
 
-  const groupedCommands: { step: number; name?: string; cycles: number }[] = [];
-  let lastCommandId: string = job.data.commands[0].id;
-  let cycleCount = 0;
+  const groupedCommands = [];
+  let lastCommandId = job.data.commands[0].id;
+  let cycleCount = 1;
+  let step = 1;
 
-  job.data.commands.forEach((command, index) => {
+  for (let i = 1; i < job.data.commands.length; i++) {
+    const command = job.data.commands[i];
     if (command.id !== lastCommandId) {
       groupedCommands.push({
-        step: index - cycleCount + 1,
-        name: job.data?.commands[index - 1].name,
+        step: step,
+        name: job.data.commands[i - 1].name,
         cycles: cycleCount,
       });
+      step += cycleCount;
       lastCommandId = command.id;
       cycleCount = 1;
     } else {
       cycleCount++;
     }
-  });
-
-  if (job.data.commands.length > 0 && cycleCount > 0) {
-    groupedCommands.push({
-      step: job.data.commands.length,
-      name: job.data.commands[job.data.commands.length - 1].name,
-      cycles: cycleCount,
-    });
   }
+
+  groupedCommands.push({
+    step: step,
+    name: job.data.commands[job.data.commands.length - 1].name,
+    cycles: cycleCount,
+  });
 
   return groupedCommands;
 });

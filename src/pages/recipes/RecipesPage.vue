@@ -107,6 +107,7 @@ const columns = computed<QTableProps['columns']>(() => [
     name: 'subrecipe',
     label: t('recipe.subrecipe'),
     field: 'subRecipe',
+    format: (value) => (value ? t('global.yes') : t('global.no')),
     sortable: true,
     align: 'left',
   },
