@@ -44,18 +44,9 @@
             {{ message }}
           </div>
         </template>
-        <!--<template #body-cell-actions="props">
+        <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn
-              :icon="mdiPencil"
-              color="grey-color"
-              flat
-              round
-              @click.stop="
-                store.editDialog = true;
-                //store.editingCommand = props.row;
-                store.editRecipeId = props.row.value?.id;
-              "
+            <q-btn :icon="mdiPencil" color="grey-color" flat round
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>
@@ -66,18 +57,24 @@
               flat
               round
               @click.stop="
-                store.deleteDialog = true;
-                store.deletingRecipe = props.row;
+                isDeleteDialogOpened = true;
+                deletedScenario = props.row;
               "
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.delete') }}
               </q-tooltip>
             </q-btn>
           </q-td>
-        </template>-->
+        </template>
       </q-table>
     </template>
   </PageLayout>
+  <DeleteScenarioDialog
+    v-if="deletedScenario"
+    v-model="isDeleteDialogOpened"
+    :scenario="deletedScenario"
+    @on-delete="handleToggleClick"
+  />
 </template>
 
 <script setup lang="ts">
@@ -86,6 +83,8 @@ import { QTableProps } from 'quasar';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { Scenario } from '@/models/Scenario';
+import DeleteScenarioDialog from '@/components/scenarios/DeleteScenarioDialog.vue';
 import { mdiPlus, mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
@@ -96,13 +95,16 @@ const translatedOptions = computed(() => [
   { value: 'all', label: t('scenario.type_options.option1') },
   { value: 'active', label: t('scenario.type_options.option2') },
 ]);
-const selectedOption = ref('all');
 
-function handleToggleClick() {
+const isDeleteDialogOpened = ref(false);
+const selectedOption = ref('all');
+const deletedScenario = ref<Scenario>();
+
+async function handleToggleClick() {
   if (selectedOption.value == 'all') {
-    store.getScenarios();
+    await store.getScenarios();
   } else {
-    store.getActiveScenarios();
+    await store.getActiveScenarios();
   }
 }
 
@@ -113,6 +115,13 @@ const columns = computed<QTableProps['columns']>(() => [
     field: 'name',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'actions',
+    label: '',
+    field: '',
+    align: 'center',
+    sortable: false,
   },
 ]);
 </script>

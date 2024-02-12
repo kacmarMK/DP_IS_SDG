@@ -13,7 +13,7 @@
           </div>
         </q-card>
 
-        <q-card class="q-pa-lg" style="min-width: 800px">
+        <q-card class="q-pa-lg">
           <q-input
             v-model="scenarioStore.scenarioFrame.name"
             filled
@@ -33,7 +33,7 @@
           </div>
 
           <q-input
-            v-model.number="scenarioStore.scenarioFrame.mutedUntil"
+            v-model.number="validatedMutedUntil"
             type="number"
             filled
             :label="t('scenario.form.muted_until')"
@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
@@ -91,6 +91,30 @@ const scenarioStore = useScenarioStore();
 deviceStore.devices.refresh();
 
 const deviceOptions = getDeviceOptions();
+
+const validatedMutedUntil = computed({
+  get: () => scenarioStore.scenarioFrame.mutedUntil,
+  set: (value) => {
+    if (typeof value !== 'undefined' && value < 0) {
+      // If negative number, set it to 0
+      scenarioStore.scenarioFrame.mutedUntil = 0;
+    } else {
+      // Otherwise, set to the provided value
+      scenarioStore.scenarioFrame.mutedUntil = value;
+    }
+  },
+});
+
+// Watch for changes in the input value and validate it
+watch(
+  () => scenarioStore.scenarioFrame.mutedUntil,
+  (newValue) => {
+    if (typeof newValue !== 'undefined' && newValue < 0) {
+      // If negative number, set it to 0
+      scenarioStore.scenarioFrame.mutedUntil = 0;
+    }
+  },
+);
 
 const dayOptions = computed(() => [
   { label: t('scenario.day_options.option1'), value: 1 },
@@ -129,7 +153,7 @@ const hourOptions = [
   { label: '23', value: 23 },
 ];
 
-const devicesFromOptions = ref([]);
+let devicesFromOptions = ref([]);
 
 function getDeviceOptions() {
   return deviceStore.devices.data?.map((device) => ({
@@ -153,7 +177,14 @@ function onSubmit() {
 }
 
 function onReset() {
-  //TODO
+  scenarioStore.scenarioFrame.rules = ' ';
+  scenarioStore.scenarioFrame.name = '';
+  devicesFromOptions = ref([]);
+  scenarioStore.scenarioFrame.deactivated = false;
+  scenarioStore.scenarioFrame.isAlreadyTriggered = false;
+  scenarioStore.scenarioFrame.mutedUntil = 0;
+  scenarioStore.scenarioFrame.activeAtDay = [];
+  scenarioStore.scenarioFrame.activeAtHour = [];
 }
 </script>
 
