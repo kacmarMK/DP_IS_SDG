@@ -10,6 +10,8 @@ export const useScenarioStore = defineStore('scenarios', () => {
   const scenarios = ref<Scenario[]>([]);
   const isLoadingScenarios = ref(false);
 
+  const mode = 'create';
+
   async function getScenarios() {
     try {
       isLoadingScenarios.value = true;
@@ -65,5 +67,6 @@ export const useScenarioStore = defineStore('scenarios', () => {
     getScenarios,
     createScenario,
     getActiveScenarios,
+    mode,
   };
 });

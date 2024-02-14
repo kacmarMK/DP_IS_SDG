@@ -25,17 +25,17 @@
         :rows-per-page-label="t('table.rows_per_page_label')"
       >
         <template #top>
-          <div class="q-gutter-md">
-            <div>
-              <q-btn-toggle
-                v-model="selectedOption"
-                push
-                glossy
-                toggle-color="primary"
-                :options="translatedOptions"
-                @click="handleToggleClick"
-              />
-            </div>
+          <div class="q-mx-auto">
+            <q-btn-toggle
+              v-model="selectedOption"
+              push
+              glossy
+              spread
+              toggle-color="primary"
+              :options="translatedOptions"
+              style="width: 300px"
+              @click="handleToggleClick"
+            />
           </div>
         </template>
         <template #no-data="{ message }">
@@ -46,11 +46,18 @@
         </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
-            <q-btn :icon="mdiPencil" color="grey-color" flat round
+            <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/scenarios/${props.row.id}`"
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                {{ t('global.details') }}
+              </q-tooltip>
+            </q-btn>
+            <!--
+            <q-btn :icon="mdiPencil" color="grey-color" flat round :to="`/scenarios/${props.row.id}/edit`"
               ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
                 {{ t('global.edit') }}
               </q-tooltip>
             </q-btn>
+            -->
             <q-btn
               :icon="mdiTrashCanOutline"
               color="grey-color"
@@ -85,7 +92,7 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Scenario } from '@/models/Scenario';
 import DeleteScenarioDialog from '@/components/scenarios/DeleteScenarioDialog.vue';
-import { mdiPlus, mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import { mdiOpenInNew, mdiPlus, mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const store = useScenarioStore();

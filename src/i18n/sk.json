@@ -313,6 +313,8 @@
     "label": "Scenár | Scenáre",
     "all": "Všetky",
     "active": "Aktívne",
+    "days_active": "Aktívne v dňoch",
+    "hours_active": "Aktívne v hodinách",
     "create_scenario": "Vytvoriť scenár",
     "delete_scenario": "Vymazať scenár",
     "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",

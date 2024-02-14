@@ -1,22 +1,25 @@
 <template>
   <div class="q-pa-md">
     <q-form @submit.prevent="onSubmit" @reset="onReset">
-      <div class="row items-center q-gutter-lg">
-        <q-card class="q-pa-lg">
+      <div class="row q-col-gutter-x-xs q-col-gutter-y-sm justify-between q-mx-xl">
+        <q-card class="q-pa-sm q-mt-md">
           <div>
+            <div class="text-weight-medium text-h6 row justify-center">{{ t('scenario.days_active') }}</div>
             <q-option-group
               v-model="scenarioStore.scenarioFrame.activeAtDay"
               :options="dayOptions"
+              :disabled="isReadonly"
               type="checkbox"
-              left-label
+              class="right-checkboxes q-pa-md q-mt-sm"
             />
           </div>
         </q-card>
 
-        <q-card class="q-pa-lg">
+        <q-card class="q-pa-lg q-mt-md">
           <q-input
             v-model="scenarioStore.scenarioFrame.name"
             filled
+            :readonly="isReadonly"
             :label="t('global.name')"
             lazy-rules
             :rules="[(val: string | any[]) => (val && val.length > 0) || t('global.rules.required')]"
@@ -27,70 +30,149 @@
               v-model="devicesFromOptions"
               filled
               multiple
+              :readonly="isReadonly"
               :options="deviceOptions"
               :label="t('device.label', 2)"
             />
           </div>
 
-          <q-input
-            v-model.number="validatedMutedUntil"
-            type="number"
-            filled
-            :label="t('scenario.form.muted_until')"
-            style="max-width: 200px"
-          />
-
-          <div class="q-pt-sm">
+          <div class="text-weight-medium text-h6 row justify-center">
+            <q-input
+              v-model.number="validatedMutedUntil"
+              type="number"
+              :readonly="isReadonly"
+              filled
+              :label="t('scenario.form.muted_until')"
+              style="max-width: 200px"
+            />
+          </div>
+          <div class="q-pt-xl">
             <q-checkbox
               v-model="scenarioStore.scenarioFrame.deactivated"
               left-label
+              :disabled="isReadonly"
               :label="t('scenario.form.scenario_active')"
             />
             <q-checkbox
               v-model="scenarioStore.scenarioFrame.isAlreadyTriggered"
               left-label
+              :disabled="isReadonly"
               :label="t('scenario.form.scenario_triggered')"
               class="q-ml-lg"
             />
           </div>
         </q-card>
 
-        <q-card class="q-pa-lg">
-          <div>
+        <q-card class="q-px-md q-mt-md">
+          <div style="max-width: 150px">
+            <div class="text-weight-medium text-h6 row justify-center">{{ t('scenario.hours_active') }}</div>
             <q-option-group
               v-model="scenarioStore.scenarioFrame.activeAtHour"
               size="xs"
               :options="hourOptions"
               type="checkbox"
-              left-label
+              right-label
               inline
+              :disabled="isReadonly"
               dense
+              class="right-checkboxes q-pa-lg"
             />
           </div>
         </q-card>
       </div>
+      <div class="row q-col-gutter-x-xs q-col-gutter-y-sm">
+        <q-card class="q-my-lg full-width">
+          <div></div>
+        </q-card>
+      </div>
 
-      <div class="q-mt-lg">
-        <q-btn :label="t('global.create')" type="submit" color="primary" />
-        <q-btn :label="t('global.refresh')" type="reset" color="primary" flat class="q-ml-sm" />
+      <div class="q-mt-lg row justify-center">
+        <q-btn
+          v-if="showCreateButton"
+          :label="buttonLabel"
+          type="submit"
+          color="primary"
+          size="lg"
+          style="min-width: 150px"
+        />
+        <q-btn
+          v-if="showRefreshButton"
+          :label="t('global.refresh')"
+          type="reset"
+          color="secondary"
+          flat
+          style="min-width: 150px"
+          size="lg"
+          class="q-ml-sm"
+        />
       </div>
     </q-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, defineProps, toRefs, PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { Device } from '@/models/Device';
+import { Scenario } from '@/models/Scenario';
 
 const { t } = useI18n();
 const deviceStore = useDeviceStore();
 const scenarioStore = useScenarioStore();
+const props = defineProps({
+  mode: {
+    type: String,
+    default: 'create',
+  },
+  scenarioData: {
+    type: Object as PropType<Scenario>,
+    default: null,
+  },
+});
+const isReadonly = computed(() => props.mode === 'detail');
+scenarioStore.mode = props.mode;
 deviceStore.devices.refresh();
 
 const deviceOptions = getDeviceOptions();
+const { scenarioData } = toRefs(props);
+
+// A function to update the scenarioFrame ref with scenarioData
+const fillScenarioFrame = (data: Scenario) => {
+  scenarioStore.scenarioFrame.rules = data.rules || ' ';
+  scenarioStore.scenarioFrame.name = data.name || '';
+  scenarioStore.scenarioFrame.devices = data.devices || [];
+  scenarioStore.scenarioFrame.deactivated = data.deactivated || false;
+  scenarioStore.scenarioFrame.isAlreadyTriggered = data.isAlreadyTriggered || false;
+  scenarioStore.scenarioFrame.mutedUntil = data.mutedUntil || 0;
+  scenarioStore.scenarioFrame.activeAtDay = data.activeAtDay || [];
+  scenarioStore.scenarioFrame.activeAtHour = data.activeAtHour || [];
+};
+
+fillScenarioFrame(scenarioData.value);
+// Watch for changes to scenarioData and update scenarioFrame accordingly
+watch(
+  scenarioData,
+  (newValue) => {
+    fillScenarioFrame(newValue);
+  },
+  { deep: true },
+); // deep watch to detect nested changes
+// Computed property for the button label
+const buttonLabel = computed(() => {
+  return scenarioStore.mode === 'edit' ? t('global.edit') : t('global.create');
+});
+
+// Function to determine if the create button should be shown
+const showCreateButton = computed(() => {
+  return scenarioStore.mode === 'create' || scenarioStore.mode === 'edit';
+});
+
+// Function to determine if the refresh button should be shown
+const showRefreshButton = computed(() => {
+  return scenarioStore.mode === 'create';
+});
 
 const validatedMutedUntil = computed({
   get: () => scenarioStore.scenarioFrame.mutedUntil,
@@ -188,4 +270,8 @@ function onReset() {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.right-checkboxes .q-checkbox {
+  justify-content: flex-end;
+}
+</style>
