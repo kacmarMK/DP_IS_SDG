@@ -10,6 +10,8 @@ export const useScenarioStore = defineStore('scenarios', () => {
   const scenarios = ref<Scenario[]>([]);
   const isLoadingScenarios = ref(false);
 
+  const mode = 'create';
+
   async function getScenarios() {
     try {
       isLoadingScenarios.value = true;
@@ -34,7 +36,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
     }
   }
   const scenarioFrame = ref<ScenarioFrame>({
-    rules: '',
+    rules: ' ',
     name: '',
     devices: [],
     deactivated: false,
@@ -47,6 +49,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
   async function createScenario() {
     try {
       isCreatingScenario.value = true;
+      scenarioFrame.value.name.trim;
       await ScenarioService.createScenario(scenarioFrame.value);
       toast.success(t('scenario.toasts.create_success'));
     } catch (error) {
@@ -64,5 +67,6 @@ export const useScenarioStore = defineStore('scenarios', () => {
     getScenarios,
     createScenario,
     getActiveScenarios,
+    mode,
   };
 });
