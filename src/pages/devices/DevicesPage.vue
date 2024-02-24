@@ -16,7 +16,6 @@
     </template>
     <template #default>
       <DevicesTable
-        v-if="deviceStore.devices.data"
         v-model="deviceStore.devices.data"
         :loading="deviceStore.devices.isLoading"
         :filter="filter"
@@ -41,6 +40,7 @@ const { t } = useI18n();
 
 const authStore = useAuthStore();
 const deviceStore = useDeviceStore();
+
 deviceStore.devices.refresh();
 
 const filter = ref('');

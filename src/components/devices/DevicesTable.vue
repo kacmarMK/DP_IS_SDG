@@ -116,7 +116,7 @@ import {
 } from '@quasar/extras/mdi-v6';
 import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 
-const devices = defineModel<Device[]>({ required: true });
+const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -136,6 +136,7 @@ const authStore = useAuthStore();
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();
 function deviceDeleted() {
+  if (!deviceToDelete.value || !devices.value) return;
   devices.value = devices.value.filter((device) => device.uid !== deviceToDelete.value?.uid);
   emit('onChange', devices.value);
 }
@@ -145,7 +146,7 @@ const deviceToShare = ref<Device>();
 
 const filteredDevices = computed(() => {
   if (props.filter) {
-    return devices.value.filter((device) => device.name.toLowerCase().includes(props.filter.toLowerCase()));
+    return devices.value?.filter((device) => device.name.toLowerCase().includes(props.filter.toLowerCase()));
   }
   return devices.value;
 });
