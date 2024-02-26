@@ -8,7 +8,6 @@
             <q-option-group
               v-model="scenarioStore.scenarioFrame.activeAtDay"
               :options="dayOptions"
-              :disabled="isReadonly"
               type="checkbox"
               class="right-checkboxes q-pa-md q-mt-sm"
             />
@@ -50,13 +49,11 @@
             <q-checkbox
               v-model="scenarioStore.scenarioFrame.deactivated"
               left-label
-              :disabled="isReadonly"
               :label="t('scenario.form.scenario_active')"
             />
             <q-checkbox
               v-model="scenarioStore.scenarioFrame.isAlreadyTriggered"
               left-label
-              :disabled="isReadonly"
               :label="t('scenario.form.scenario_triggered')"
               class="q-ml-lg"
             />
@@ -73,7 +70,6 @@
               type="checkbox"
               right-label
               inline
-              :disabled="isReadonly"
               dense
               class="right-checkboxes q-pa-lg"
             />
@@ -82,7 +78,57 @@
       </div>
       <div class="row q-col-gutter-x-xs q-col-gutter-y-sm">
         <q-card class="q-my-lg full-width">
-          <div></div>
+          <div class="text-weight-medium text-h5 row justify-center">{{ t('scenario.conditions') }}</div>
+          <div class="row q-col-gutter-x-xs q-col-gutter-y-sm">
+            <q-select
+              v-model="value"
+              rounded
+              outlined
+              :options="optionsValue"
+              label="Value"
+              style="min-width: 190px"
+              class="q-ma-md"
+            />
+            <q-select
+              v-model="value"
+              rounded
+              outlined
+              :options="optionsValue"
+              label="Operations"
+              style="min-width: 150px"
+              class="q-ma-md"
+            />
+            <q-input
+              v-model="value"
+              type="number"
+              :readonly="isReadonly"
+              filled
+              label="Constant"
+              style="max-width: 130px"
+              class="q-ma-md"
+            />
+            <q-select
+              v-model="value"
+              rounded
+              outlined
+              :options="optionsValue"
+              label="Returned action"
+              style="min-width: 200px"
+              class="q-ma-md"
+            />
+            <q-input
+              v-model="value"
+              type="text"
+              :readonly="isReadonly"
+              filled
+              label="String"
+              style="max-width: 200px"
+              class="q-ma-md"
+            />
+          </div>
+          <div class="row justify-center q-ma-sm" style="height: 250px">
+            <q-card class="q-pa-lg full-width"> </q-card>
+          </div>
         </q-card>
       </div>
 
@@ -116,7 +162,10 @@ import { useI18n } from 'vue-i18n';
 import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { Device } from '@/models/Device';
-import { Scenario } from '@/models/Scenario';
+import { Scenario, ScenarioFrame } from '@/models/Scenario';
+import { is } from 'quasar';
+import ScenarioService from '@/services/ScenarioService';
+import { useRoute } from 'vue-router';
 
 const { t } = useI18n();
 const deviceStore = useDeviceStore();
@@ -128,14 +177,27 @@ const props = defineProps({
   },
   scenarioData: {
     type: Object as PropType<Scenario>,
-    default: null,
+    default: ref<ScenarioFrame>({
+      rules: ' ',
+      name: '',
+      devices: [],
+      deactivated: false,
+      isAlreadyTriggered: false,
+      mutedUntil: 0,
+      activeAtDay: [],
+      activeAtHour: [],
+    }),
   },
 });
-const isReadonly = computed(() => props.mode === 'detail');
+const isReadonly = computed(() => {
+  return props.mode === 'detail';
+});
+
 scenarioStore.mode = props.mode;
 deviceStore.devices.refresh();
 
 const deviceOptions = getDeviceOptions();
+
 const { scenarioData } = toRefs(props);
 
 // A function to update the scenarioFrame ref with scenarioData
@@ -149,15 +211,14 @@ const fillScenarioFrame = (data: Scenario) => {
   scenarioStore.scenarioFrame.activeAtDay = data.activeAtDay || [];
   scenarioStore.scenarioFrame.activeAtHour = data.activeAtHour || [];
 };
-
 fillScenarioFrame(scenarioData.value);
 // Watch for changes to scenarioData and update scenarioFrame accordingly
 watch(
-  scenarioData,
+  props.scenarioData,
   (newValue) => {
     fillScenarioFrame(newValue);
   },
-  { deep: true },
+  { deep: true, immediate: true },
 ); // deep watch to detect nested changes
 // Computed property for the button label
 const buttonLabel = computed(() => {
@@ -197,6 +258,9 @@ watch(
     }
   },
 );
+
+const value = ref(null);
+const optionsValue = ['Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'];
 
 const dayOptions = computed(() => [
   { label: t('scenario.day_options.option1'), value: 1 },
@@ -252,10 +316,23 @@ interface DeviceOption {
 function extractIDFromArray(arrayOfObjects: DeviceOption[]): string[] {
   return arrayOfObjects.map((item) => item.value.uid);
 }
+const editedScenario = ref<Scenario>();
+const route = useRoute();
+if (scenarioStore.mode == 'edit') getScenario();
 
-function onSubmit() {
-  scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
-  scenarioStore.createScenario();
+async function onSubmit() {
+  if (scenarioStore.mode == 'create') {
+    scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
+    scenarioStore.createScenario();
+  } else {
+    scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
+    setEditedScenario();
+
+    console.log(editedScenario);
+    if (editedScenario.value) {
+      scenarioStore.editScenario(editedScenario.value);
+    }
+  }
 }
 
 function onReset() {
@@ -267,6 +344,24 @@ function onReset() {
   scenarioStore.scenarioFrame.mutedUntil = 0;
   scenarioStore.scenarioFrame.activeAtDay = [];
   scenarioStore.scenarioFrame.activeAtHour = [];
+}
+
+function setEditedScenario() {
+  if (editedScenario.value) {
+    editedScenario.value.rules = scenarioStore.scenarioFrame.rules || ' ';
+    editedScenario.value.name = scenarioStore.scenarioFrame.name || '';
+    editedScenario.value.devices = scenarioStore.scenarioFrame.devices;
+    editedScenario.value.deactivated = scenarioStore.scenarioFrame.deactivated || false;
+    editedScenario.value.isAlreadyTriggered = scenarioStore.scenarioFrame.isAlreadyTriggered || false;
+    editedScenario.value.mutedUntil = scenarioStore.scenarioFrame.mutedUntil || 0;
+    editedScenario.value.activeAtDay = scenarioStore.scenarioFrame.activeAtDay || [];
+    editedScenario.value.activeAtHour = scenarioStore.scenarioFrame.activeAtHour || [];
+  }
+}
+
+async function getScenario() {
+  const scenarioId = route.params.id.toString();
+  editedScenario.value = await ScenarioService.getScenarioById(scenarioId);
 }
 </script>
 

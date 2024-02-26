@@ -17,7 +17,7 @@
       />
     </template>
     <template #default>
-      <ScenarioForm mode="detail" :scenario-data="scenario" />
+      <ScenarioForm v-if="scenario" mode="detail" :scenario-data="scenario" />
     </template>
   </PageLayout>
 </template>

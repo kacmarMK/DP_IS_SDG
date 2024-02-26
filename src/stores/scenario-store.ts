@@ -59,6 +59,19 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isCreatingScenario.value = false;
     }
   }
+  async function editScenario(editedScenario: Scenario) {
+    try {
+      isCreatingScenario.value = true;
+      scenarioFrame.value.name.trim;
+      await ScenarioService.editScenario(editedScenario);
+      toast.success(t('scenario.toasts.update_success'));
+    } catch (error) {
+      console.log(error);
+      toast.error(t('scenario.toasts.update_failed'));
+    } finally {
+      isCreatingScenario.value = false;
+    }
+  }
 
   return {
     scenarios,
@@ -68,5 +81,6 @@ export const useScenarioStore = defineStore('scenarios', () => {
     createScenario,
     getActiveScenarios,
     mode,
+    editScenario,
   };
 });

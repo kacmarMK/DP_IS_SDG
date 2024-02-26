@@ -26,7 +26,7 @@
         <q-space></q-space>
         <div class="actions"></div>
       </div>
-      <ScenarioForm mode="edit" :scenario-data="scenario" />
+      <ScenarioForm v-if="scenario" mode="edit" :scenario-data="scenario" />
     </div>
   </q-page>
 </template>

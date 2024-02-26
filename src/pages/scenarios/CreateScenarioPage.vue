@@ -1,7 +1,7 @@
 <template>
   <PageLayout :title="t('global.create')" :previous-title="t('scenario.label', 2)" previous-route="/scenarios">
     <template #default>
-      <ScenarioForm mode="create" />
+      <ScenarioForm />
     </template>
   </PageLayout>
 </template>

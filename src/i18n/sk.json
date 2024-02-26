@@ -319,6 +319,7 @@
     "delete_scenario": "Vymazať scenár",
     "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",
     "edit_scenario": "Upraviť scenár",
+    "conditions": "Podmienky",
     "toasts": {
       "load_failed": "Načítanie scenárov zlyhalo!",
       "create_success": "Scenár bol vytvorený!",
