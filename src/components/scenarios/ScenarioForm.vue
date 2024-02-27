@@ -1,3 +1,4 @@
+<!-- eslint-disable @intlify/vue-i18n/no-raw-text -->
 <template>
   <div class="q-pa-md">
     <q-form @submit.prevent="onSubmit" @reset="onReset">
@@ -76,62 +77,115 @@
           </div>
         </q-card>
       </div>
-      <div class="row q-col-gutter-x-xs q-col-gutter-y-sm">
-        <q-card class="q-my-lg full-width">
-          <div class="text-weight-medium text-h5 row justify-center">{{ t('scenario.conditions') }}</div>
-          <div class="row q-col-gutter-x-xs q-col-gutter-y-sm">
-            <q-select
-              v-model="value"
-              rounded
-              outlined
-              :options="optionsValue"
-              label="Value"
-              style="min-width: 190px"
-              class="q-ma-md"
-            />
-            <q-select
-              v-model="value"
-              rounded
-              outlined
-              :options="optionsValue"
-              label="Operations"
-              style="min-width: 150px"
-              class="q-ma-md"
-            />
-            <q-input
-              v-model="value"
-              type="number"
-              :readonly="isReadonly"
-              filled
-              label="Constant"
-              style="max-width: 130px"
-              class="q-ma-md"
-            />
-            <q-select
-              v-model="value"
-              rounded
-              outlined
-              :options="optionsValue"
-              label="Returned action"
-              style="min-width: 200px"
-              class="q-ma-md"
-            />
-            <q-input
-              v-model="value"
-              type="text"
-              :readonly="isReadonly"
-              filled
-              label="String"
-              style="max-width: 200px"
-              class="q-ma-md"
-            />
+      <!-- This button will only show when 'showConditions' is false -->
+      <div class="row justify-center q-pa-xl q-mt-xl">
+        <q-btn
+          v-if="!showConditions"
+          label="Add conditions"
+          padding="xl"
+          color="green"
+          size="20px"
+          :icon="mdiPlusCircleOutline"
+          :icon-right="mdiCallSplit"
+          @click="showConditions = true"
+        ></q-btn>
+      </div>
+
+      <!-- The q-card and 'Remove conditions' button will only show when 'showConditions' is true -->
+      <div v-if="showConditions">
+        <q-card class="full-width">
+          <div class="text-weight-medium q-pa-lg row justify-center" style="font-weight: 600; font-size: 30px">
+            {{ t('scenario.conditions') }}
           </div>
-          <div class="row justify-center q-ma-sm" style="height: 250px">
-            <q-card class="q-pa-lg full-width"> </q-card>
+          <div class="row justify-center q-ma-sm" style="min-height: 300px; overflow-y: auto">
+            <q-card class="q-pa-lg full-width" style="z-index: 1">
+              <div
+                class="col"
+                style="
+                  background-color: #f5f5f5;
+                  padding: 20px;
+                  border-radius: 8px;
+                  font-family: monospace;
+                  white-space: pre;
+                  overflow-x: auto;
+                  border: 1px solid #ddd;
+                  font-size: large;
+                "
+              >
+                <span class="q-pa-sm" style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
+                  >if</span
+                >
+                (
+                <div class="row q-gutter-sm q-mx-md">
+                  <div class="col">
+                    <q-select
+                      v-model="selectVariable1"
+                      :options="conditonVariable1"
+                      label="Value / Constant"
+                      dense
+                    ></q-select>
+                  </div>
+                  <div class="col-2">
+                    <q-select v-model="selectOperand" :options="operands" label="Operand" dense></q-select>
+                  </div>
+                  <div class="col">
+                    <q-select
+                      v-model="selectVariable2"
+                      :options="conditonVariable2"
+                      label="Value / Constant"
+                      dense
+                    ></q-select>
+                  </div>
+                </div>
+                <div class="row justify-center q-mt-md">
+                  <q-btn size="17px" label="+" round dense color="secondary"></q-btn>
+                </div>
+                )
+                <span
+                  class="q-pa-sm q-ma-sm"
+                  style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
+                  >then</span
+                >
+                {
+                <br />
+                <q-select
+                  v-model="selectThen"
+                  :options="optionsThen"
+                  label="Action / Condition"
+                  dense
+                  class="q-ma-md q-px-xl"
+                ></q-select>
+                <br />
+                }
+                <span class="q-pa-sm" style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
+                  >else</span
+                >
+                {
+                <br />
+                <q-select
+                  v-model="selectElse"
+                  :options="optionsElse"
+                  label="Action / Condition"
+                  dense
+                  class="q-ma-md q-px-xl"
+                ></q-select>
+                <br />}
+              </div>
+            </q-card>
+          </div>
+          <div class="row justify-center q-pb-lg">
+            <q-btn
+              label="Remove conditions"
+              padding="xl"
+              color="red"
+              size="20px"
+              :icon="mdiMinusCircleOutline"
+              :icon-right="mdiCallSplit"
+              @click="showConditions = false"
+            ></q-btn>
           </div>
         </q-card>
       </div>
-
       <div class="q-mt-lg row justify-center">
         <q-btn
           v-if="showCreateButton"
@@ -163,9 +217,9 @@ import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { Device } from '@/models/Device';
 import { Scenario, ScenarioFrame } from '@/models/Scenario';
-import { is } from 'quasar';
 import ScenarioService from '@/services/ScenarioService';
 import { useRoute } from 'vue-router';
+import { mdiCallSplit, mdiPlusCircleOutline, mdiMinusCircleOutline } from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const deviceStore = useDeviceStore();
@@ -258,9 +312,6 @@ watch(
     }
   },
 );
-
-const value = ref(null);
-const optionsValue = ['Google', 'Facebook', 'Twitter', 'Apple', 'Oracle'];
 
 const dayOptions = computed(() => [
   { label: t('scenario.day_options.option1'), value: 1 },
@@ -363,10 +414,64 @@ async function getScenario() {
   const scenarioId = route.params.id.toString();
   editedScenario.value = await ScenarioService.getScenarioById(scenarioId);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+const selectVariable1 = ref('');
+const selectOperand = ref('');
+const selectVariable2 = ref('');
+const selectThen = ref('');
+const selectElse = ref('');
+const conditonVariable1 = [{ label: 'Option 1', value: '1' }];
+const operands = [
+  { label: '>', value: '>' },
+  { label: '<', value: '<' },
+  { label: '==', value: '==' },
+  { label: '!=', value: '!=' },
+  { label: '>=', value: '>=' },
+  { label: '<=', value: '<=' },
+];
+const conditonVariable2 = [{ label: 'Option 3', value: '3' }];
+const optionsThen = [{ label: 'Option 4', value: '4' }];
+const optionsElse = [{ label: 'Option 5', value: '5' }];
+
+const showConditions = ref(false);
 </script>
 
 <style lang="scss" scoped>
 .right-checkboxes .q-checkbox {
   justify-content: flex-end;
+}
+
+.list-group-item {
+  display: flex; /* Display items in a row */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space between the item text and the close icon */
+  padding: 10px 20px; /* Add some padding inside the items */
+  margin: 0; /* Remove any default margin */
+  border: 1px solid black; /* Black border around each item */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color for the button-like appearance */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+}
+
+.list-group-item + .list-group-item {
+  margin-top: -1px; /* Make items touch each other by overlapping borders */
+}
+
+.fa-times.close {
+  cursor: pointer; /* Ensure the close icon changes cursor to pointer */
+  color: #333; /* Color for the close icon */
+  margin-left: 15px; /* Space it a bit from the text */
+}
+
+/* Additional hover effect for better user feedback */
+.list-group-item:hover {
+  background-color: #e9ecef;
+}
+
+/* Style for the close icon when hovered to give feedback */
+.fa-times.close:hover {
+  color: #d9534f; /* Change color on hover */
 }
 </style>
