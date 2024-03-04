@@ -5,12 +5,12 @@ import time
 from datetime import datetime, timezone
 
 # Constants
-DEVICE_ID = "6590da350fe93f331047c534"  # Replace with actual device ID
-JOB_STATUS_ID = "6590da3d0fe93f331047c538"  # Replace with actual job status ID
-TAG = "s1"  # Replace with actual tag
+DEVICE_ID = "65e594017002026f38ff56bc"  # Replace with actual device ID
+JOB_STATUS_ID = "65e594217002026f38ff56c0"  # Replace with actual job status ID
+TAG = "s123"  # Replace with actual tag
 API_BASE_URL = "http://localhost:8080/api"  # Replace with actual API base URL
-USERNAME = "test"  # Replace with actual username
-PASSWORD = "test"  # Replace with actual password
+USERNAME = "admin"  # Replace with actual username
+PASSWORD = "admin"  # Replace with actual password
 
 
 # Function to get JWT token
@@ -27,14 +27,14 @@ def update_job_status(token):
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
     # Generate random data for the request body
-    random_data = {"tag": TAG, "value": random.randint(0, 10)}
+    random_data = {"tag": TAG, "value": random.uniform(0, 10)}
 
     request_body = {
         "retCode": "JOB_PROCESSING",
         "code": "JOB_PROCESSING",
-        "currentStep": 0,
-        "totalSteps": 0,
-        "currentCycle": 0,
+        "currentStep": 1,
+        "totalSteps": 12,
+        "currentCycle": 1,
         "data": [random_data],
     }
 

@@ -114,7 +114,7 @@ const chartOptions = ref({
     position: 'bottom',
     horizontalAlign: 'center',
   },
-  yaxis: yaxisLabels.map((unit, index) => ({
+  yaxis: props.dataPointTags.map((tag, index) => ({
     axisBorder: {
       show: true,
     },
@@ -123,7 +123,7 @@ const chartOptions = ref({
     },
     labels: {
       formatter: function (val: number) {
-        return `${val.toFixed(0)} ${unit}`;
+        return `${val.toFixed(tag.decimal)} ${tag.unit}`;
       },
       style: {
         colors: graphColors[index],
@@ -140,9 +140,9 @@ const chartOptions = ref({
   },
   tooltip: {
     shared: false,
-    y: yaxisLabels.map((unit) => ({
+    y: props.dataPointTags.map((tag) => ({
       formatter: function (val: number) {
-        return `${val.toFixed(2)} ${unit}`;
+        return `${val.toFixed(tag.decimal)} ${tag.unit}`;
       },
     })),
     x: {
