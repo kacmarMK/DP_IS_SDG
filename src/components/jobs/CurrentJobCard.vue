@@ -41,7 +41,7 @@
             <div>
               {{ t('job.step_of', [activeJob.status?.currentStep ?? 1, activeJob.noOfCmds]) }}
               <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->
-              <span>({{ currentCommandName }})</span>
+              <span v-if="currentCommandName">({{ currentCommandName }})</span>
             </div>
             <div>
               {{ t('job.cycle_of', [activeJob.status?.currentCycle ?? 1, activeJob.noOfReps]) }}
@@ -129,7 +129,9 @@ const currentProgress = computed(() => {
 const currentCommandName = computed(() => {
   if (activeJob.value && activeJob.value.status) {
     const { status, commands } = activeJob.value;
-    return commands[(status.currentStep ?? 1) - 1].name ?? '';
+    const command = commands[(status.currentStep ?? 1) - 1];
+
+    return command?.name ?? '';
   }
   return '';
 });
