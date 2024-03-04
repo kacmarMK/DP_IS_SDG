@@ -16,11 +16,13 @@ export const useAuthStore = defineStore('authStore', () => {
   const isAuthenticated = computed(() => !!jwt.value);
 
   async function login(user: UserLogin) {
+    clearJwt();
     const res = await AuthService.login(user);
     jwt.value = res;
   }
 
   async function loginByGoogle(token: string) {
+    clearJwt();
     const res = await AuthService.loginByGoogle(token);
     jwt.value = res;
   }

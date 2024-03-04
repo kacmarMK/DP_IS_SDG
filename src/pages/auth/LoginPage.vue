@@ -105,7 +105,6 @@ async function login() {
 
   try {
     isSubmitting.value = true;
-    authStore.clearJwt();
     await authStore.login(userLogin.value);
     toast.success(t('auth.login.toasts.login_success'));
     router.push('/');

@@ -119,7 +119,6 @@ async function register() {
 
   try {
     isSubmitting.value = true;
-    authStore.clearJwt();
     await authService.register(userRegister.value, Role.ADMIN);
     toast.success(t('auth.register.toasts.register_success'));
     router.push('/');

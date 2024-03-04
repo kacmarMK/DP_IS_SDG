@@ -18,7 +18,6 @@ const router = useRouter();
 async function login(response: { credential: string }) {
   try {
     loading.value = true;
-    authStore.clearJwt();
     await authStore.loginByGoogle(response.credential);
     toast.success('Prihlásenie prebehlo úspešne');
     router.push('/');
