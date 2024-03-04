@@ -10,6 +10,13 @@ class AuthService {
     return jwt;
   }
 
+  async loginByGoogle(token: string): Promise<string> {
+    const jwt = await api<string>(`user/loginGoogle/${token}`, {
+      method: 'POST',
+    });
+    return jwt;
+  }
+
   async register(userRegister: UserRegister, role: Role): Promise<User> {
     const user: User = await api<User>(`user/create/${role}`, {
       method: 'POST',

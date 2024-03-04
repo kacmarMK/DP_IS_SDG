@@ -49,8 +49,9 @@
             @click.prevent="login"
           />
         </q-form>
-        <div class="column items-center q-my-md links">
-          <div class="q-mb-md">
+        <div class="column items-center links">
+          <GoogleLoginBtn v-model:loading="isSubmitting" />
+          <div class="q-md-md q-mt-lg">
             <span>{{ t('auth.login.no_account') }}</span>
             <router-link to="/register" class="q-ml-sm">
               {{ t('auth.login.sign_up') }}
@@ -75,6 +76,7 @@ import { isFormValid } from '@/utils/form-validation';
 import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccount, mdiEye, mdiEyeOff, mdiLock } from '@quasar/extras/mdi-v6';
+import GoogleLoginBtn from '@/components/account/GoogleLoginBtn.vue';
 
 const { t } = useI18n();
 

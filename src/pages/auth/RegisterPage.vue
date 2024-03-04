@@ -55,8 +55,9 @@
             @click.prevent="register"
           />
         </q-form>
-        <div class="column items-center q-my-lg links">
-          <div class="q-mb-md">
+        <div class="column items-center links">
+          <GoogleLoginBtn v-model:loading="isSubmitting" />
+          <div class="q-md-md q-mt-lg">
             <span>{{ t('auth.register.have_account') }}</span>
             <router-link to="/login" class="q-ml-sm">
               {{ t('auth.register.login') }}
@@ -83,6 +84,7 @@ import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccount, mdiEmail, mdiEye, mdiEyeOff, mdiLock } from '@quasar/extras/mdi-v6';
 import { useAuthStore } from '@/stores/auth-store';
+import GoogleLoginBtn from '@/components/account/GoogleLoginBtn.vue';
 
 const { t } = useI18n();
 const router = useRouter();

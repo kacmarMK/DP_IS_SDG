@@ -20,6 +20,11 @@ export const useAuthStore = defineStore('authStore', () => {
     jwt.value = res;
   }
 
+  async function loginByGoogle(token: string) {
+    const res = await AuthService.loginByGoogle(token);
+    jwt.value = res;
+  }
+
   function clearJwt() {
     jwt.value = '';
   }
@@ -95,5 +100,6 @@ export const useAuthStore = defineStore('authStore', () => {
     refreshUser,
     isAdmin,
     clearJwt,
+    loginByGoogle,
   };
 });
