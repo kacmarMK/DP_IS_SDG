@@ -46,6 +46,13 @@ class AuthService {
     });
     return updatedUser;
   }
+
+  async setRole(role: Role, id: string): Promise<User> {
+    const user: User = await api<User>(`user/setRole/${id}/${role}`, {
+      method: 'POST',
+    });
+    return user;
+  }
 }
 
 export default new AuthService();

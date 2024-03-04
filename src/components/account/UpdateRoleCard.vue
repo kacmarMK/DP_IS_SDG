@@ -28,7 +28,7 @@
 import { PropType, computed, ref } from 'vue';
 import { handleError } from '@/utils/error-handler';
 import AuthService from '@/services/AuthService';
-import { User, UserUpdate } from '@/models/User';
+import { User } from '@/models/User';
 import { toast } from 'vue3-toastify';
 import { QForm, QInput } from 'quasar';
 import { isFormValid } from '@/utils/form-validation';
@@ -64,17 +64,9 @@ async function updateRole() {
     return;
   }
 
-  const updateUser: UserUpdate = {
-    authorities: [
-      {
-        authority: newRole.value,
-      },
-    ],
-  };
-
   try {
     changingRole.value = true;
-    await AuthService.updateUser(updateUser, props.user.uid);
+    await AuthService.setRole(newRole.value, props.user.uid);
     toast.success(t('account.toasts.role_change_success'));
     qform.value?.reset();
     emit('update');

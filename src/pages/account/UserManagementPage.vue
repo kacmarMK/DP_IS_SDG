@@ -87,6 +87,8 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'center',
     sortable: false,
     format(val) {
+      if (!val) return t('account.role.user');
+
       const authorities = val.map((authority: GrantedAuthority) => authority.authority);
       const roles: string[] = [];
       if (authorities.includes('admin')) {
