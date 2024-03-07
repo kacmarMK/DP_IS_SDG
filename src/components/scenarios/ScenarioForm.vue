@@ -80,11 +80,11 @@
       <!-- This button will only show when 'showConditions' is false -->
       <div class="row justify-center q-pa-xl q-mt-xl">
         <q-btn
-          v-if="!showConditions"
+          v-if="!showConditions && showAddConditionsButton"
           label="Add conditions"
           padding="xl"
           color="green"
-          size="20px"
+          size="16px"
           :icon="mdiPlusCircleOutline"
           :icon-right="mdiCallSplit"
           @click="showConditions = true"
@@ -100,47 +100,102 @@
           <div class="row justify-center q-ma-sm" style="min-height: 300px; overflow-y: auto">
             <q-card class="q-pa-lg full-width" style="z-index: 1">
               <div
-                class="col"
                 style="
                   background-color: #f5f5f5;
-                  padding: 20px;
+                  padding: 70px;
                   border-radius: 8px;
                   font-family: monospace;
                   white-space: pre;
                   overflow-x: auto;
                   border: 1px solid #ddd;
-                  font-size: large;
+                  font-size: 17px;
                 "
               >
                 <span class="q-pa-sm" style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
                   >if</span
                 >
-                (
-                <div class="row q-gutter-sm q-mx-md">
+                <div class="row q-gutter-sm q-mx-md q-pa-md" style="border-radius: 8px; border: 1px solid #858585">
+                  <div class="col-1 q-mt-md q-pt-sm" style="font-size: 40px">(</div>
                   <div class="col">
+                    <div class="row justify-center">
+                      <q-radio
+                        v-model="conditionSlot1"
+                        name="conditionSlot1"
+                        val="const"
+                        left-label
+                        label="Constant"
+                        color="secondary"
+                      />
+                      <q-radio v-model="conditionSlot1" name="conditionSlot1" val="val" label="Value" />
+                    </div>
+
+                    <q-input
+                      v-if="conditionSlot1 == 'const'"
+                      v-model="inputValue1"
+                      label="Enter Constant"
+                      dense
+                      :rules="[requiredInputRule]"
+                    ></q-input>
                     <q-select
+                      v-if="conditionSlot1 == 'val'"
                       v-model="selectVariable1"
                       :options="conditonVariable1"
-                      label="Value / Constant"
+                      label="Choose Value"
                       dense
+                      :rules="[requiredSelectRule]"
                     ></q-select>
                   </div>
-                  <div class="col-2">
-                    <q-select v-model="selectOperand" :options="operands" label="Operand" dense></q-select>
+                  <div class="col-2 q-mt-xl">
+                    <q-select
+                      v-model="selectOperand"
+                      :options="operands"
+                      label="Operand"
+                      dense
+                      :rules="[requiredSelectRule]"
+                    ></q-select>
                   </div>
                   <div class="col">
+                    <div class="row justify-center">
+                      <q-radio
+                        v-model="conditionSlot2"
+                        name="conditionSlot2"
+                        val="const"
+                        left-label
+                        label="Constant"
+                        color="secondary"
+                      />
+                      <q-radio v-model="conditionSlot2" name="conditionSlot2" val="val" label="Value" />
+                    </div>
+
+                    <q-input
+                      v-if="conditionSlot2 == 'const'"
+                      v-model="inputValue2"
+                      label="Enter Constant"
+                      dense
+                      :rules="[requiredInputRule]"
+                    ></q-input>
                     <q-select
+                      v-if="conditionSlot2 == 'val'"
                       v-model="selectVariable2"
                       :options="conditonVariable2"
-                      label="Value / Constant"
+                      label="Choose Value"
                       dense
+                      :rules="[requiredSelectRule]"
                     ></q-select>
                   </div>
+                  <!--
+                  <div class="col-1 q-pa-lg q-mt-md q-ml-xl">
+                    <q-btn size="15px" label="+" color="primary" style="font-size: 12px"></q-btn>
+                  </div>
+                  -->
+                  <div class="col-1 q-pl-xl q-pt-xs q-mt-lg" style="font-size: 40px">)</div>
+                  <div class="col-1 q-pa-md q-pt-lg q-mt-lg">
+                    <q-btn size="14px" label="+" round dense color="secondary"></q-btn>
+                  </div>
                 </div>
-                <div class="row justify-center q-mt-md">
+                <div class="row q-pa-md">
                   <q-btn size="17px" label="+" round dense color="secondary"></q-btn>
                 </div>
-                )
                 <span
                   class="q-pa-sm q-ma-sm"
                   style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
@@ -148,27 +203,114 @@
                 >
                 {
                 <br />
-                <q-select
-                  v-model="selectThen"
-                  :options="optionsThen"
-                  label="Action / Condition"
-                  dense
-                  class="q-ma-md q-px-xl"
-                ></q-select>
+                <div class="q-pa-md" style="border-radius: 8px; border: 1px solid #858585">
+                  <div class="row justify-center">
+                    <q-radio
+                      v-model="thenSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="noAction"
+                      label="No Action"
+                      color="red"
+                    />
+                    <q-radio v-model="thenSlot" class="q-mr-lg" keep-color val="job" label="Job" color="teal" />
+                    <q-radio
+                      v-model="thenSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="notification"
+                      label="Notification"
+                      color="orange"
+                    />
+                    <q-radio
+                      v-model="thenSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="condition"
+                      label="Condition"
+                      color="blue"
+                    />
+                  </div>
+                  <div class="row justify-center">
+                    <div class="col-5">
+                      <q-input
+                        v-if="thenSlot == 'notification'"
+                        v-model="notificationThen"
+                        label="Enter Notification Message"
+                        dense
+                        :rules="[requiredInputRule]"
+                      ></q-input>
+                      <q-select
+                        v-if="thenSlot === 'job'"
+                        v-model="jobThen"
+                        :options="jobOptions"
+                        label="Jobs"
+                        dense
+                        class="col"
+                        :rules="[requiredInputRule]"
+                      ></q-select>
+                    </div>
+                  </div>
+                </div>
+
                 <br />
                 }
-                <span class="q-pa-sm" style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
+                <span
+                  class="q-pa-sm q-mt-sm"
+                  style="background-color: #e0e0e0; border-radius: 6px; display: inline-block"
                   >else</span
                 >
                 {
                 <br />
-                <q-select
-                  v-model="selectElse"
-                  :options="optionsElse"
-                  label="Action / Condition"
-                  dense
-                  class="q-ma-md q-px-xl"
-                ></q-select>
+                <div class="q-pa-md q-mt-sm" style="border-radius: 8px; border: 1px solid #858585">
+                  <div class="row justify-center">
+                    <q-radio
+                      v-model="elseSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="noAction"
+                      label="No Action"
+                      color="red"
+                    />
+                    <q-radio v-model="elseSlot" class="q-mr-lg" keep-color val="job" label="Job" color="teal" />
+                    <q-radio
+                      v-model="elseSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="notification"
+                      label="Notification"
+                      color="orange"
+                    />
+                    <q-radio
+                      v-model="elseSlot"
+                      class="q-mr-lg"
+                      keep-color
+                      val="condition"
+                      label="Condition"
+                      color="blue"
+                    />
+                  </div>
+                  <div class="row justify-center">
+                    <div class="col-5">
+                      <q-input
+                        v-if="elseSlot == 'notification'"
+                        v-model="notificationElse"
+                        label="Enter Notification Message"
+                        dense
+                        :rules="[requiredInputRule]"
+                      ></q-input>
+                      <q-select
+                        v-if="elseSlot === 'job'"
+                        v-model="jobElse"
+                        :options="jobOptions"
+                        label="Jobs"
+                        dense
+                        class="col"
+                        :rules="[requiredInputRule]"
+                      ></q-select>
+                    </div>
+                  </div>
+                </div>
                 <br />}
               </div>
             </q-card>
@@ -178,10 +320,13 @@
               label="Remove conditions"
               padding="xl"
               color="red"
-              size="20px"
+              size="16px"
               :icon="mdiMinusCircleOutline"
               :icon-right="mdiCallSplit"
-              @click="showConditions = false"
+              @click="
+                clearConditions();
+                showConditions = false;
+              "
             ></q-btn>
           </div>
         </q-card>
@@ -211,13 +356,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, defineProps, toRefs, PropType } from 'vue';
+import { computed, ref, watch, defineProps, toRefs, PropType, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDeviceStore } from '@/stores/device-store';
 import { useScenarioStore } from '@/stores/scenario-store';
 import { Device } from '@/models/Device';
 import { Scenario, ScenarioFrame } from '@/models/Scenario';
 import ScenarioService from '@/services/ScenarioService';
+import RecipeService from '@/services/RecipeService';
+import DeviceService from '@/services/DeviceService';
 import { useRoute } from 'vue-router';
 import { mdiCallSplit, mdiPlusCircleOutline, mdiMinusCircleOutline } from '@quasar/extras/mdi-v6';
 
@@ -286,6 +433,10 @@ const showCreateButton = computed(() => {
 
 // Function to determine if the refresh button should be shown
 const showRefreshButton = computed(() => {
+  return scenarioStore.mode === 'create';
+});
+
+const showAddConditionsButton = computed(() => {
   return scenarioStore.mode === 'create';
 });
 
@@ -372,6 +523,10 @@ const route = useRoute();
 if (scenarioStore.mode == 'edit') getScenario();
 
 async function onSubmit() {
+  if (showConditions.value) {
+    scenarioStore.scenarioFrame.rules = parseRules();
+    console.log(scenarioStore.scenarioFrame.rules);
+  }
   if (scenarioStore.mode == 'create') {
     scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
     scenarioStore.createScenario();
@@ -379,7 +534,6 @@ async function onSubmit() {
     scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
     setEditedScenario();
 
-    console.log(editedScenario);
     if (editedScenario.value) {
       scenarioStore.editScenario(editedScenario.value);
     }
@@ -397,6 +551,23 @@ function onReset() {
   scenarioStore.scenarioFrame.activeAtHour = [];
 }
 
+function clearConditions() {
+  selectVariable1.value = null;
+  selectOperand.value = null;
+  selectVariable2.value = null;
+  jobThen.value = null;
+  notificationThen.value = '';
+  notificationElse.value = '';
+  jobElse.value = null;
+  inputValue1.value = '';
+  inputValue2.value = '';
+
+  conditionSlot1.value = 'const';
+  conditionSlot2.value = 'const';
+  thenSlot.value = 'noAction';
+  elseSlot.value = 'noAction';
+}
+
 function setEditedScenario() {
   if (editedScenario.value) {
     editedScenario.value.rules = scenarioStore.scenarioFrame.rules || ' ';
@@ -410,18 +581,76 @@ function setEditedScenario() {
   }
 }
 
+function parseRules() {
+  const rulesStringStart = '{"if": [';
+  let conditionString = '';
+  let thenString = '';
+  let elseString = '';
+  const rulesStringEnd = ']}';
+
+  // Condition string creation
+  if (inputValue1.value && inputValue2.value) {
+    // Both condition slots are constants
+    conditionString =
+      '{ "' + selectOperand.value?.value + '": [ ' + inputValue1.value + ', ' + inputValue2.value + ' ] },';
+  } else if (inputValue1.value && selectVariable2.value) {
+    // Condition slot 1 is a constant, Condition slot 2 is a variable
+    //TODO
+  } else if (selectVariable1.value && inputValue2.value) {
+    // Condition slot 1 is a variable, Condition slot 2 is a constant
+    //TODO
+  } else {
+    // Both condition slots are variables
+    // TODO
+  }
+
+  // Then string creation
+  if (thenSlot.value === 'noAction') {
+    thenString = ' "noAction",';
+  } else if (thenSlot.value === 'job') {
+    thenString = ' "job:' + jobThen.value?.value + '",';
+  } else {
+    thenString = ' "notificationMessage:' + notificationThen.value + '",';
+  }
+
+  // Else string creation
+  if (elseSlot.value === 'noAction') {
+    elseString = ' "noAction" ';
+  } else if (elseSlot.value === 'job') {
+    elseString = ' "job:' + jobElse.value?.value + '"';
+  } else {
+    elseString = ' "notificationMessage:' + notificationElse.value + '"';
+  }
+
+  return rulesStringStart + conditionString + thenString + elseString + rulesStringEnd;
+}
+
 async function getScenario() {
   const scenarioId = route.params.id.toString();
   editedScenario.value = await ScenarioService.getScenarioById(scenarioId);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-const selectVariable1 = ref('');
-const selectOperand = ref('');
-const selectVariable2 = ref('');
-const selectThen = ref('');
-const selectElse = ref('');
-const conditonVariable1 = [{ label: 'Option 1', value: '1' }];
+interface Operand {
+  label: string;
+  value: string;
+}
+interface Job {
+  label: string;
+  value: string;
+}
+interface Variable {
+  label: string;
+  value: string;
+}
+const selectVariable1 = ref<Variable | null>(null);
+const selectOperand = ref<Operand | null>(null);
+const selectVariable2 = ref<Variable | null>(null);
+const jobThen = ref<Job | null>(null);
+const notificationThen = ref('');
+const notificationElse = ref('');
+const jobElse = ref<Job | null>(null);
+const conditonVariable1 = ref<{ label: string; value: string }[]>([]);
 const operands = [
   { label: '>', value: '>' },
   { label: '<', value: '<' },
@@ -430,11 +659,43 @@ const operands = [
   { label: '>=', value: '>=' },
   { label: '<=', value: '<=' },
 ];
-const conditonVariable2 = [{ label: 'Option 3', value: '3' }];
-const optionsThen = [{ label: 'Option 4', value: '4' }];
-const optionsElse = [{ label: 'Option 5', value: '5' }];
+const conditonVariable2 = ref<{ label: string; value: string }[]>([]);
+const jobOptions = ref<{ label: string; value: string }[]>([]);
 
 const showConditions = ref(false);
+const inputValue1 = ref('');
+const inputValue2 = ref('');
+
+const conditionSlot1 = ref('const');
+const conditionSlot2 = ref('const');
+const thenSlot = ref('noAction');
+const elseSlot = ref('noAction');
+
+const requiredInputRule = (val: string | number): string | boolean => {
+  const number = parseFloat(val as string);
+  return (!isNaN(number) && isFinite(number)) || 'This field is required';
+};
+const requiredSelectRule = (val: string) => !!val || val === '' || 'This field is required';
+
+onMounted(async () => {
+  const recipes = await RecipeService.getRecipes('NONE', 'NONE');
+  jobOptions.value = recipes.map((recipe) => ({
+    label: recipe.name,
+    value: recipe.id,
+  }));
+
+  const devices = await DeviceService.getDevices();
+  conditonVariable1.value = devices.map((device) => ({
+    label: device.name,
+    value: device.name,
+  }));
+  conditonVariable2.value = devices.map((device) => ({
+    label: device.name,
+    value: device.name,
+  }));
+  // TODO fixnut tagy
+  console.log(devices);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -473,5 +734,8 @@ const showConditions = ref(false);
 /* Style for the close icon when hovered to give feedback */
 .fa-times.close:hover {
   color: #d9534f; /* Change color on hover */
+}
+.q-select {
+  font-size: 1.25rem;
 }
 </style>
