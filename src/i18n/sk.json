@@ -241,8 +241,7 @@
     "recipe_steps": "Kroky receptu",
     "no_subrecipes_added": "Žiadne pridané podrecepty",
     "no_commands_added": "Žiadne pridané príkazy",
-    "available_commands": "Dostupné príkazy",
-    "available_subrecipes": "Dostupné podrecepty",
+    "available_steps": "Dostupné kroky",
     "no_commands_for_device_type": "Žiadne dostupné príkazy pre tento typ zariadenia",
     "no_subrecipes_for_device_type": "Žiadne dostupné podrecepty pre tento typ zariadenia",
     "toasts": {

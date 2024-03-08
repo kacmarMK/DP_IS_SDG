@@ -1,25 +1,10 @@
 <template>
-  <q-btn-toggle
-    v-model="selectedStepType"
-    spread
-    class="shadow custom-toggle q-my-lg"
-    no-caps
-    rounded
-    unelevated
-    toggle-color="primary"
-    color="white"
-    text-color="primary"
-    :options="[
-      { label: t('command.label', 2), value: 'commands' },
-      { label: t('recipe.subrecipe', 2), value: 'subrecipes' },
-    ]"
-  />
   <div class="row q-col-gutter-xl">
     <div class="col-12 col-md-6">
       <div class="table-name text-secondary">{{ t('recipe.recipe_steps') }}</div>
-      <VueDraggable v-model="localRecipeCommands" :animation="200" handle=".handle" draggable="tr" target="tbody">
+      <VueDraggable v-model="localSubCommands" :animation="200" handle=".handle" draggable="tr" target="tbody">
         <q-table
-          :rows="localRecipeCommands"
+          :rows="localSubCommands"
           :columns="stepColumns"
           flat
           :no-data-label="t('recipe.no_commands_added')"
@@ -37,6 +22,30 @@
             <q-td auto-width :props="propsDrag">
               <div>
                 <q-icon :name="mdiDrag" size="28px" class="handle drag-icon" />
+              </div>
+            </q-td>
+          </template>
+
+          <template #body-cell-step="propsStep">
+            <q-td :props="propsStep">
+              <div v-if="!propsStep.row.value.recipe">{{ propsStep.row.value.name }}</div>
+              <div v-else>
+                <q-tree :nodes="getCommandNodes(propsStep.row.value)" node-key="id" :dense="true" />
+              </div>
+            </q-td>
+          </template>
+
+          <template #body-cell-cycles="propsCycles">
+            <q-td auto-width :props="propsCycles">
+              <div>
+                <q-input
+                  v-model="propsCycles.row.cycles"
+                  dense
+                  outlined
+                  type="number"
+                  :min="1"
+                  style="min-width: 65px"
+                />
               </div>
             </q-td>
           </template>
@@ -60,12 +69,8 @@
       </VueDraggable>
     </div>
     <div class="col-12 col-md-6">
-      <div v-if="selectedStepType == 'commands'" class="table-name text-secondary">
-        {{ t('recipe.available_commands') }}
-      </div>
-
-      <div v-if="selectedStepType == 'subrecipes'" class="table-name text-secondary">
-        {{ t('recipe.available_subrecipes') }}
+      <div class="table-name text-secondary">
+        {{ t('recipe.available_steps') }}
       </div>
 
       <q-table
@@ -73,12 +78,29 @@
         :columns="availableCommandsColumns"
         :loading="commandStore.commands.isLoading"
         flat
+        hide-header
         :no-data-label="t('recipe.no_commands_for_device_type')"
         :loading-label="t('table.loading_label')"
         :rows-per-page-label="t('table.rows_per_page_label')"
         :rows-per-page-options="[20, 50, 100, 0]"
         class="shadow"
       >
+        <template #top>
+          <div class="col-12 q-table__title">
+            <q-tabs
+              v-model="selectedStepType"
+              inline-label
+              no-caps
+              align="justify"
+              indicator-color="primary"
+              active-color="primary"
+              class="text-secondary bottom-outline"
+            >
+              <q-tab name="commands" class="outline-bottom-grey" :icon="mdiCodeTags" label="Commands" />
+              <q-tab name="subrecipes" class="outline-bottom-grey" :icon="mdiBookMultipleOutline" label="Subrecipes" />
+            </q-tabs>
+          </div>
+        </template>
         <template #body-cell-actions="propsActions">
           <q-td auto-width :props="propsActions">
             <q-btn
@@ -92,6 +114,15 @@
             />
           </q-td>
         </template>
+
+        <template #body-cell-name="propsName">
+          <q-td :props="propsName">
+            <div v-if="!propsName.row.recipe">{{ propsName.row.name }}</div>
+            <div v-else>
+              <q-tree :nodes="getCommandNodes(propsName.row)" node-key="id" :dense="true" />
+            </div>
+          </q-td>
+        </template>
       </q-table>
     </div>
   </div>
@@ -102,11 +133,11 @@ import { QTableProps } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Command } from '@/models/Command';
-import { mdiPlus, mdiClose, mdiDrag } from '@quasar/extras/mdi-v6';
+import { mdiPlus, mdiClose, mdiDrag, mdiCodeTags, mdiBookMultipleOutline } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useCommandStore } from '@/stores/command-store';
 
-const command = defineModel<Command>({ required: true });
+const recipe = defineModel<Command>({ required: true });
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -119,38 +150,94 @@ const commandStore = useCommandStore();
 commandStore.commands.refresh();
 
 const selectedStepType = ref('commands');
-const localRecipeCommands = ref(command.value.subCommands?.map((c, index) => ({ id: index, value: c })) ?? []);
+const localSubCommands = ref(getSubCommandsWithCycles(recipe.value.subCommands));
+
+function getSubCommandsWithCycles(commands: Command[] | undefined): { id: number; value: Command; cycles: number }[] {
+  if (!commands) return [];
+
+  const groupedCommands: { id: number; value: Command; cycles: number }[] = [];
+
+  commands.forEach((command, index) => {
+    const lastGroupedCommand = groupedCommands[groupedCommands.length - 1];
+    if (lastGroupedCommand && lastGroupedCommand.value.id === command.id) {
+      lastGroupedCommand.cycles += 1;
+    } else {
+      groupedCommands.push({
+        id: index,
+        value: command,
+        cycles: 1,
+      });
+    }
+  });
+
+  return groupedCommands;
+}
 
 const filteredCommands = computed<Command[]>(() => {
-  const { deviceType, id: mainCommandId } = command.value; // Destructure to get the main command's id
+  const { deviceType, id: mainCommandId } = recipe.value;
   const showRecipes = selectedStepType.value === 'subrecipes';
 
   return (
     commandStore.commands.data?.filter((command) => {
       const isDeviceTypeMatch = !deviceType || command.deviceType === deviceType;
       const isRecipeMatch = showRecipes ? command.recipe === true : command.recipe === false;
-      const isNotMainCommand = command.id !== mainCommandId; // Check if it's not the main command
-      return isDeviceTypeMatch && isRecipeMatch && isNotMainCommand; // Include this condition in return
+      const isNotMainCommand = command.id !== mainCommandId;
+      return isDeviceTypeMatch && isRecipeMatch && isNotMainCommand;
     }) ?? []
   );
 });
 
 function addCommandToRecipe(command: Command) {
   const uniqueId = Date.now() + Math.random();
-  localRecipeCommands.value.push({ id: uniqueId, value: command });
+  localSubCommands.value.push({
+    id: uniqueId,
+    value: command,
+    cycles: 1,
+  });
 }
 
 function removeCommandFromRecipe(index: number) {
-  localRecipeCommands.value.splice(index, 1);
+  localSubCommands.value.splice(index, 1);
 }
 
 watch(
-  localRecipeCommands,
+  localSubCommands,
   (newLocalCommands) => {
-    command.value.subCommands = newLocalCommands.map((item) => item.value);
+    const unpackedCommands: Command[] = [];
+    newLocalCommands.forEach((commandWithCycles) => {
+      for (let i = 0; i < commandWithCycles.cycles; i++) {
+        unpackedCommands.push({ ...commandWithCycles.value });
+      }
+    });
+    recipe.value.subCommands = unpackedCommands;
   },
   { deep: true },
 );
+
+// Command nodes
+interface CommandNode {
+  id: string;
+  label: string;
+  children?: CommandNode[];
+}
+
+function getCommandNodes(command: Command): CommandNode[] {
+  if (!command) {
+    return [];
+  }
+
+  const rootNode: CommandNode = {
+    id: command.id,
+    label: command.name,
+    children: command.subCommands?.map((subCommand) => ({
+      id: subCommand.id,
+      label: subCommand.name,
+      children: getCommandNodes(subCommand)?.[0].children,
+    })),
+  };
+
+  return [rootNode];
+}
 
 const stepColumns = computed<QTableProps['columns']>(() => [
   {
@@ -166,6 +253,13 @@ const stepColumns = computed<QTableProps['columns']>(() => [
     field: (row) => row.value.name,
     sortable: false,
     align: 'left',
+  },
+  {
+    name: 'cycles',
+    label: t('job.cycle', 2),
+    field: '',
+    sortable: false,
+    align: 'center',
   },
   {
     name: 'remove',
@@ -194,7 +288,7 @@ const availableCommandsColumns = computed<QTableProps['columns']>(() => [
 ]);
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .table-name {
   font-size: 1.1rem;
   font-weight: 500;
@@ -205,7 +299,11 @@ const availableCommandsColumns = computed<QTableProps['columns']>(() => [
   cursor: move;
 }
 
-.custom-toggle {
-  border: 1px solid var(--q-primary);
+.q-table__top {
+  padding: 0 !important;
+}
+
+.bottom-outline {
+  border-bottom: 1px solid #e0e0e0;
 }
 </style>

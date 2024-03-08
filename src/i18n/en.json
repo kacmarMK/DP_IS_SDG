@@ -241,8 +241,7 @@
     "recipe_steps": "Recipe steps",
     "no_subrecipes_added": "No subrecipes added to this recipe",
     "no_commands_added": "No commands added to this recipe",
-    "available_commands": "Available commands",
-    "available_subrecipes": "Available subrecipes",
+    "available_steps": "Available steps",
     "no_commands_for_device_type": "No commands available for this device type",
     "no_subrecipes_for_device_type": "No subrecipes available for this device type",
     "toasts": {

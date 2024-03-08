@@ -21,8 +21,7 @@
         />
       </div>
     </q-card>
-    <CommandStepsSelect v-model="command" class="q-mt-md" :loading="props.loading" />
-    <!-- <SubrecipeStepsSelect v-show="selectedStepType === 'subrecipes'" v-model="recipe" :loading="props.loading" /> -->
+    <CommandStepsSelect v-model="command" class="q-mt-none" :loading="props.loading" />
   </div>
 </template>
 

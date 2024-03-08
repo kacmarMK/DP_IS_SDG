@@ -21,7 +21,6 @@ import RecipeForm from '@/components/recipes/RecipeForm.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import RecipeService from '@/services/RecipeService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useAsyncData } from '@/composables/useAsyncData';
