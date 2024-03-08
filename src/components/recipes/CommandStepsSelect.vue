@@ -1,4 +1,19 @@
 <template>
+  <q-btn-toggle
+    v-model="selectedStepType"
+    spread
+    class="shadow custom-toggle q-my-lg"
+    no-caps
+    rounded
+    unelevated
+    toggle-color="primary"
+    color="white"
+    text-color="primary"
+    :options="[
+      { label: t('command.label', 2), value: 'commands' },
+      { label: t('recipe.subrecipe', 2), value: 'subrecipes' },
+    ]"
+  />
   <div class="row q-col-gutter-xl">
     <div class="col-12 col-md-6">
       <div class="table-name text-secondary">{{ t('recipe.recipe_steps') }}</div>
@@ -26,12 +41,6 @@
             </q-td>
           </template>
 
-          <template #body-cell-step="propsStep">
-            <q-td auto-width :props="propsStep">
-              <div>{{ propsStep.rowIndex + 1 }}</div>
-            </q-td>
-          </template>
-
           <template #body-cell-remove="propsRemove">
             <q-td auto-width :props="propsRemove">
               <div>
@@ -51,7 +60,14 @@
       </VueDraggable>
     </div>
     <div class="col-12 col-md-6">
-      <div class="table-name text-secondary">{{ t('recipe.available_commands') }}</div>
+      <div v-if="selectedStepType == 'commands'" class="table-name text-secondary">
+        {{ t('recipe.available_commands') }}
+      </div>
+
+      <div v-if="selectedStepType == 'subrecipes'" class="table-name text-secondary">
+        {{ t('recipe.available_subrecipes') }}
+      </div>
+
       <q-table
         :rows="filteredCommands"
         :columns="availableCommandsColumns"
@@ -85,12 +101,12 @@
 import { QTableProps } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Command, CommandInput } from '@/models/Command';
+import { Command } from '@/models/Command';
 import { mdiPlus, mdiClose, mdiDrag } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useCommandStore } from '@/stores/command-store';
 
-const recipe = defineModel<CommandInput>({ required: true });
+const command = defineModel<Command>({ required: true });
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -102,11 +118,21 @@ const { t } = useI18n();
 const commandStore = useCommandStore();
 commandStore.commands.refresh();
 
-const localRecipeCommands = ref(recipe.value.subCommands?.map((c, index) => ({ id: index, value: c })) ?? []);
+const selectedStepType = ref('commands');
+const localRecipeCommands = ref(command.value.subCommands?.map((c, index) => ({ id: index, value: c })) ?? []);
 
 const filteredCommands = computed<Command[]>(() => {
-  const { deviceType } = recipe.value;
-  return commandStore.commands.data?.filter((command) => !deviceType || command.deviceType === deviceType) ?? [];
+  const { deviceType, id: mainCommandId } = command.value; // Destructure to get the main command's id
+  const showRecipes = selectedStepType.value === 'subrecipes';
+
+  return (
+    commandStore.commands.data?.filter((command) => {
+      const isDeviceTypeMatch = !deviceType || command.deviceType === deviceType;
+      const isRecipeMatch = showRecipes ? command.recipe === true : command.recipe === false;
+      const isNotMainCommand = command.id !== mainCommandId; // Check if it's not the main command
+      return isDeviceTypeMatch && isRecipeMatch && isNotMainCommand; // Include this condition in return
+    }) ?? []
+  );
 });
 
 function addCommandToRecipe(command: Command) {
@@ -121,7 +147,7 @@ function removeCommandFromRecipe(index: number) {
 watch(
   localRecipeCommands,
   (newLocalCommands) => {
-    recipe.value.subCommands = newLocalCommands.map((item) => item.value);
+    command.value.subCommands = newLocalCommands.map((item) => item.value);
   },
   { deep: true },
 );
@@ -135,8 +161,8 @@ const stepColumns = computed<QTableProps['columns']>(() => [
     align: 'center',
   },
   {
-    name: 'command',
-    label: t('command.label'),
+    name: 'step',
+    label: t('job.step'),
     field: (row) => row.value.name,
     sortable: false,
     align: 'left',
@@ -165,14 +191,6 @@ const availableCommandsColumns = computed<QTableProps['columns']>(() => [
     sortable: true,
     align: 'left',
   },
-  {
-    name: 'parameters',
-    label: t('command.parameters'),
-    field: 'params',
-    sortable: false,
-    align: 'left',
-    format: (val: string[]) => val?.join(', '),
-  },
 ]);
 </script>
 
@@ -185,5 +203,9 @@ const availableCommandsColumns = computed<QTableProps['columns']>(() => [
 
 .drag-icon {
   cursor: move;
+}
+
+.custom-toggle {
+  border: 1px solid var(--q-primary);
 }
 </style>

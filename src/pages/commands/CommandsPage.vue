@@ -115,10 +115,12 @@ const filter = ref('');
 
 const filteredCommands = computed(() => {
   if (filter.value === '') {
-    return store.commands.data;
+    return store.commands.data?.filter((command) => !command.recipe) ?? [];
   }
   return (
-    store.commands.data?.filter((command) => command.name.toLowerCase().includes(filter.value.toLowerCase())) ?? []
+    store.commands.data?.filter(
+      (command) => !command.recipe && command.name.toLowerCase().includes(filter.value.toLowerCase()),
+    ) ?? []
   );
 });
 

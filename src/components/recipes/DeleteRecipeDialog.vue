@@ -12,7 +12,7 @@ import { useI18n } from 'vue-i18n';
 import { toast } from 'vue3-toastify';
 import DeleteConfirmationDialog from '@/components/core/DeleteConfirmationDialog.vue';
 import { Recipe } from '@/models/Recipe';
-import RecipeService from '@/services/RecipeService';
+import CommandService from '@/services/CommandService';
 
 const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
@@ -29,7 +29,7 @@ const isDeleteInProgress = ref(false);
 async function handleDelete() {
   try {
     isDeleteInProgress.value = true;
-    await RecipeService.deleteRecipeById(props.recipe.id);
+    await CommandService.deleteCommand(props.recipe.id);
     isDialogOpen.value = false;
     emit('onDeleted');
     toast.success(t('recipe.toasts.delete_success'));

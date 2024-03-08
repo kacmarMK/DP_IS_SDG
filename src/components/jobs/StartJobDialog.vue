@@ -12,7 +12,7 @@
         ref="recipeRef"
         v-model="jobToRun.recipeId"
         :label="t('recipe.label')"
-        :options="recipeStore.recipes.data"
+        :options="commandStore.commands.data"
         option-value="id"
         option-label="name"
         lazy-rules
@@ -70,7 +70,7 @@ import { useI18n } from 'vue-i18n';
 import { isFormValid } from '@/utils/form-validation';
 import { mdiClock } from '@quasar/extras/mdi-v6';
 import DialogCommon from '../core/DialogCommon.vue';
-import { useRecipeStore } from '@/stores/recipe-store';
+import { useCommandStore } from '@/stores/command-store';
 
 const isDialogOpen = defineModel<boolean>();
 const props = defineProps({
@@ -86,8 +86,8 @@ const { t } = useI18n();
 const jobToRun = ref<JobToRun>();
 const selectedRecipe = ref<Recipe | null>(null);
 const jobIsStarting = ref(false);
-const recipeStore = useRecipeStore();
-recipeStore.recipes.refresh();
+const commandStore = useCommandStore();
+commandStore.commands.refresh();
 
 async function runJob() {
   if (!jobToRun.value || !props.device) return;
