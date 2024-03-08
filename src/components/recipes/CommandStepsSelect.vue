@@ -30,7 +30,14 @@
             <q-td :props="propsStep">
               <div v-if="!propsStep.row.value.recipe">{{ propsStep.row.value.name }}</div>
               <div v-else>
-                <q-tree :nodes="getCommandNodes(propsStep.row.value)" node-key="id" :dense="true" />
+                <q-tree :nodes="getCommandNodes(propsStep.row.value)" node-key="id" :dense="true">
+                  <template #default-header="treeProp">
+                    <span>{{ treeProp.node.label }}</span>
+                    <template v-if="treeProp.node.cycles > 1">
+                      <span class="text-grey-8">&nbsp;({{ treeProp.node.cycles }}x)</span>
+                    </template>
+                  </template>
+                </q-tree>
               </div>
             </q-td>
           </template>
@@ -203,13 +210,9 @@ function removeCommandFromRecipe(index: number) {
 watch(
   localSubCommands,
   (newLocalCommands) => {
-    const unpackedCommands: Command[] = [];
-    newLocalCommands.forEach((commandWithCycles) => {
-      for (let i = 0; i < commandWithCycles.cycles; i++) {
-        unpackedCommands.push({ ...commandWithCycles.value });
-      }
-    });
-    recipe.value.subCommands = unpackedCommands;
+    recipe.value.subCommands = newLocalCommands.flatMap((commandWithCycles) =>
+      Array.from({ length: commandWithCycles.cycles }, () => ({ ...commandWithCycles.value })),
+    );
   },
   { deep: true },
 );
@@ -218,6 +221,7 @@ watch(
 interface CommandNode {
   id: string;
   label: string;
+  cycles: number;
   children?: CommandNode[];
 }
 
@@ -226,14 +230,33 @@ function getCommandNodes(command: Command): CommandNode[] {
     return [];
   }
 
+  function groupSubCommands(subCommands: Command[]): CommandNode[] {
+    if (!subCommands) return [];
+
+    const groupedNodes: CommandNode[] = [];
+
+    subCommands.forEach((subCommand) => {
+      const lastNode = groupedNodes[groupedNodes.length - 1];
+      if (lastNode && lastNode.id === subCommand.id) {
+        lastNode.cycles += 1;
+      } else {
+        groupedNodes.push({
+          id: subCommand.id,
+          label: subCommand.name,
+          cycles: 1,
+          children: groupSubCommands(subCommand.subCommands ?? []),
+        });
+      }
+    });
+
+    return groupedNodes;
+  }
+
   const rootNode: CommandNode = {
     id: command.id,
     label: command.name,
-    children: command.subCommands?.map((subCommand) => ({
-      id: subCommand.id,
-      label: subCommand.name,
-      children: getCommandNodes(subCommand)?.[0].children,
-    })),
+    cycles: 1,
+    children: groupSubCommands(command.subCommands ?? []),
   };
 
   return [rootNode];
