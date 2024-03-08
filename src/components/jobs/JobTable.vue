@@ -17,6 +17,14 @@
       </div>
     </template>
 
+    <template #body-cell-deviceName="tableProps">
+      <q-td :props="tableProps">
+        <router-link class="text-black" :to="`/devices/${tableProps.row.deviceId}`">{{
+          tableProps.row.deviceName
+        }}</router-link>
+      </q-td>
+    </template>
+
     <template #body-cell-status="tableProps">
       <q-td auto-width :props="tableProps">
         <q-badge :color="statusColors[tableProps.row.currentStatus as JobStatusEnum]" class="q-pa-xs">
@@ -24,6 +32,7 @@
         </q-badge>
       </q-td>
     </template>
+
     <template #body-cell-actions="tableProps">
       <q-td auto-width :props="tableProps">
         <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/jobs/${tableProps.row.uid}`"
@@ -44,6 +53,7 @@ import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from 'src/models/JobStatusEnum';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
+import { RouterLink } from 'vue-router';
 
 const { t } = useI18n();
 
@@ -52,76 +62,85 @@ const props = defineProps({
     type: Array as PropType<Job[]>,
     default: () => [],
   },
+  showDeviceName: {
+    type: Boolean,
+    default: false,
+  },
   loading: {
     type: Boolean,
     default: false,
   },
 });
 
-const columns = computed<QTableProps['columns']>(() => [
-  {
-    name: 'name',
-    label: t('global.name'),
-    field: 'name',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'started_at',
-    label: t('job.started_at'),
-    field: 'createdAt',
-    sortable: true,
-    align: 'left',
-    format: (val: string) => new Date(val).toLocaleString(),
-  },
-  {
-    name: 'finished_at',
-    label: t('job.finished_at'),
-    field: 'finishedAt',
-    sortable: true,
-    align: 'left',
-    format: (val: string) => {
-      if (val) {
-        return new Date(val).toLocaleString();
-      }
-      return t('job.not_finished');
+const columns = computed<QTableProps['columns']>(() => {
+  const baseColumns: QTableProps['columns'] = [
+    {
+      name: 'name',
+      label: t('job.label'),
+      field: 'name',
+      sortable: true,
+      align: 'left',
     },
-  },
-  {
-    name: 'step',
-    label: t('job.step'),
-    field: (row) => row.status?.currentStep ?? 1,
-    sortable: true,
-    align: 'left',
-    format: (val: string, row: Job) => {
-      return t('global.n_of_m', [val, row.noOfCmds]);
+    {
+      name: 'started_at',
+      label: t('job.started_at'),
+      field: 'createdAt',
+      sortable: true,
+      align: 'left',
+      format: (val: string) => new Date(val).toLocaleString(),
     },
-  },
-  {
-    name: 'cycle',
-    label: t('job.cycle'),
-    field: (row) => row.status?.currentCycle ?? 1,
-    sortable: true,
-    align: 'left',
-    format: (val: number, row: Job) => {
-      return t('global.n_of_m', [val, row.noOfReps]);
+    {
+      name: 'finished_at',
+      label: t('job.finished_at'),
+      field: 'finishedAt',
+      sortable: true,
+      align: 'left',
+      format: (val: string) => (val ? new Date(val).toLocaleString() : t('job.not_finished')),
     },
-  },
-  {
-    name: 'status',
-    label: t('job.status'),
-    field: '',
-    sortable: false,
-    align: 'center',
-  },
-  {
-    name: 'actions',
-    label: '',
-    field: '',
-    align: 'center',
-    sortable: false,
-  },
-]);
+    {
+      name: 'step',
+      label: t('job.step'),
+      field: (row) => row.status?.currentStep ?? 1,
+      sortable: true,
+      align: 'left',
+      format: (val: string, row: Job) => t('global.n_of_m', [val, row.noOfCmds]),
+    },
+    {
+      name: 'cycle',
+      label: t('job.cycle'),
+      field: (row) => row.status?.currentCycle ?? 1,
+      sortable: true,
+      align: 'left',
+      format: (val: number, row: Job) => t('global.n_of_m', [val, row.noOfReps]),
+    },
+    {
+      name: 'status',
+      label: t('job.status'),
+      field: 'currentStatus',
+      sortable: true,
+      align: 'center',
+    },
+    {
+      name: 'actions',
+      label: '',
+      field: '',
+      align: 'center',
+      sortable: false,
+    },
+  ];
+
+  if (props.showDeviceName) {
+    baseColumns.unshift({
+      name: 'deviceName',
+      label: t('device.label'),
+      field: 'deviceName',
+      sortable: true,
+      align: 'left',
+    });
+  }
+
+  return baseColumns;
+});
 </script>
 
 <style lang="scss" scoped></style>

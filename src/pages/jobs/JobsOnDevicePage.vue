@@ -11,6 +11,7 @@ import { useI18n } from 'vue-i18n';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
 import { reactive } from 'vue';
+import JobStable from '@/components/jobs/JobTable.vue';
 
 const { t } = useI18n();
 

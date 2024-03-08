@@ -1,6 +1,6 @@
 <template>
   <PageLayout :title="t('job.label', 2)">
-    <JobStable :jobs="store.jobs.data" :loading="store.jobs.isLoading" />
+    <JobStable :jobs="store.jobs.data" :show-device-name="true" :loading="store.jobs.isLoading" />
   </PageLayout>
 </template>
 

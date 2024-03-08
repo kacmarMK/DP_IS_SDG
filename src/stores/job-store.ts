@@ -16,6 +16,7 @@ export const useJobStore = defineStore('job', () => {
       device.jobs.map((job) => ({
         ...job,
         deviceName: device.name,
+        deviceId: device.uid,
       })),
     );
   }
