@@ -1,8 +1,8 @@
-import { Command, CommandFrame } from 'src/models/Command';
+import { Command, CommandInput } from 'src/models/Command';
 import { api } from '@/utils/api';
 
 class CommandService {
-  async createCommand(command: CommandFrame): Promise<Command> {
+  async createCommand(command: CommandInput): Promise<Command> {
     return await api<Command>('jobs/command/createCommand', {
       method: 'POST',
       body: command,
@@ -27,7 +27,7 @@ class CommandService {
     });
   }
 
-  async updateCommand(command: CommandFrame, id: string): Promise<Command> {
+  async updateCommand(command: CommandInput, id: string): Promise<Command> {
     return await api<Command>(`jobs/command/updateCommand/${id}`, {
       method: 'PUT',
       body: command,

@@ -82,16 +82,15 @@
 </template>
 
 <script setup lang="ts">
-import { RecipeInput } from '@/models/Recipe';
 import { QTableProps } from 'quasar';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Command } from '@/models/Command';
+import { Command, CommandInput } from '@/models/Command';
 import { mdiPlus, mdiClose, mdiDrag } from '@quasar/extras/mdi-v6';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useCommandStore } from '@/stores/command-store';
 
-const recipe = defineModel<RecipeInput>({ required: true });
+const recipe = defineModel<CommandInput>({ required: true });
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -103,7 +102,7 @@ const { t } = useI18n();
 const commandStore = useCommandStore();
 commandStore.commands.refresh();
 
-const localRecipeCommands = ref(recipe.value.commands?.map((c, index) => ({ id: index, value: c })) ?? []);
+const localRecipeCommands = ref(recipe.value.subCommands?.map((c, index) => ({ id: index, value: c })) ?? []);
 
 const filteredCommands = computed<Command[]>(() => {
   const { deviceType } = recipe.value;
@@ -122,7 +121,7 @@ function removeCommandFromRecipe(index: number) {
 watch(
   localRecipeCommands,
   (newLocalCommands) => {
-    recipe.value.commands = newLocalCommands.map((item) => item.value);
+    recipe.value.subCommands = newLocalCommands.map((item) => item.value);
   },
   { deep: true },
 );

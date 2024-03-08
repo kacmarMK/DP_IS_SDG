@@ -31,6 +31,7 @@ const getDefaultCommand = (): CommandInput => ({
   name: '',
   deviceType: undefined,
   params: [],
+  recipe: false,
 });
 
 const creatingCommand = ref(false);

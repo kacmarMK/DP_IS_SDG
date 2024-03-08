@@ -26,16 +26,17 @@ import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useAsyncData } from '@/composables/useAsyncData';
 import { useRoute, useRouter } from 'vue-router';
-import { useRecipeStore } from '@/stores/recipe-store';
+import { useCommandStore } from '@/stores/command-store';
+import CommandService from '@/services/CommandService';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const store = useRecipeStore();
+const store = useCommandStore();
 
 const uid = route.params.id.toString();
-const recipe = reactive(useAsyncData(() => RecipeService.getRecipeById(uid), t('recipe.toasts.load_failed')));
-recipe.data = store.getRecipeById(uid);
+const recipe = reactive(useAsyncData(() => CommandService.getCommand(uid), t('recipe.toasts.load_failed')));
+recipe.data = store.getCommandById(uid);
 
 const recipeForm = ref();
 const updatingRecipe = ref(false);
@@ -45,7 +46,7 @@ async function updateRecipe() {
 
   try {
     updatingRecipe.value = true;
-    await RecipeService.updateRecipe(recipe.data, recipe.data.id);
+    await CommandService.updateCommand(recipe.data, recipe.data.id);
     toast.success(t('recipe.toasts.update_success'));
     router.push('/recipes/');
   } catch (error) {

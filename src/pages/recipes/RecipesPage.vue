@@ -18,7 +18,7 @@
       <q-table
         :rows="filteredRecipes"
         :columns="columns"
-        :loading="store.recipes.isLoading"
+        :loading="store.commands.isLoading"
         flat
         :rows-per-page-options="[10, 20, 50]"
         class="shadow"
@@ -75,7 +75,7 @@
     v-if="recipeToDelete"
     v-model="deleteDialogOpen"
     :recipe="recipeToDelete"
-    @on-delete="store.recipes.refresh"
+    @on-delete="store.commands.refresh"
   />
 </template>
 
@@ -85,16 +85,16 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiCodeTags, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 import { mdiPlus } from '@quasar/extras/mdi-v6';
-import { useRecipeStore } from '@/stores/recipe-store';
 import { Recipe } from '@/models/Recipe';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
 import SearchBar from '@/components/core/SearchBar.vue';
 import { useAuthStore } from '@/stores/auth-store';
+import { useCommandStore } from '@/stores/command-store';
 
 const { t } = useI18n();
-const store = useRecipeStore();
-store.recipes.refresh();
+const store = useCommandStore();
+store.commands.refresh();
 
 const authStore = useAuthStore();
 
@@ -104,9 +104,13 @@ const filter = ref('');
 
 const filteredRecipes = computed(() => {
   if (filter.value === '') {
-    return store.recipes.data;
+    return store.commands.data?.filter((command) => command.recipe) ?? [];
   }
-  return store.recipes.data?.filter((recipe) => recipe.name.toLowerCase().includes(filter.value.toLowerCase())) ?? [];
+  return (
+    store.commands.data?.filter(
+      (command) => command.recipe && command.name.toLowerCase().includes(filter.value.toLowerCase()),
+    ) ?? []
+  );
 });
 
 const columns = computed<QTableProps['columns']>(() => [

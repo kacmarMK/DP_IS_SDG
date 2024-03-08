@@ -19,16 +19,9 @@
           :label="t('device.device_type')"
           :options="Object.values(DeviceTypeEnum)"
         />
-        <q-checkbox
-          v-model="recipe.subRecipe"
-          :disable="props.loading"
-          dense
-          :label="t('recipe.subrecipe')"
-          class="col-auto"
-        />
       </div>
     </q-card>
-    <q-btn-toggle
+    <!-- <q-btn-toggle
       v-model="selectedStepType"
       spread
       class="q-mb-lg q-mt-xl shadow custom-toggle"
@@ -42,22 +35,21 @@
         { label: t('command.label', 2), value: 'commands' },
         { label: t('recipe.subrecipe', 2), value: 'subrecipes' },
       ]"
-    />
-    <CommandStepsSelect v-show="selectedStepType === 'commands'" v-model="recipe" :loading="props.loading" />
-    <SubrecipeStepsSelect v-show="selectedStepType === 'subrecipes'" v-model="recipe" :loading="props.loading" />
+    /> -->
+    <CommandStepsSelect v-model="recipe" class="q-mt-md" :loading="props.loading" />
+    <!-- <SubrecipeStepsSelect v-show="selectedStepType === 'subrecipes'" v-model="recipe" :loading="props.loading" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { RecipeInput, getEmptyRecipeInput } from '@/models/Recipe';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DeviceTypeEnum from '@/models/DeviceType';
 import { isFormValid } from '@/utils/form-validation';
 import CommandStepsSelect from '@/components/recipes/CommandStepsSelect.vue';
-import SubrecipeStepsSelect from './SubrecipeStepsSelect.vue';
+import { CommandInput, getEmptyCommandInputAsRecipe } from '@/models/Command';
 
-const recipe = defineModel<RecipeInput>({ required: true, default: getEmptyRecipeInput() });
+const recipe = defineModel<CommandInput>({ required: true, default: getEmptyCommandInputAsRecipe() });
 const props = defineProps({
   loading: {
     type: Boolean,

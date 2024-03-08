@@ -19,18 +19,19 @@
 <script setup lang="ts">
 import RecipeForm from '@/components/recipes/RecipeForm.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
-import { RecipeInput, getEmptyRecipeInput } from '@/models/Recipe';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import RecipeService from '@/services/RecipeService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
 import { useRouter } from 'vue-router';
+import { CommandInput, getEmptyCommandInputAsRecipe } from '@/models/Command';
+import CommandService from '@/services/CommandService';
 
 const { t } = useI18n();
 const router = useRouter();
 
-const recipe = ref<RecipeInput>(getEmptyRecipeInput());
+const recipe = ref<CommandInput>(getEmptyCommandInputAsRecipe());
 const creatingRecipe = ref(false);
 const recipeForm = ref();
 
@@ -39,8 +40,8 @@ async function createRecipe() {
 
   try {
     creatingRecipe.value = true;
-    const createdRecipe = await RecipeService.createRecipe(recipe.value);
-    await RecipeService.updateRecipe(createdRecipe, createdRecipe.id); // Must call update to set new commands
+    const createdRecipe = await CommandService.createCommand(recipe.value);
+    await CommandService.updateCommand(createdRecipe, createdRecipe.id); // Must call update to set new commands
     toast.success(t('recipe.toasts.create_success'));
     router.push('/recipes/');
   } catch (error) {
