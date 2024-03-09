@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/devices',
-        component: () => import('pages/devices/DevicesPage.vue'),
+        component: () => import('pages/devices/DeviceListPage.vue'),
       },
       {
         path: '/devices/create',

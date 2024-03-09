@@ -2,6 +2,11 @@
   <PageLayout :title="t('device.label', 2)">
     <template #actions>
       <SearchBar v-model="filter" />
+      <AutoRefreshButton
+        v-model="refreshInterval"
+        :loading="deviceStore.devices.isLoading"
+        @on-refresh="deviceStore.devices.refresh"
+      />
       <q-btn
         v-if="authStore.isAdmin"
         class="shadow"
@@ -35,13 +40,15 @@ import { mdiPlus } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { ref } from 'vue';
 import SearchBar from '@/components/core/SearchBar.vue';
+import { useStorage } from '@vueuse/core';
+import AutoRefreshButton from '@/components/core/AutoRefreshButton.vue';
 
 const { t } = useI18n();
-
 const authStore = useAuthStore();
 const deviceStore = useDeviceStore();
-
-deviceStore.devices.refresh();
-
 const filter = ref('');
+
+// Setup for automatic refresh
+const refreshInterval = useStorage('DeviceRefreshInterval', 30);
+deviceStore.devices.refresh();
 </script>

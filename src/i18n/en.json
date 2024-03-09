@@ -26,6 +26,9 @@
     "shared": "Shared",
     "permissions": "Permissions",
     "n_of_m": "{0} of {1}",
+    "refresh": "Refresh",
+    "automatic_refresh_interval": "Automatic refresh interval",
+    "enter_refresh_interval_s": "Enter refresh interval in seconds",
     "rules": {
       "required": "This field is required!"
     }

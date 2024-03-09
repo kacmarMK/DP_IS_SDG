@@ -139,7 +139,6 @@ import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
 import StatusDot from './StatusDot.vue';
 import JobStatusBadge from '../jobs/JobStatusBadge.vue';
-import { JobStatusEnum } from '@/models/JobStatusEnum';
 
 const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({

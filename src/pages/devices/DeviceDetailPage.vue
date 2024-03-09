@@ -7,7 +7,7 @@
   >
     <template #actions>
       <q-btn
-        class="shadow bg-white q-ml-md"
+        class="shadow bg-white"
         :to="`/devices/${device.data.uid}/jobs`"
         text-color="grey-color"
         unelevated
@@ -18,7 +18,7 @@
       />
       <q-btn
         v-if="authStore.isAdmin"
-        class="shadow q-ml-md"
+        class="shadow"
         color="primary"
         unelevated
         no-caps
