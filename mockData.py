@@ -2,12 +2,12 @@ import requests
 import json
 import random
 import time
-from datetime import datetime, timezone
 
 # Constants
-DEVICE_ID = "65e594017002026f38ff56bc"  # Replace with actual device ID
-JOB_STATUS_ID = "65e594217002026f38ff56c0"  # Replace with actual job status ID
-TAG = "s123"  # Replace with actual tag
+DEVICE_ID = "65eb8e8019a6f336ba03a433"  # Replace with actual device ID
+DEVICE_API_KEY = "api"
+JOB_STATUS_ID = "65eb8e8919a6f336ba03a436"  # Replace with actual job status ID
+TAG = "s1"  # Replace with actual tag
 API_BASE_URL = "http://localhost:8080/api"  # Replace with actual API base URL
 USERNAME = "admin"  # Replace with actual username
 PASSWORD = "admin"  # Replace with actual password
@@ -33,15 +33,12 @@ def update_job_status(token):
         "retCode": "JOB_PROCESSING",
         "code": "JOB_PROCESSING",
         "currentStep": 1,
-        "totalSteps": 12,
         "currentCycle": 1,
         "data": [random_data],
     }
 
-    print(f"Request Body: {request_body}")
-
     response = requests.post(
-        f"{API_BASE_URL}/device/updateJobStatus/{DEVICE_ID}/{JOB_STATUS_ID}",
+        f"{API_BASE_URL}/device/updateJobStatus/{DEVICE_ID}/{DEVICE_API_KEY}/{JOB_STATUS_ID}",
         headers=headers,
         data=json.dumps(request_body),
     )
@@ -56,7 +53,7 @@ def main():
     while True:
         status_code, response = update_job_status(token)
         print(f"Status Code: {status_code}, Response: {response}")
-        time.sleep(5)
+        time.sleep(1)
 
 
 main()

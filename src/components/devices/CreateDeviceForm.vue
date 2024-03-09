@@ -27,8 +27,18 @@
               v-model="deviceInput.mac"
               :disable="loadingDevice"
               :rules="macRules"
-              class="col-12 col-md-6"
+              class="col-12"
               :label="t('device.mac_address')"
+            />
+            <q-input
+              ref="responseTimeRef"
+              v-model="deviceInput.responseTime"
+              :disable="loadingDevice"
+              :rules="responseTimeRules"
+              type="number"
+              :min="0"
+              class="col-12 col-md-6"
+              :label="t('device.response_time')"
             />
             <q-input
               ref="initApiKeyRef"
@@ -298,4 +308,5 @@ const remoteDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
 const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const macRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const typeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const responseTimeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 </script>

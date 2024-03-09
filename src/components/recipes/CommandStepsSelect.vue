@@ -30,7 +30,7 @@
             <q-td :props="propsStep">
               <div v-if="!propsStep.row.value.recipe">{{ propsStep.row.value.name }}</div>
               <div v-else>
-                <q-tree :nodes="getCommandNodes(propsStep.row.value)" node-key="id" :dense="true">
+                <q-tree :nodes="getCommandNodes(propsStep.row.value)" node-key="id">
                   <template #default-header="treeProp">
                     <span>{{ treeProp.node.label }}</span>
                     <template v-if="treeProp.node.cycles > 1">
@@ -126,7 +126,7 @@
           <q-td :props="propsName">
             <div v-if="!propsName.row.recipe">{{ propsName.row.name }}</div>
             <div v-else>
-              <q-tree :nodes="getCommandNodes(propsName.row)" node-key="id" :dense="true">
+              <q-tree :nodes="getCommandNodes(propsName.row)" node-key="id">
                 <template #default-header="treeProp">
                   <span>{{ treeProp.node.label }}</span>
                   <template v-if="treeProp.node.cycles > 1">

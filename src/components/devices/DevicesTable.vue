@@ -25,6 +25,21 @@
         </q-td>
       </template>
 
+      <template #body-cell-contact="propsContact">
+        <q-td auto-width :props="propsContact">
+          {{ formatTimeToDistance(propsContact.row.lastContact) }}
+          <q-tooltip v-if="propsContact.row.lastContact" content-style="font-size: 11px" :offset="[0, 4]">
+            {{ formatToLocalTime(propsContact.row.lastContact) }}
+          </q-tooltip>
+        </q-td>
+      </template>
+
+      <template #body-cell-status="propsStatus">
+        <q-td auto-width :props="propsStatus">
+          <StatusDot :status="getDeviceStatus(propsStatus.row)" />
+        </q-td>
+      </template>
+
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions">
           <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/devices/${propsActions.row.uid}`"
@@ -99,7 +114,7 @@
 import { QTableProps } from 'quasar';
 import ShareDeviceDialog from './ShareDeviceDialog.vue';
 import { computed, ref } from 'vue';
-import { Device } from '@/models/Device';
+import { Device, getDeviceStatus } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
@@ -115,6 +130,8 @@ import {
   mdiTrashCanOutline,
 } from '@quasar/extras/mdi-v6';
 import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
+import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
+import StatusDot from './StatusDot.vue';
 
 const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({
@@ -176,27 +193,6 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'left',
   },
   {
-    name: 'type',
-    label: t('device.type'),
-    field: 'type',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'version',
-    label: t('device.version'),
-    field: 'version',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'firmware',
-    label: t('device.firmware'),
-    field: 'firmware',
-    sortable: true,
-    align: 'left',
-  },
-  {
     name: 'permissions',
     label: t('global.permissions'),
     field(row) {
@@ -204,6 +200,22 @@ const columns = computed<QTableProps['columns']>(() => [
     },
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'contact',
+    label: t('device.last_seen'),
+    field: 'lastContact',
+    align: 'left',
+    sortable: true,
+  },
+  {
+    name: 'status',
+    label: t('device.status'),
+    field(row) {
+      return getDeviceStatus(row);
+    },
+    align: 'center',
+    sortable: true,
   },
   {
     name: 'actions',
