@@ -1,5 +1,10 @@
 <template>
-  <PageLayout v-if="job.data" :title="job.data.name" :previous-title="t('job.label', 2)" previous-route="/jobs">
+  <PageLayout
+    v-if="job.data"
+    :title="job.data.name"
+    :previous-title="t('job.label', 2)"
+    :previous-route="`/devices/${job.data.deviceId}`"
+  >
     <template #description>
       <q-badge class="q-pa-xs q-ml-sm" color="primary">
         <!-- eslint-disable-next-line @intlify/vue-i18n/no-raw-text -->

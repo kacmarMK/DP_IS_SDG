@@ -25,6 +25,8 @@ class DeviceService {
 
   async updateDevice(deviceUpdate: DeviceInput, uid: string): Promise<Device> {
     deviceUpdate.dataPointTags = null;
+    deviceUpdate.jobs = null;
+    deviceUpdate.sharedUsers = null;
     return await api<Device>(`device/updateDevice/${uid}`, {
       method: 'PUT',
       body: deviceUpdate,

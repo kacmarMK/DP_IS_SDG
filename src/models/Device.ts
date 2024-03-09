@@ -22,7 +22,6 @@ interface Device {
   responseTime: number;
   addTime?: number;
   lastContact?: string;
-  lastJobStatus?: JobStatusEnum;
   initExpireTime?: number;
   initApiKey?: string;
   deactivated: boolean;
@@ -37,8 +36,10 @@ interface DeviceInput {
   firmware: string;
   responseTime?: number;
   initApiKey?: string;
+  jobs?: Job[] | null;
   deactivated: boolean;
   dataPointTags?: DataPointTag[] | null;
+  sharedUsers?: User[] | null;
 }
 
 function deviceToInput(device: Device): DeviceInput {
@@ -85,5 +86,25 @@ function getDeviceStatus(device: Device, timeReserveMs = 1000): DeviceStatus {
   }
 }
 
+function getLastJobStatus(device: Device): JobStatusEnum {
+  const { jobs } = device;
+
+  if (jobs.length === 0) {
+    return JobStatusEnum.JOB_FREE;
+  }
+
+  let latestJob: Job = jobs[0];
+  let latestUpdateTime: Date = new Date(jobs[0].status.lastUpdated);
+
+  for (const job of jobs) {
+    const jobUpdateTime: Date = new Date(job.status.lastUpdated);
+    if (jobUpdateTime > latestUpdateTime) {
+      latestUpdateTime = jobUpdateTime;
+      latestJob = job;
+    }
+  }
+  return latestJob.currentStatus;
+}
+
 export type { Device, DeviceInput };
-export { deviceToInput, getEmptyDeviceInput, getDeviceStatus, DeviceStatus };
+export { deviceToInput, getEmptyDeviceInput, getDeviceStatus, DeviceStatus, getLastJobStatus };

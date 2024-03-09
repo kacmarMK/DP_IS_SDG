@@ -42,7 +42,7 @@
 
       <template #body-cell-jobstatus="jobProps">
         <q-td auto-width :props="jobProps">
-          <JobStatusBadge :status="jobProps.row.lastJobStatus" />
+          <JobStatusBadge :status="getLastJobStatus(jobProps.row)" />
         </q-td>
       </template>
 
@@ -120,7 +120,7 @@
 import { QTableProps } from 'quasar';
 import ShareDeviceDialog from './ShareDeviceDialog.vue';
 import { computed, ref } from 'vue';
-import { Device, getDeviceStatus } from '@/models/Device';
+import { Device, getDeviceStatus, getLastJobStatus } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
 import { toast } from 'vue3-toastify';
@@ -227,7 +227,9 @@ const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'jobstatus',
     label: t('job.job_status'),
-    field: 'lastJobStatus',
+    field(row) {
+      return getLastJobStatus(row);
+    },
     align: 'center',
     sortable: true,
   },
