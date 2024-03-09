@@ -178,6 +178,9 @@
   "time_range": {
     "label": "Časový rozsah",
     "custom": "Vlastný",
+    "from": "Od",
+    "to": "Do",
+    "now": "Teraz",
     "predefined": {
       "last_30min": "Posledných 30 minút",
       "last_1h": "Posledná hodina",
@@ -191,6 +194,7 @@
   "job": {
     "label": "Úloha | Úlohy",
     "job_history": "História úloh",
+    "job_status": "Stav úlohy",
     "run_job": "Spustiť úlohu",
     "no_running_job": "Žiadna bežiaca úloha",
     "not_finished": "Prebieha",

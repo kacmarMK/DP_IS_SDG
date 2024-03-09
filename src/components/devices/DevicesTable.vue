@@ -40,6 +40,12 @@
         </q-td>
       </template>
 
+      <template #body-cell-jobstatus="jobProps">
+        <q-td auto-width :props="jobProps">
+          <JobStatusBadge :status="jobProps.row.lastJobStatus" />
+        </q-td>
+      </template>
+
       <template #body-cell-actions="propsActions">
         <q-td auto-width :props="propsActions">
           <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/devices/${propsActions.row.uid}`"
@@ -132,6 +138,8 @@ import {
 import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
 import StatusDot from './StatusDot.vue';
+import JobStatusBadge from '../jobs/JobStatusBadge.vue';
+import { JobStatusEnum } from '@/models/JobStatusEnum';
 
 const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({
@@ -214,6 +222,13 @@ const columns = computed<QTableProps['columns']>(() => [
     field(row) {
       return getDeviceStatus(row);
     },
+    align: 'center',
+    sortable: true,
+  },
+  {
+    name: 'jobstatus',
+    label: t('job.job_status'),
+    field: 'lastJobStatus',
     align: 'center',
     sortable: true,
   },

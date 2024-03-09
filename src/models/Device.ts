@@ -1,6 +1,7 @@
 import { DataPointTag } from './DataPointTag';
 import DeviceTypeEnum from './DeviceType';
 import { Job } from './Job';
+import { JobStatusEnum } from './JobStatusEnum';
 import { User } from './User';
 
 enum DeviceStatus {
@@ -21,6 +22,7 @@ interface Device {
   responseTime: number;
   addTime?: number;
   lastContact?: string;
+  lastJobStatus?: JobStatusEnum;
   initExpireTime?: number;
   initApiKey?: string;
   deactivated: boolean;
@@ -64,6 +66,7 @@ function getEmptyDeviceInput(): DeviceInput {
   };
 }
 
+//Online or offline
 function getDeviceStatus(device: Device, timeReserveMs = 1000): DeviceStatus {
   if (!device.lastContact) {
     return DeviceStatus.OFFLINE;
@@ -71,7 +74,7 @@ function getDeviceStatus(device: Device, timeReserveMs = 1000): DeviceStatus {
 
   const lastContactDate = new Date(device.lastContact + 'Z');
 
-  const currentDate = new Date(); // Local time
+  const currentDate = new Date();
   const timeDifference = currentDate.getTime() - lastContactDate.getTime();
   const responseTimeMs = device.responseTime * 1000 + timeReserveMs;
 

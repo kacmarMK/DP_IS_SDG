@@ -85,9 +85,7 @@ const series = computed(() => {
   }));
 });
 
-const yaxisLabels = props.dataPointTags.map((tag) => tag.unit) ?? [];
-
-const chartOptions = ref({
+const chartOptions = computed(() => ({
   chart: {
     height: 350,
     zoom: {
@@ -99,6 +97,9 @@ const chartOptions = ref({
       tools: {
         download: false,
       },
+    },
+    animations: {
+      enabled: false,
     },
   },
   dataLabels: {
@@ -151,7 +152,7 @@ const chartOptions = ref({
       },
     },
   },
-});
+}));
 
 const chart = ref<ApexCharts | null>(null);
 function updateTimeRange(timeRange: TimeRange) {

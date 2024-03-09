@@ -16,17 +16,10 @@
       <q-icon :name="mdiClockOutline" />
     </template>
     <template #after-options>
-      <q-item clickable>
+      <q-item clickable @click="customTimeRangeDialog = true">
         <q-item-section>
           <q-item-label>{{ t('time_range.custom') }}</q-item-label>
         </q-item-section>
-        <q-popup-proxy transition-show="scale" transition-hide="scale">
-          <q-date :model-value="customTimeRangeSelected" range @update:model-value="setCustomTimeRange">
-            <div class="row items-center justify-end q-gutter-sm">
-              <q-btn v-close-popup label="OK" color="primary" flat />
-            </div>
-          </q-date>
-        </q-popup-proxy>
       </q-item>
     </template>
     <template #selected-item="scope">
@@ -39,6 +32,23 @@
       </template>
     </template>
   </q-select>
+  <q-dialog v-model="customTimeRangeDialog">
+    <q-card class="q-pa-xs">
+      <q-card-section>
+        <div class="text-h6">
+          {{ t('time_range.custom') }}
+        </div>
+      </q-card-section>
+      <q-card-section class="q-pt-none column q-gutter-md">
+        <DateTimeInput v-model="customTimeRangeSelected.from" :label="t('time_range.from')" />
+        <DateTimeInput v-model="customTimeRangeSelected.to" :label="t('time_range.to')" :show-now-button="true" />
+      </q-card-section>
+      <q-card-actions align="right" class="text-primary">
+        <q-btn v-close-popup flat :label="t('global.cancel')" no-caps />
+        <q-btn unelevated color="primary" label="Filter" no-caps padding="6px 20px" @click="setCustomTimeRange" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +57,7 @@ import { computed, ref } from 'vue';
 import { PredefinedTimeRange } from '@/models/TimeRange';
 import { useI18n } from 'vue-i18n';
 import { mdiClockOutline } from '@quasar/extras/mdi-v6';
+import DateTimeInput from './DateTimeInput.vue';
 
 const emit = defineEmits(['update:modelValue']);
 defineExpose({
@@ -54,6 +65,8 @@ defineExpose({
 });
 
 const { t } = useI18n();
+
+const customTimeRangeDialog = ref(false);
 
 const timeRanges = computed(() => [
   {
@@ -94,15 +107,19 @@ const timeRanges = computed(() => [
 ]);
 
 const selectedTimeRangeIndex = ref(1);
-const customTimeRangeSelected = ref({
-  from: new Date(),
-  to: new Date(),
+const customTimeRangeSelected = ref<{
+  from: Date | null;
+  to: Date | null;
+}>({
+  from: null,
+  to: null,
 });
+
 const isCustomTimeRangeSelected = ref(false);
 
-function setCustomTimeRange(val: { from: Date; to: Date }) {
-  customTimeRangeSelected.value = val;
+function setCustomTimeRange() {
   isCustomTimeRangeSelected.value = true;
+  customTimeRangeDialog.value = false;
   emitUpdate();
 }
 
@@ -116,9 +133,13 @@ const formatDate = (date: Date) => format(date, 'yyyy-MM-dd HH:mm:ss');
 function emitUpdate() {
   let newVal;
   if (isCustomTimeRangeSelected.value) {
+    if (customTimeRangeSelected.value.from === null) {
+      return;
+    }
+
     newVal = {
       from: formatDate(new Date(customTimeRangeSelected.value.from)),
-      to: formatDate(new Date(customTimeRangeSelected.value.to)),
+      to: formatDate(new Date(customTimeRangeSelected.value.to ?? new Date())),
     };
   } else {
     const now = new Date();

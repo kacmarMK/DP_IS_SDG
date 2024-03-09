@@ -178,6 +178,9 @@
   "time_range": {
     "label": "Time range",
     "custom": "Custom",
+    "from": "From",
+    "to": "To",
+    "now": "Now",
     "predefined": {
       "last_30min": "Last 30 minutes",
       "last_1h": "Last hour",
@@ -191,6 +194,7 @@
   "job": {
     "label": "Job | Jobs",
     "job_history": "Job history",
+    "job_status": "Job status",
     "run_job": "Run job",
     "no_running_job": "No running job",
     "not_finished": "Not finished yet",
