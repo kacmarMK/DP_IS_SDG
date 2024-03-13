@@ -27,9 +27,9 @@
 
       <template #body-cell-contact="propsContact">
         <q-td auto-width :props="propsContact">
-          {{ formatTimeToDistance(propsContact.row.lastContact) }}
-          <q-tooltip v-if="propsContact.row.lastContact" content-style="font-size: 11px" :offset="[0, 4]">
-            {{ formatToLocalTime(propsContact.row.lastContact) }}
+          {{ formatTimeToDistance(propsContact.row.lastResponse) }}
+          <q-tooltip v-if="propsContact.row.lastResponse" content-style="font-size: 11px" :offset="[0, 4]">
+            {{ formatToLocalTime(propsContact.row.lastResponse) }}
           </q-tooltip>
         </q-td>
       </template>
@@ -211,7 +211,7 @@ const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'contact',
     label: t('device.last_seen'),
-    field: 'lastContact',
+    field: 'lastResponse',
     align: 'left',
     sortable: true,
   },
