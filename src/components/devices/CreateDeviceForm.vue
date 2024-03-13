@@ -308,5 +308,5 @@ const remoteDataPointTagFormRef = ref<(typeof DataPointTagForm)[]>([]);
 const nameRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const macRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
 const typeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
-const responseTimeRules = [(val: string) => (val && val.length > 0) || t('global.rules.required')];
+const responseTimeRules = [(val: number) => val > 0 || t('global.rules.required')];
 </script>

@@ -13,6 +13,7 @@
       <job-status-badges v-if="job" class="q-ml-sm" :job="job.data"></job-status-badges>
     </template>
     <template #actions>
+      <AutoRefreshButton v-model="refreshInterval" :loading="job.isLoading" @on-refresh="job.refresh" />
       <job-controls
         v-if="job && authStore.isAdmin"
         class="col-grow"
@@ -80,7 +81,7 @@
 
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import jobService from '@/services/JobService';
 import JobControls from '@/components/jobs/JobControls.vue';
@@ -92,6 +93,8 @@ import { mdiCheck, mdiListStatus } from '@quasar/extras/mdi-v6';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
 import { useJobStore } from '@/stores/job-store';
+import { useStorage } from '@vueuse/core';
+import AutoRefreshButton from '@/components/core/AutoRefreshButton.vue';
 
 const { t } = useI18n();
 
@@ -99,6 +102,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 const jobStore = useJobStore();
 
+const refreshInterval = useStorage('JobDetailRefreshInterval', 30);
 const job = reactive(
   useAsyncData(() => jobService.getJobById(route.params.id.toString()), t('job.toasts.load_failed')),
 );
@@ -185,17 +189,6 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'left',
   },
 ]);
-
-//Refresh job every N seconds
-const refreshInterval = 10; // in seconds
-const intervalId = ref();
-onMounted(() => {
-  intervalId.value = setInterval(job.refresh, refreshInterval * 1000);
-});
-
-onUnmounted(() => {
-  clearInterval(intervalId.value);
-});
 </script>
 
 <style lang="scss" scoped>

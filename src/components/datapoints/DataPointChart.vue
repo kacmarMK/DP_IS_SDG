@@ -20,7 +20,7 @@
           </q-list></template
         >
       </q-btn-dropdown>
-      <q-btn
+      <!-- <q-btn
         text-color="primary"
         outline
         unelevated
@@ -29,7 +29,7 @@
         padding="0.5rem 1rem"
         :icon="mdiRefresh"
         @click="refreshDevice()"
-      ></q-btn>
+      ></q-btn> -->
     </div>
     <apexchart
       ref="chart"
@@ -70,6 +70,10 @@ const selectedTimeRange = ref<TimeRange>();
 const timeRangeSelect = ref();
 function refreshDevice() {
   emit('refresh');
+  timeRangeSelect.value?.emitUpdate();
+}
+
+function refreshTimeRange() {
   timeRangeSelect.value?.emitUpdate();
 }
 
@@ -263,6 +267,10 @@ watch(
     updateSeriesVisibility(newTags, tickedNodes.value ?? []);
   },
 );
+
+defineExpose({
+  refreshTimeRange,
+});
 </script>
 
 <style lang="scss">
