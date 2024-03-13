@@ -25,7 +25,7 @@
       <q-input
         v-model.number="refreshInterval"
         type="number"
-        :min="1"
+        :min="0"
         :label="t('global.automatic_refresh_interval')"
         :hint="t('global.enter_refresh_interval_s')"
       />
@@ -60,7 +60,7 @@ const setupAutoRefresh = () => {
     clearInterval(intervalId);
   }
 
-  if (refreshInterval.value != null && refreshInterval.value >= 1) {
+  if (refreshInterval.value != null && refreshInterval.value > 0) {
     intervalId = setInterval(() => {
       emit('onRefresh');
     }, refreshInterval.value * 1000);
