@@ -16,7 +16,7 @@
     "name": "Názov",
     "value": "Hodnota",
     "options": "Možnosti",
-    "refresh": "Obnoviť",
+    "clean": "Vyčistiť",
     "search": "Hľadať",
     "account": "Účet",
     "user_management": "Správa používateľov",
@@ -322,8 +322,6 @@
     "label": "Scenár | Scenáre",
     "all": "Všetky",
     "active": "Aktívne",
-    "days_active": "Aktívne v dňoch",
-    "hours_active": "Aktívne v hodinách",
     "create_scenario": "Vytvoriť scenár",
     "delete_scenario": "Vymazať scenár",
     "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",
@@ -338,9 +336,13 @@
       "delete_success": "Scenár bol vymazaný!",
       "delete_failed": "Vymazanie scenáru zlyhalo!"
     },
-    "type_options": {
+    "scenario_type_options": {
       "option1": "Všetky",
       "option2": "Aktívne"
+    },
+    "rules_type_options": {
+      "option1": "Grafický mód",
+      "option2": "Programátorský mód"
     },
     "day_options": {
       "option1": "Pondelok",

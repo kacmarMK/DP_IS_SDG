@@ -16,7 +16,7 @@
     "name": "Name",
     "value": "Value",
     "options": "Options",
-    "refresh": "Refresh",
+    "clean": "Clean",
     "search": "Search",
     "account": "Account",
     "user_management": "User Management",
@@ -322,8 +322,6 @@
     "label": "Scenario | Scenarios",
     "all": "All",
     "active": "Active",
-    "days_active": "Active on days",
-    "hours_active": "Active in hours",
     "create_scenario": "Create scenario",
     "delete_scenario": "Delete scenario",
     "delete_scenario_desc": "Are you sure you want to delete this scenario?",
@@ -338,9 +336,13 @@
       "delete_success": "Scenario deleted!",
       "delete_failed": "Scenario delete failed!"
     },
-    "type_options": {
+    "scenario_type_options": {
       "option1": "All",
       "option2": "Active"
+    },
+    "rules_type_options": {
+      "option1": "Graphical mode",
+      "option2": "Programmer mode"
     },
     "day_options": {
       "option1": "Monday",

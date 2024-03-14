@@ -51,13 +51,13 @@
                 {{ t('global.details') }}
               </q-tooltip>
             </q-btn>
-            <!--
-            <q-btn :icon="mdiPencil" color="grey-color" flat round :to="`/scenarios/${props.row.id}/edit`"
-              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
-                {{ t('global.edit') }}
-              </q-tooltip>
+
+            <q-btn :icon="mdiPowerSleep" color="grey-color" flat round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> Mute </q-tooltip>
             </q-btn>
-            -->
+            <q-btn :icon="mdiPower" color="grey-color" flat round
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> Deactivate </q-tooltip>
+            </q-btn>
             <q-btn
               :icon="mdiTrashCanOutline"
               color="grey-color"
@@ -92,15 +92,23 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Scenario } from '@/models/Scenario';
 import DeleteScenarioDialog from '@/components/scenarios/DeleteScenarioDialog.vue';
-import { mdiOpenInNew, mdiPlus, mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import {
+  mdiOpenInNew,
+  mdiPlus,
+  mdiBookMultipleOutline,
+  mdiPencil,
+  mdiTrashCanOutline,
+  mdiPowerSleep,
+  mdiPower,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const store = useScenarioStore();
 store.getScenarios();
 
 const translatedOptions = computed(() => [
-  { value: 'all', label: t('scenario.type_options.option1') },
-  { value: 'active', label: t('scenario.type_options.option2') },
+  { value: 'all', label: t('scenario.scenario_type_options.option1') },
+  { value: 'active', label: t('scenario.scenario_type_options.option2') },
 ]);
 
 const isDeleteDialogOpened = ref(false);
