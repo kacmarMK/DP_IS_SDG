@@ -103,8 +103,13 @@
               active-color="primary"
               class="text-secondary bottom-outline"
             >
-              <q-tab name="commands" class="outline-bottom-grey" :icon="mdiCodeTags" label="Commands" />
-              <q-tab name="subrecipes" class="outline-bottom-grey" :icon="mdiBookMultipleOutline" label="Subrecipes" />
+              <q-tab name="commands" class="outline-bottom-grey" :icon="mdiCodeTags" :label="t('command.label', 2)" />
+              <q-tab
+                name="subrecipes"
+                class="outline-bottom-grey"
+                :icon="mdiBookMultipleOutline"
+                :label="t('recipe.subrecipe', 2)"
+              />
             </q-tabs>
           </div>
         </template>
