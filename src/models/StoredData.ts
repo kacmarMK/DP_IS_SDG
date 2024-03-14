@@ -2,7 +2,8 @@ interface StoredData {
   uid: string;
   dataPointTagId: string;
   value: number;
-  measureAdd: number;
+  measureAt: number;
+  measureAtDevice: string;
   deactivated: boolean;
   deviceId: string;
   tag: string;
