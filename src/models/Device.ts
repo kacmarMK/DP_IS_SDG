@@ -21,7 +21,7 @@ interface Device {
   dataPointTags: DataPointTag[];
   responseTime: number;
   addTime?: number;
-  lastContact?: string;
+  lastResponse?: number;
   initExpireTime?: number;
   initApiKey?: string;
   deactivated: boolean;
@@ -69,11 +69,11 @@ function getEmptyDeviceInput(): DeviceInput {
 
 //Online or offline
 function getDeviceStatus(device: Device, timeReserveMs = 1000): DeviceStatus {
-  if (!device.lastContact) {
+  if (!device.lastResponse) {
     return DeviceStatus.OFFLINE;
   }
 
-  const lastContactDate = new Date(device.lastContact + 'Z');
+  const lastContactDate = new Date(device.lastResponse);
 
   const currentDate = new Date();
   const timeDifference = currentDate.getTime() - lastContactDate.getTime();

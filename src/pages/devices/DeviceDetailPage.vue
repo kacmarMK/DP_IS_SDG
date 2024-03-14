@@ -16,6 +16,7 @@
         :label="t('job.label', 2)"
         :icon="mdiListStatus"
       />
+      <AutoRefreshButton v-model="refreshInterval" :loading="device.isLoading" @on-refresh="refreshDevice" />
       <q-btn
         v-if="authStore.isAdmin"
         class="shadow"
@@ -34,7 +35,11 @@
           <device-info-card :device="device.data" class="shadow container q-pa-lg full-height"></device-info-card>
         </div>
         <div class="col-12 col-md-12 col-lg-6 col-xl-6">
-          <current-job-card class="shadow container q-pa-lg full-height" :device="device.data"></current-job-card>
+          <current-job-card
+            ref="currentJobCard"
+            class="shadow container q-pa-lg full-height"
+            :device="device.data"
+          ></current-job-card>
         </div>
         <div class="col-12 col-md-12 col-lg-12 col-xl-3">
           <sensor-selection-tree
@@ -47,6 +52,7 @@
         <div class="col-12">
           <data-point-chart
             v-if="dataPointTagTree"
+            ref="dataPointChart"
             v-model:tickedNodes="tickedNodes"
             class="bg-white shadow q-pa-lg"
             :data-point-tags="device.data.dataPointTags"
@@ -74,6 +80,8 @@ import { mdiListStatus, mdiPencil } from '@quasar/extras/mdi-v6';
 import { useDeviceStore } from '@/stores/device-store';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
+import { useStorage } from '@vueuse/core';
+import AutoRefreshButton from '@/components/core/AutoRefreshButton.vue';
 
 const { t } = useI18n();
 
@@ -83,6 +91,9 @@ const deviceStore = useDeviceStore();
 
 const deviceId = route.params.id.toString();
 const device = reactive(useAsyncData(getDevice, t('device.toasts.loading_failed')));
+
+const dataPointChart = ref();
+const currentJobCard = ref();
 
 const dataPointTagTree = ref<DataPointTagNode>();
 const tickedNodes = ref<string[]>();
@@ -102,6 +113,14 @@ function loadStoreDevice(uid: string) {
   }
 }
 loadStoreDevice(route.params.id.toString());
+
+async function refreshDevice() {
+  currentJobCard.value?.refresh();
+  await device.refresh();
+  dataPointChart.value?.refreshTimeRange();
+}
+
+const refreshInterval = useStorage('DeviceDetailRefreshInterval', 30);
 </script>
 
 <style lang="scss" scoped></style>

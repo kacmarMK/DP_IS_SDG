@@ -85,7 +85,6 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { mdiCodeTags, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
 import { mdiPlus } from '@quasar/extras/mdi-v6';
-import { Recipe } from '@/models/Recipe';
 import DeleteRecipeDialog from '@/components/recipes/DeleteRecipeDialog.vue';
 import PageLayout from '@/layouts/PageLayout.vue';
 import SearchBar from '@/components/core/SearchBar.vue';
@@ -125,14 +124,6 @@ const columns = computed<QTableProps['columns']>(() => [
     name: 'deviceType',
     label: t('device.device_type'),
     field: 'deviceType',
-    sortable: true,
-    align: 'left',
-  },
-  {
-    name: 'subrecipe',
-    label: t('recipe.subrecipe'),
-    field: 'subRecipe',
-    format: (value) => (value ? t('global.yes') : t('global.no')),
     sortable: true,
     align: 'left',
   },

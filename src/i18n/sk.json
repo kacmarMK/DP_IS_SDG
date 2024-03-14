@@ -28,7 +28,7 @@
     "n_of_m": "{0} z {1}",
     "refresh": "Obnoviť",
     "automatic_refresh_interval": "Automatický interval obnovy",
-    "enter_refresh_interval_s": "Zadajte interval obnovy v sekundách",
+    "enter_refresh_interval_s": "Zadajte interval obnovy v sekundách (0 pre vypnutie)",
     "rules": {
       "required": "Toto pole je povinné!"
     }

@@ -20,7 +20,7 @@
           </q-list></template
         >
       </q-btn-dropdown>
-      <q-btn
+      <!-- <q-btn
         text-color="primary"
         outline
         unelevated
@@ -29,7 +29,7 @@
         padding="0.5rem 1rem"
         :icon="mdiRefresh"
         @click="refreshDevice()"
-      ></q-btn>
+      ></q-btn> -->
     </div>
     <apexchart
       ref="chart"
@@ -73,11 +73,15 @@ function refreshDevice() {
   timeRangeSelect.value?.emitUpdate();
 }
 
+function refreshTimeRange() {
+  timeRangeSelect.value?.emitUpdate();
+}
+
 const series = computed(() => {
   return props.dataPointTags.map((tag, index) => ({
     name: `${tag.name} (${tag.unit})`,
     data: tag.storedData.map((data) => ({
-      x: data.measureAdd,
+      x: data.measureAt,
       y: data.value,
       unit: tag.unit,
     })),
@@ -177,7 +181,7 @@ const generateCSVData = () => {
   let allData: {
     name: string;
     unit: string;
-    measureAdd: number;
+    measureAt: number;
     value: number;
   }[] = [];
 
@@ -187,21 +191,21 @@ const generateCSVData = () => {
       allData.push({
         name: tag.name,
         unit: tag.unit,
-        measureAdd: data.measureAdd,
+        measureAt: data.measureAt,
         value: data.value,
       });
     });
   });
 
-  // Sort the data by measureAdd (timestamp)
-  allData.sort((a, b) => new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime());
+  // Sort the data by measureAt (timestamp)
+  allData.sort((a, b) => new Date(a.measureAt).getTime() - new Date(b.measureAt).getTime());
 
   // Format the data for CSV export
   let csvData = allData.map((data) => ({
     name: data.name,
-    unix: new Date(data.measureAdd).getTime(),
-    date: format(new Date(data.measureAdd), 'dd/MM/yyyy'),
-    time: format(new Date(data.measureAdd), 'HH:mm:ss'),
+    unix: new Date(data.measureAt).getTime(),
+    date: format(new Date(data.measureAt), 'dd/MM/yyyy'),
+    time: format(new Date(data.measureAt), 'HH:mm:ss'),
     value: data.value,
     unit: data.unit,
   }));
@@ -263,6 +267,10 @@ watch(
     updateSeriesVisibility(newTags, tickedNodes.value ?? []);
   },
 );
+
+defineExpose({
+  refreshTimeRange,
+});
 </script>
 
 <style lang="scss">

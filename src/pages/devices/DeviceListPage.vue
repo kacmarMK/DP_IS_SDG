@@ -49,6 +49,6 @@ const deviceStore = useDeviceStore();
 const filter = ref('');
 
 // Setup for automatic refresh
-const refreshInterval = useStorage('DeviceRefreshInterval', 30);
+const refreshInterval = useStorage('DeviceListRefreshInterval', 30);
 deviceStore.devices.refresh();
 </script>

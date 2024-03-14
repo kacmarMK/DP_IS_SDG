@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import StartJobDialog from '@/components/jobs/StartJobDialog.vue';
-import { computed, ref, onMounted, onUnmounted, PropType, reactive } from 'vue';
+import { computed, ref, PropType, reactive } from 'vue';
 import { JobStatusEnum } from '@/models/JobStatusEnum';
 import { Job } from '@/models/Job';
 import jobService from '@/services/JobService';
@@ -136,15 +136,12 @@ const currentCommandName = computed(() => {
   return '';
 });
 
-//Refresh job every N seconds
-const refreshInterval = 10; // in seconds
-const intervalId = ref();
-onMounted(() => {
-  intervalId.value = setInterval(jobs.refresh, refreshInterval * 1000);
-});
+async function refreshJobs() {
+  await jobs.refresh();
+}
 
-onUnmounted(() => {
-  clearInterval(intervalId.value);
+defineExpose({
+  refresh: refreshJobs,
 });
 </script>
 
