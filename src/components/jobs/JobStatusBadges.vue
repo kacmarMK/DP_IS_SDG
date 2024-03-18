@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <q-badge :color="statusColors[job.currentStatus]" class="q-pa-xs">
+    <q-badge :color="jobStatusColors[job.currentStatus]" class="q-pa-xs">
       {{ props.job.currentStatus }}
     </q-badge>
     <q-badge v-if="props.job.toCancel" color="red" class="q-pa-xs q-ml-sm">
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { Job } from '@/models/Job';
-import { statusColors } from '@/utils/colors';
+import { jobStatusColors } from '@/utils/job-status-look';
 import { PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 

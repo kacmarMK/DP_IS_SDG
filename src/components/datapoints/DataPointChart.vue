@@ -81,8 +81,8 @@ const series = computed(() => {
   return props.dataPointTags.map((tag, index) => ({
     name: `${tag.name} (${tag.unit})`,
     data: tag.storedData.map((data) => ({
-      x: data.measureAt,
-      y: data.value,
+      x: data.measureAt ?? 1,
+      y: data.value ?? 0,
       unit: tag.unit,
     })),
     color: graphColors[index],

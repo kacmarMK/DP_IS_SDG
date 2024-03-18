@@ -35,16 +35,4 @@ const graphColors = [
   '#743411',
 ];
 
-const statusColors: Record<JobStatusEnum, string> = {
-  [JobStatusEnum.JOB_FREE]: 'accent',
-  [JobStatusEnum.JOB_IDLE]: 'accent',
-  [JobStatusEnum.JOB_PENDING]: 'accent',
-  [JobStatusEnum.JOB_PROCESSING]: 'primary',
-  [JobStatusEnum.JOB_DONE]: 'green',
-  [JobStatusEnum.JOB_ERR]: 'red',
-  [JobStatusEnum.JOB_PAUSED]: 'accent',
-  [JobStatusEnum.JOB_CANCELED]: 'red',
-  [JobStatusEnum.JOB_STATUS_MAX]: 'primary',
-};
-
-export { graphColors, statusColors };
+export { graphColors };

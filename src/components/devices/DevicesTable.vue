@@ -42,7 +42,8 @@
 
       <template #body-cell-jobstatus="jobProps">
         <q-td auto-width :props="jobProps">
-          <JobStatusBadge :status="getLastJobStatus(jobProps.row)" />
+          <!-- <JobStatusBadge :status="getLastJobStatus(jobProps.row)" /> -->
+          <JobStatusIcon :status="getLastJobStatus(jobProps.row)" />
         </q-td>
       </template>
 
@@ -139,6 +140,7 @@ import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
 import StatusDot from './StatusDot.vue';
 import JobStatusBadge from '../jobs/JobStatusBadge.vue';
+import JobStatusIcon from '../jobs/JobStatusIcon.vue';
 
 const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({
@@ -210,7 +212,7 @@ const columns = computed<QTableProps['columns']>(() => [
   },
   {
     name: 'contact',
-    label: t('device.last_seen'),
+    label: t('device.last_activity'),
     field: 'lastResponse',
     align: 'left',
     sortable: true,

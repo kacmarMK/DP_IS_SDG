@@ -1,12 +1,12 @@
 <template>
-  <q-badge v-if="status" :color="statusColors[status as JobStatusEnum]">
+  <q-badge v-if="status" :color="jobStatusColors[status as JobStatusEnum]">
     {{ status }}
   </q-badge>
 </template>
 
 <script setup lang="ts">
 import { JobStatusEnum } from '@/models/JobStatusEnum';
-import { statusColors } from '@/utils/colors';
+import { jobStatusColors } from '@/utils/job-status-look';
 
 defineProps({
   status: {

@@ -30,18 +30,18 @@
       />
     </template>
     <template #default>
+      <div class="q-mb-lg">
+        <device-info-card :device="device.data" class="shadow container full-height"></device-info-card>
+      </div>
       <div class="row q-col-gutter-x-xl q-col-gutter-y-xl justify-between">
-        <div class="col-12 col-md-12 col-lg-6 col-xl-3">
-          <device-info-card :device="device.data" class="shadow container q-pa-lg full-height"></device-info-card>
-        </div>
-        <div class="col-12 col-md-12 col-lg-6 col-xl-6">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-8">
           <current-job-card
             ref="currentJobCard"
             class="shadow container q-pa-lg full-height"
             :device="device.data"
           ></current-job-card>
         </div>
-        <div class="col-12 col-md-12 col-lg-12 col-xl-3">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-4">
           <sensor-selection-tree
             v-if="dataPointTagTree"
             v-model:tickedNodes="tickedNodes"

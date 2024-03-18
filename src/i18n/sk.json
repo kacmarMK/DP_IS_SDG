@@ -120,6 +120,7 @@
   },
   "device": {
     "label": "Zariadenie | Zariadenia",
+    "device_info": "Informácie o zariadení",
     "add_device": "Pridať zariadenie",
     "type": "Typ",
     "device_type": "Typ zariadenia",
@@ -135,7 +136,7 @@
     "no_sensors": "Žiadne dostupné snímače",
     "unit": "Jednotka",
     "response_time": "Odozva",
-    "last_seen": "Naposledy videné",
+    "last_activity": "Posledná aktivita",
     "status": "Stav",
     "decimal": "Počet desatinných miest",
     "init_window": "Inicializovať 1min okno",

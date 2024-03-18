@@ -120,6 +120,7 @@
   },
   "device": {
     "label": "Device | Devices",
+    "device_info": "Device info",
     "add_device": "Add device",
     "type": "Type",
     "device_type": "Device type",
@@ -135,7 +136,7 @@
     "no_sensors": "No sensors available",
     "unit": "Unit",
     "response_time": "Response time",
-    "last_seen": "Last seen",
+    "last_activity": "Last activity",
     "status": "Status",
     "decimal": "Decimal places",
     "init_window": "Initialize 1min window",

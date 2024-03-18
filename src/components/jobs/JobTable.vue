@@ -27,7 +27,7 @@
 
     <template #body-cell-status="tableProps">
       <q-td auto-width :props="tableProps">
-        <q-badge :color="statusColors[tableProps.row.currentStatus as JobStatusEnum]" class="q-pa-xs">
+        <q-badge :color="jobStatusColors[tableProps.row.currentStatus as JobStatusEnum]" class="q-pa-xs">
           {{ tableProps.row.currentStatus }}
         </q-badge>
       </q-td>
@@ -49,11 +49,11 @@
 import { QTableProps } from 'quasar';
 import { Job } from '@/models/Job';
 import { PropType, computed } from 'vue';
-import { statusColors } from '@/utils/colors';
 import { JobStatusEnum } from 'src/models/JobStatusEnum';
 import { useI18n } from 'vue-i18n';
 import { mdiListStatus, mdiOpenInNew } from '@quasar/extras/mdi-v6';
 import { RouterLink } from 'vue-router';
+import { jobStatusColors } from '@/utils/job-status-look';
 
 const { t } = useI18n();
 
