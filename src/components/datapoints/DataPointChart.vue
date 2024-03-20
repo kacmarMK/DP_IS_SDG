@@ -140,7 +140,14 @@ async function onClickRefresh() {
 async function refreshStoredData() {
   if (props.dataPointTags.length === 0) return;
   const from = new Date(selectedTimeRange.value?.from ?? 0);
-  const to = new Date(selectedTimeRange.value?.to ?? Date.now());
+
+  const zoomTo = lastZoom.value?.[1] ?? Date.now();
+  const selectedTimeRangeTo = new Date(selectedTimeRange.value?.to ?? Date.now());
+
+  console.log('zoomTo', zoomTo);
+  console.log('selectedTimeRangeTo', selectedTimeRangeTo.getTime());
+
+  const to = new Date(zoomTo > selectedTimeRangeTo.getTime() ? zoomTo : selectedTimeRangeTo.getTime());
 
   const fromUnix = from.getTime();
   const toUnix = to.getTime();

@@ -77,7 +77,7 @@ const timeRanges = computed(() => [
   {
     title: t('time_range.predefined.last_1h'),
     name: '1h',
-    time: 3600,
+    time: 360,
   },
   {
     title: t('time_range.predefined.last_6h'),
