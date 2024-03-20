@@ -124,7 +124,6 @@ loadStoreDevice(route.params.id.toString());
 async function refreshDevice() {
   currentJobCard.value?.refresh();
   await getDevice();
-  dataPointChart.value?.refreshTimeRange();
 }
 
 const refreshInterval = useStorage('DeviceDetailRefreshInterval', 30);

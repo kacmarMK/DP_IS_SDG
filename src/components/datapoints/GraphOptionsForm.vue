@@ -1,6 +1,7 @@
 <template>
   <q-form @submit="emit('onSubmit')">
-    <q-input v-model="cadence" type="number" :label="t('chart.maximum_values')" />
+    <q-input v-model.number="refreshInterval" type="number" :label="t('global.automatic_refresh_interval')" />
+    <q-input v-model.number="cadence" type="number" :label="t('chart.maximum_values')" />
     <q-select
       v-model="selectedStatisticalMethod"
       :options="statisticalMethods"
@@ -52,6 +53,11 @@ const graphTypeOptions = [
   { value: 'markers', label: t('chart.graph_options.markers') },
   { value: 'linesmarkers', label: t('chart.graph_options.lines_markers') },
 ];
+
+const refreshInterval = defineModel<number>('refreshInterval', {
+  type: Number,
+  required: true,
+});
 
 const cadence = defineModel<number>('cadence', {
   type: Number,

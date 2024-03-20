@@ -12,7 +12,7 @@
         text-color="grey-5"
         class="options-btn"
         :icon="mdiRefresh"
-        @click="refreshStoredData()"
+        @click="onClickRefresh"
       >
         <template #default>
           <div class="text-grey-10 text-weight-regular q-ml-sm">
@@ -45,6 +45,8 @@
       :series="series"
       @mounted="setChartUpdate"
       @legend-click="legendClick"
+      @before-reset-zoom="beforeResetZoom"
+      @zoomed="onChartZoomed"
     ></apexchart>
     <dialog-common
       v-model="optionsDialogOpen"
@@ -57,6 +59,7 @@
       <template #title>{{ t('global.options') }}</template>
       <template #default>
         <GraphOptionsForm
+          v-model:refreshInterval="refreshInterval"
           v-model:cadence="cadence"
           v-model:selectedStatisticalMethod="selectedStatisticalMethod"
           v-model:selectedCurve="selectedCurve"
@@ -79,6 +82,7 @@ import DataPointTagService from '@/services/DataPointTagService';
 import DialogCommon from '../core/DialogCommon.vue';
 import { mdiRefresh } from '@quasar/extras/mdi-v6';
 import GraphOptionsForm from './GraphOptionsForm.vue';
+import { useInterval } from '@/composables/useInterval';
 
 const props = defineProps({
   dataPointTags: {
@@ -92,9 +96,6 @@ const { t } = useI18n();
 
 const selectedTimeRange = ref<TimeRange>();
 const timeRangeSelect = ref();
-function refreshTimeRange() {
-  timeRangeSelect.value?.emitUpdate();
-}
 
 const series = computed(() => {
   return localDataPointTags.value.map((tag, index) => ({
@@ -122,7 +123,18 @@ async function updateTimeRange(timeRange: TimeRange) {
     chartOptions.value.xaxis.min = new Date(timeRange.from).getTime();
     chartOptions.value.xaxis.max = new Date(timeRange.to).getTime();
   }
-  refreshStoredData();
+  await refreshStoredData();
+}
+
+async function onClickRefresh() {
+  if (!lastZoom.value) {
+    timeRangeSelect.value?.emitUpdate();
+  } else if (lastZoom.value && lastZoom.value[1] == chartOptions.value.xaxis.max) {
+    lastZoom.value = null;
+    timeRangeSelect.value?.emitUpdate();
+  } else {
+    await refreshStoredData();
+  }
 }
 
 async function refreshStoredData() {
@@ -145,11 +157,19 @@ async function refreshStoredData() {
 
   const results = await Promise.all(promises);
 
+  disableChartUpdate();
   localDataPointTags.value = props.dataPointTags.map((tag, index) => ({
     ...tag,
     storedData: results[index],
   }));
+  enableChartUpdate();
+
   await updateSeriesVisibility(localDataPointTags.value, tickedNodes.value ?? []);
+
+  // Zoom back after data refresh
+  if (chart.value && lastZoom.value) {
+    chart.value?.zoomX(lastZoom.value[0], lastZoom.value[1]);
+  }
 }
 
 //Legend control
@@ -178,6 +198,15 @@ function disableChartUpdate() {
 function legendClick(_chartContext: unknown, seriesIndex: number) {
   seriesVisibility.value[seriesIndex] = !seriesVisibility.value[seriesIndex];
   tickedNodes.value = props.dataPointTags.filter((_, index) => seriesVisibility.value[index]).map((tag) => tag.uid);
+}
+
+// Zoom for chart update, to keep the zoom after data refresh
+const lastZoom = ref<[number, number] | null>();
+function beforeResetZoom() {
+  lastZoom.value = null;
+}
+function onChartZoomed(chartContext: unknown, { xaxis }: { xaxis: { min: number; max: number } }) {
+  lastZoom.value = [xaxis.min, xaxis.max];
 }
 
 function areAllSeriesVisible(newTicked: string[]) {
@@ -215,6 +244,7 @@ async function updateSeriesVisibility(tags: DataPointTag[], ticked: string[]) {
 
 const optionsDialogOpen = ref(false);
 
+const refreshInterval = useStorage('graphOptions.refreshInterval', 60);
 const cadence = useStorage('graphOptions.cadence', 1000);
 const selectedStatisticalMethod = useStorage('graphOptions.selectedStatisticalMethod', 1);
 const selectedCurve = useStorage('graphOptions.selectedCurve', 'straight');
@@ -249,9 +279,10 @@ watch(
   },
 );
 
-defineExpose({
-  refreshTimeRange,
-});
+const intervalMilliseconds = computed(() => refreshInterval.value * 1000);
+useInterval(() => {
+  onClickRefresh();
+}, intervalMilliseconds);
 
 const chartOptions = computed(() => ({
   chart: {

@@ -34,50 +34,27 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps, ref, computed } from 'vue';
 import { mdiCog, mdiRefresh } from '@quasar/extras/mdi-v6';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import DialogCommon from './DialogCommon.vue';
+import { useInterval } from '@/composables/useInterval';
 
 const { t } = useI18n();
 
 const refreshInterval = defineModel({ type: Number, required: true });
+const emit = defineEmits(['onRefresh']);
+const refreshDialogOpen = ref(false);
+
+const intervalMilliseconds = computed(() => refreshInterval.value * 1000);
+useInterval(() => {
+  emit('onRefresh');
+}, intervalMilliseconds);
 
 defineProps({
   loading: {
     type: Boolean,
     default: false,
   },
-});
-
-const emit = defineEmits(['onRefresh']);
-
-const refreshDialogOpen = ref(false);
-let intervalId: NodeJS.Timeout | null = null;
-
-const setupAutoRefresh = () => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
-
-  if (refreshInterval.value != null && refreshInterval.value > 0) {
-    intervalId = setInterval(() => {
-      emit('onRefresh');
-    }, refreshInterval.value * 1000);
-  }
-};
-
-watch(refreshInterval, () => {
-  setupAutoRefresh();
-});
-
-onMounted(() => {
-  setupAutoRefresh();
-});
-
-onUnmounted(() => {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
 });
 </script>
