@@ -6,7 +6,6 @@
         color="grey-color"
         :icon="mdiPause"
         :loading="pausingJob"
-        :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="pauseJob"
       ></JobControlButton>
     </div>
@@ -16,7 +15,6 @@
         color="primary"
         :icon="mdiPlay"
         :loading="resumingJob"
-        :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="resumeJob"
       ></JobControlButton>
     </div>
@@ -26,7 +24,6 @@
         color="green-9"
         :icon="mdiSkipNext"
         :loading="skipStepLoading"
-        :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="skipStep"
       ></JobControlButton>
     </div>
@@ -36,7 +33,6 @@
         color="primary"
         :icon="mdiSkipForward"
         :loading="skipCycleLoading"
-        :disable="runningJob.currentStatus != JobStatusEnum.JOB_PROCESSING"
         @click="skipCycle"
       ></JobControlButton>
     </div>
