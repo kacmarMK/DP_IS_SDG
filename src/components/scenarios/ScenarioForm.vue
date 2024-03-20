@@ -86,12 +86,12 @@
                   spread
                   toggle-color="secondary"
                   :options="translatedOptions"
-                  style="width: 500px"
+                  style="width: 800px"
                   @click="handleToggleClick"
                 />
               </div>
               <div
-                v-if="!showProgrammerMode"
+                v-if="!showProgrammerMode && !showPseudocode"
                 style="
                   background-color: #f5f5f5;
                   padding: 70px;
@@ -738,12 +738,12 @@
                         v-if="thenSlot === 'job'"
                         v-model="jobThen"
                         :options="jobOptions"
-                        label="Jobs"
+                        label="Job"
                         dense
                         class="col"
                       ></q-select>
                       <div
-                        v-if="!showProgrammerMode && thenSlot === 'condition'"
+                        v-if="!showProgrammerMode && !showPseudocode && thenSlot === 'condition'"
                         style="
                           background-color: #f5f5f5;
                           padding: 70px;
@@ -1406,7 +1406,7 @@
                                 v-if="thenSlot === 'job'"
                                 v-model="jobThen"
                                 :options="jobOptions"
-                                label="Jobs"
+                                label="Job"
                                 dense
                                 class="col"
                               ></q-select>
@@ -1463,7 +1463,7 @@
                                 v-if="elseSlot === 'job'"
                                 v-model="jobElse"
                                 :options="jobOptions"
-                                label="Jobs"
+                                label="Job"
                                 dense
                                 class="col"
                               ></q-select>
@@ -1472,6 +1472,39 @@
                         </div>
                         <br />
                       </div>
+                    </div>
+                  </div>
+                  <div v-if="thenSlot === 'job' || thenSlot === 'notification'" class="q-pa-sm q-mt-lg">
+                    <div class="row justify-center">
+                      <q-btn
+                        color="white"
+                        text-color="black"
+                        label="DURATION"
+                        style="width: 145px; height: 54px"
+                        size="16px"
+                      />
+                      <q-select v-model="durationOptionThen" filled :options="durationOptions" style="width: 145px" />
+
+                      <q-input
+                        v-if="durationOptionThen === 'SET'"
+                        v-model="durationTimeThen"
+                        filled
+                        mask="fulltime"
+                        :rules="['fulltime']"
+                        style="width: 160px"
+                      >
+                        <template #append>
+                          <q-btn :icon="mdiClockTimeFourOutline">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                              <q-time v-model="durationTimeThen" with-seconds format24h>
+                                <div class="row items-center justify-end">
+                                  <q-btn v-close-popup label="Close" color="primary" flat />
+                                </div>
+                              </q-time>
+                            </q-popup-proxy>
+                          </q-btn>
+                        </template>
+                      </q-input>
                     </div>
                   </div>
                 </div>
@@ -1525,7 +1558,7 @@
                         v-if="elseSlot === 'job'"
                         v-model="jobElse"
                         :options="jobOptions"
-                        label="Jobs"
+                        label="Job"
                         dense
                         class="col"
                       ></q-select>
@@ -2193,7 +2226,7 @@
                                 v-if="thenSlot === 'job'"
                                 v-model="jobThen"
                                 :options="jobOptions"
-                                label="Jobs"
+                                label="Job"
                                 dense
                                 class="col"
                               ></q-select>
@@ -2250,7 +2283,7 @@
                                 v-if="elseSlot === 'job'"
                                 v-model="jobElse"
                                 :options="jobOptions"
-                                label="Jobs"
+                                label="Job"
                                 dense
                                 class="col"
                               ></q-select>
@@ -2259,19 +2292,67 @@
                         </div>
                         <br />
                       </div>
+                      <div v-if="elseSlot === 'job' || elseSlot === 'notification'" class="q-pa-sm q-mt-lg">
+                        <div class="row justify-center">
+                          <q-btn
+                            color="white"
+                            text-color="black"
+                            label="DURATION"
+                            style="width: 145px; height: 54px"
+                            size="16px"
+                          />
+                          <q-select
+                            v-model="durationOptionElse"
+                            filled
+                            :options="durationOptions"
+                            style="width: 145px"
+                          />
+
+                          <q-input
+                            v-if="durationOptionElse === 'SET'"
+                            v-model="durationTimeElse"
+                            filled
+                            mask="fulltime"
+                            :rules="['fulltime']"
+                            style="width: 160px"
+                          >
+                            <template #append>
+                              <q-btn :icon="mdiClockTimeFourOutline">
+                                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                  <q-time v-model="durationTimeElse" with-seconds format24h>
+                                    <div class="row items-center justify-end">
+                                      <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                  </q-time>
+                                </q-popup-proxy>
+                              </q-btn>
+                            </template>
+                          </q-input>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <br />}
               </div>
               <q-input
-                v-if="showProgrammerMode"
+                v-if="showPseudocode"
                 v-model="pseudocode"
                 filled
                 label="Enter your pseudocode here..."
                 type="textarea"
                 hint="Don't forget to check correct syntax!"
-                rows="10"
+                rows="20"
+                style="font-family: monospace; font-size: 20px"
+              />
+              <q-input
+                v-if="showProgrammerMode"
+                v-model="scenarioStore.scenarioFrame.rules"
+                filled
+                label="Enter your JSON code here..."
+                type="textarea"
+                hint="Don't forget to check correct syntax!"
+                rows="20"
                 style="font-family: monospace; font-size: 20px"
               />
             </q-card>
@@ -2328,7 +2409,12 @@ import ScenarioService from '@/services/ScenarioService';
 import CommandService from '@/services/CommandService';
 import DeviceService from '@/services/DeviceService';
 import { useRoute } from 'vue-router';
-import { mdiCallSplit, mdiPlusCircleOutline, mdiMinusCircleOutline } from '@quasar/extras/mdi-v6';
+import {
+  mdiCallSplit,
+  mdiPlusCircleOutline,
+  mdiMinusCircleOutline,
+  mdiClockTimeFourOutline,
+} from '@quasar/extras/mdi-v6';
 
 const { t } = useI18n();
 const deviceStore = useDeviceStore();
@@ -2437,30 +2523,30 @@ const dayOptions = computed(() => [
 ]);
 
 const hourOptions = [
-  { label: '0:00', value: 0 },
-  { label: '1:00', value: 1 },
-  { label: '2:00', value: 2 },
-  { label: '3:00', value: 3 },
-  { label: '4:00', value: 4 },
-  { label: '5:00', value: 5 },
-  { label: '6:00', value: 6 },
-  { label: '7:00', value: 7 },
-  { label: '8:00', value: 8 },
-  { label: '9:00', value: 9 },
-  { label: '10:00', value: 10 },
-  { label: '11:00', value: 11 },
-  { label: '12:00', value: 12 },
-  { label: '13:00', value: 13 },
-  { label: '14:00', value: 14 },
-  { label: '15:00', value: 15 },
-  { label: '16:00', value: 16 },
-  { label: '17:00', value: 17 },
-  { label: '18:00', value: 18 },
-  { label: '19:00', value: 19 },
-  { label: '20:00', value: 20 },
-  { label: '21:00', value: 21 },
-  { label: '22:00', value: 22 },
-  { label: '23:00', value: 23 },
+  { label: '0:00-0:59', value: 0 },
+  { label: '1:00-1:59', value: 1 },
+  { label: '2:00-2:59', value: 2 },
+  { label: '3:00-3:59', value: 3 },
+  { label: '4:00-4:59', value: 4 },
+  { label: '5:00-5:59', value: 5 },
+  { label: '6:00-6:59', value: 6 },
+  { label: '7:00-7:59', value: 7 },
+  { label: '8:00-8:59', value: 8 },
+  { label: '9:00-9:59', value: 9 },
+  { label: '10:00-10:59', value: 10 },
+  { label: '11:00-11:59', value: 11 },
+  { label: '12:00-12:59', value: 12 },
+  { label: '13:00-13:59', value: 13 },
+  { label: '14:00-14:59', value: 14 },
+  { label: '15:00-15:59', value: 15 },
+  { label: '16:00-16:59', value: 16 },
+  { label: '17:00-17:59', value: 17 },
+  { label: '18:00-18:59', value: 18 },
+  { label: '19:00-19:59', value: 19 },
+  { label: '20:00-20:59', value: 20 },
+  { label: '21:00-21:59', value: 21 },
+  { label: '22:00-22:59', value: 22 },
+  { label: '23:00-23:59', value: 23 },
 ];
 const removeHour = (val: number) => {
   const index = scenarioStore.scenarioFrame.activeAtHour.indexOf(val);
@@ -2502,6 +2588,7 @@ if (scenarioStore.mode == 'edit') getScenario();
 async function onSubmit() {
   if (showConditions.value) {
     scenarioStore.scenarioFrame.rules = parseRules();
+    console.log(scenarioStore.scenarioFrame.rules);
   }
   if (scenarioStore.mode == 'create') {
     scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
@@ -2568,16 +2655,38 @@ function parseRules() {
   if (inputValue1.value && inputValue2.value) {
     // Both condition slots are constants
     conditionString =
-      '{ "' + selectOperand1.value?.value + '": [ ' + inputValue1.value + ', ' + inputValue2.value + ' ] },';
+      '{ "' + selectOperand1.value?.value + '": [ ' + inputValue1.value + ', ' + inputValue2.value + ' ]},';
   } else if (inputValue1.value && selectVariable2.value) {
     // Condition slot 1 is a constant, Condition slot 2 is a variable
-    //TODO
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ ' +
+      inputValue1.value +
+      ', {"var": "' +
+      selectVariable2.value.value +
+      '"} ]},';
   } else if (selectVariable1.value && inputValue2.value) {
     // Condition slot 1 is a variable, Condition slot 2 is a constant
-    //TODO
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ {"var": "' +
+      selectVariable1.value.value +
+      '"}, ' +
+      inputValue2.value +
+      ' ]},';
   } else {
     // Both condition slots are variables
-    // TODO
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ {"var": "' +
+      selectVariable1.value.value +
+      '"}, ' +
+      ' {"var": "' +
+      selectVariable2.value.value +
+      '"} ]},';
   }
 
   // Then string creation
@@ -2620,10 +2729,12 @@ interface Variable {
   value: string;
 }
 const showProgrammerMode = ref(false);
+const showPseudocode = ref(false);
 const selectedOption = ref('graphical');
 const translatedOptions = computed(() => [
   { value: 'graphical', label: t('scenario.rules_type_options.option1') },
   { value: 'pseudocode', label: t('scenario.rules_type_options.option2') },
+  { value: 'programmer', label: t('scenario.rules_type_options.option3') },
 ]);
 
 const selectVariable1 = ref<Variable | null>(null);
@@ -2642,7 +2753,7 @@ const jobThen = ref<Job | null>(null);
 const notificationThen = ref('');
 const notificationElse = ref('');
 const jobElse = ref<Job | null>(null);
-
+const pseudocode = ref('');
 const operands = [
   { label: '>', value: '>' },
   { label: '<', value: '<' },
@@ -2694,10 +2805,21 @@ const conditionSlot12 = ref('const');
 const thenSlot = ref('noAction');
 const elseSlot = ref('noAction');
 
+const durationOptionThen = ref('SET');
+const durationOptionElse = ref('SET');
+const durationOptions = ['SET', 'RESET'];
+const durationTimeThen = ref('00:00:00');
+const durationTimeElse = ref('00:00:00');
+
 async function handleToggleClick() {
   if (selectedOption.value == 'graphical') {
     showProgrammerMode.value = false;
+    showPseudocode.value = false;
+  } else if (selectedOption.value == 'pseudocode') {
+    showPseudocode.value = true;
+    showProgrammerMode.value = false;
   } else {
+    showPseudocode.value = false;
     showProgrammerMode.value = true;
   }
 }
@@ -2710,13 +2832,14 @@ const requiredSelectRule = (val: string) => !!val || val === '' || 'This field i
 
 onMounted(async () => {
   const commands = await CommandService.getCommands('NONE', 'NONE');
-  let recipes = [];
+
+  let recipes = ref<Command[]>([]);
   for (let command of commands) {
     if (command.recipe) {
-      recipes += command;
+      recipes.value.push(command);
     }
   }
-  jobOptions.value = recipes.map((recipe) => ({
+  jobOptions.value = recipes.value.map((recipe: Command) => ({
     label: recipe.name,
     value: recipe.id,
   }));

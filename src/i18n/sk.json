@@ -370,7 +370,8 @@
     },
     "rules_type_options": {
       "option1": "Grafický mód",
-      "option2": "Programátorský mód"
+      "option2": "Pseudokód",
+      "option3": "Programátorský mód(JSON)"
     },
     "day_options": {
       "option1": "Pondelok",

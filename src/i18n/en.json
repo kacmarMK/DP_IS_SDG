@@ -369,7 +369,8 @@
     },
     "rules_type_options": {
       "option1": "Graphical mode",
-      "option2": "Programmer mode"
+      "option2": "Pseudocode",
+      "option3": "Programmer mode(JSON)"
     },
     "day_options": {
       "option1": "Monday",
