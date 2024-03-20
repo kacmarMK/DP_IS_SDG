@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-table
+      v-model:pagination="pagination"
       :rows="filteredDevices"
       :columns="columns"
       :loading="props.loading"
@@ -9,6 +10,8 @@
       :no-data-label="t('table.no_data_label')"
       :loading-label="t('table.loading_label')"
       :rows-per-page-label="t('table.rows_per_page_label')"
+      binary-state-sort
+      @request="emit('onRequest', $event)"
     >
       <template #no-data="{ message }">
         <div class="full-width column flex-center q-pa-lg nothing-found-text">
@@ -25,7 +28,7 @@
         </q-td>
       </template>
 
-      <template #body-cell-contact="propsContact">
+      <template #body-cell-lastResponse="propsContact">
         <q-td auto-width :props="propsContact">
           {{ formatTimeToDistance(propsContact.row.lastResponse) }}
           <q-tooltip v-if="propsContact.row.lastResponse" content-style="font-size: 11px" :offset="[0, 4]">
@@ -111,7 +114,7 @@
       v-if="deviceToDelete"
       v-model="deleteDialog"
       :device="deviceToDelete"
-      @on-deleted="deviceDeleted"
+      @on-deleted="emit('onChange')"
     />
     <ShareDeviceDialog v-if="deviceToShare" v-model="shareDialog" :device="deviceToShare" />
   </div>
@@ -120,7 +123,7 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import ShareDeviceDialog from './ShareDeviceDialog.vue';
-import { computed, ref } from 'vue';
+import { PropType, computed, ref } from 'vue';
 import { Device, getDeviceStatus, getLastJobStatus } from '@/models/Device';
 import DeviceService from '@/services/DeviceService';
 import { handleError } from '@/utils/error-handler';
@@ -139,11 +142,14 @@ import {
 import DeleteDeviceDialog from './DeleteDeviceDialog.vue';
 import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
 import StatusDot from './StatusDot.vue';
-import JobStatusBadge from '../jobs/JobStatusBadge.vue';
 import JobStatusIcon from '../jobs/JobStatusIcon.vue';
+import { Pagination } from '@/models/Pagination';
 
-const devices = defineModel<Device[]>({ default: [] });
 const props = defineProps({
+  devices: {
+    type: Array as PropType<Device[]>,
+    required: true,
+  },
   loading: {
     type: Boolean,
     required: true,
@@ -154,27 +160,26 @@ const props = defineProps({
     default: '',
   },
 });
-const emit = defineEmits(['onChange']);
+const pagination = defineModel<Pagination>('pagination', {
+  default: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 },
+});
+
+const emit = defineEmits(['onChange', 'onRequest']);
 
 const { t } = useI18n();
 const authStore = useAuthStore();
 
 const deleteDialog = ref(false);
 const deviceToDelete = ref<Device>();
-function deviceDeleted() {
-  if (!deviceToDelete.value || !devices.value) return;
-  devices.value = devices.value.filter((device) => device.uid !== deviceToDelete.value?.uid);
-  emit('onChange', devices.value);
-}
 
 const shareDialog = ref(false);
 const deviceToShare = ref<Device>();
 
 const filteredDevices = computed(() => {
   if (props.filter) {
-    return devices.value?.filter((device) => device.name.toLowerCase().includes(props.filter.toLowerCase()));
+    return props.devices.filter((device) => device.name.toLowerCase().includes(props.filter.toLowerCase()));
   }
-  return devices.value;
+  return props.devices;
 });
 
 async function initExpireTimeWindow(deviceUid: string) {
@@ -207,11 +212,11 @@ const columns = computed<QTableProps['columns']>(() => [
     field(row) {
       return getPermissions(row);
     },
-    sortable: true,
+    sortable: false,
     align: 'left',
   },
   {
-    name: 'contact',
+    name: 'lastResponse',
     label: t('device.last_activity'),
     field: 'lastResponse',
     align: 'left',
@@ -224,7 +229,7 @@ const columns = computed<QTableProps['columns']>(() => [
       return getDeviceStatus(row);
     },
     align: 'center',
-    sortable: true,
+    sortable: false,
   },
   {
     name: 'jobstatus',
@@ -233,7 +238,7 @@ const columns = computed<QTableProps['columns']>(() => [
       return getLastJobStatus(row);
     },
     align: 'center',
-    sortable: true,
+    sortable: false,
   },
   {
     name: 'actions',

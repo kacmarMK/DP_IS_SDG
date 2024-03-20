@@ -188,6 +188,9 @@
       "max": "Maximum",
       "standard_deviation": "Standard deviation",
       "variance": "Variance",
+      "range": "Range",
+      "sum": "Sum",
+      "count": "Count",
       "geometry_mean": "Geometric mean",
       "harmonic_mean": "Harmonic mean"
     },

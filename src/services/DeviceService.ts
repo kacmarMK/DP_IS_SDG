@@ -2,10 +2,18 @@ import { Device, DeviceInput } from 'src/models/Device';
 import { api } from '@/utils/api';
 import { User } from '@/models/User';
 import { useAuthStore } from '@/stores/auth-store';
+import { PaginatedResponse, Pagination } from '../models/Pagination';
 
 class DeviceService {
   async getDevices(): Promise<Device[]> {
     return await api<Device[]>('device');
+  }
+
+  async getDevicesPaged(pagination: Pagination | undefined): Promise<PaginatedResponse<Device>> {
+    return await api<PaginatedResponse<Device>>('device/parsing', {
+      method: 'GET',
+      query: pagination,
+    });
   }
 
   async getDevice(uid: string): Promise<Device> {

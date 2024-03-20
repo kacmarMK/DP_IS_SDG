@@ -39,6 +39,9 @@ const statisticalMethods = [
   { value: 5, label: t('chart.statistical_methods.max') },
   { value: 6, label: t('chart.statistical_methods.standard_deviation') },
   { value: 7, label: t('chart.statistical_methods.variance') },
+  { value: 8, label: t('chart.statistical_methods.range') },
+  { value: 9, label: t('chart.statistical_methods.sum') },
+  { value: 10, label: t('chart.statistical_methods.count') },
   { value: 11, label: t('chart.statistical_methods.geometry_mean') },
   { value: 12, label: t('chart.statistical_methods.harmonic_mean') },
 ];

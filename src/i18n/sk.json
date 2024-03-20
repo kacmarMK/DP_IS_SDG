@@ -188,6 +188,9 @@
       "max": "Maximum",
       "standard_deviation": "Štandardná odchýlka",
       "variance": "Variabilita",
+      "range": "Rozsah",
+      "sum": "Súčet",
+      "count": "Počet",
       "geometry_mean": "Geometrický priemer",
       "harmonic_mean": "Harmonický priemer"
     },
