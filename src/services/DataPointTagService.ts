@@ -1,3 +1,4 @@
+import { StoredData } from '@/models/StoredData';
 import { api } from '@/utils/api';
 import { DataPointTag, DataPointTagInput } from 'src/models/DataPointTag';
 import { Device } from 'src/models/Device';
@@ -31,6 +32,18 @@ class DataPointTagService {
     return await api<DataPointTag>(`datapoint/datapointtag/deleteDataPointTag/${dataPointTagId}`, {
       method: 'DELETE',
     });
+  }
+
+  async getStoredDataByTime(
+    dataPointTagId: string,
+    startTime: number,
+    endTime: number,
+    cadence: number,
+    method: number = 1,
+  ): Promise<StoredData[]> {
+    return await api<StoredData[]>(
+      `datapoint/datapointtag/getStoredDataByTime/${dataPointTagId}/${startTime}/${endTime}/${cadence}/${method}`,
+    );
   }
 }
 

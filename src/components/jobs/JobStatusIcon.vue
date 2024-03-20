@@ -20,8 +20,5 @@ const props = defineProps({
 
 const statusColor = jobStatusColors[props.status as JobStatusEnum];
 const icon = jobStatusIcon[props.status as JobStatusEnum];
-
-console.log('statusColor', statusColor);
-console.log('icon', icon);
 </script>
 @/utils/job-status-look

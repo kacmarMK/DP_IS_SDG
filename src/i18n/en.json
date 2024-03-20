@@ -177,7 +177,33 @@
   },
   "chart": {
     "label": "Chart",
-    "export_csv": "Export CSV"
+    "export_csv": "Export CSV",
+    "maximum_values": "Maximum values",
+    "statistical_method": "Statistical method",
+    "statistical_methods": {
+      "mean": "Average (Mean)",
+      "median": "Median",
+      "mode": "Mode",
+      "min": "Minimum",
+      "max": "Maximum",
+      "standard_deviation": "Standard deviation",
+      "variance": "Variance",
+      "geometry_mean": "Geometric mean",
+      "harmonic_mean": "Harmonic mean"
+    },
+    "curve_type": "Curve type",
+    "curve_options": {
+      "straight": "Straight",
+      "smooth": "Smooth",
+      "monotone_cubic": "Monotone Cubic",
+      "stepline": "Step Line"
+    },
+    "graph_type": "Graph type",
+    "graph_options": {
+      "lines": "Lines",
+      "markers": "Markers",
+      "lines_markers": "Lines and markers"
+    }
   },
   "time_range": {
     "label": "Time range",

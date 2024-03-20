@@ -177,8 +177,35 @@
   },
   "chart": {
     "label": "Graf",
-    "export_csv": "Exportovať CSV"
+    "export_csv": "Exportovať CSV",
+    "maximum_values": "Maximum hodnôt",
+    "statistical_method": "Štatistická funkcia",
+    "statistical_methods": {
+      "mean": "Priemer (Mean)",
+      "median": "Medián",
+      "mode": "Modus",
+      "min": "Minimum",
+      "max": "Maximum",
+      "standard_deviation": "Štandardná odchýlka",
+      "variance": "Variabilita",
+      "geometry_mean": "Geometrický priemer",
+      "harmonic_mean": "Harmonický priemer"
+    },
+    "curve_type": "Typ krivky",
+    "curve_options": {
+      "straight": "Rovná",
+      "smooth": "Hladká",
+      "monotone_cubic": "Monotónna Kubická",
+      "stepline": "Schodovitá"
+    },
+    "graph_type": "Zobrazenie grafu",
+    "graph_options": {
+      "lines": "Čiary",
+      "markers": "Body",
+      "lines_markers": "Čiary a body"
+    }
   },
+
   "time_range": {
     "label": "Časový rozsah",
     "custom": "Vlastný",
