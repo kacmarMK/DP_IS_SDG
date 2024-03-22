@@ -121,21 +121,19 @@ const yaxisOptions = computed(() => {
       nameMap.set(tag.unit, tag.name);
     }
 
-    // Check if the series is visible
-    const isVisible = tickedNodes.value.includes(tag.id);
+    const isVisible = tickedNodes.value?.includes(tag.id);
 
-    let showAxis = !shownUnits.has(tag.unit) && isVisible; // Modify showAxis to depend on visibility
+    let showAxis = !shownUnits.has(tag.unit) && isVisible;
     if (showAxis) {
       shownUnits.add(tag.unit);
     }
 
-    // alwaysShow should be true only if at least one series with this unit is shown
     const alwaysShow =
-      shownUnits.has(tag.unit) && series.value.some((t) => t.unit === tag.unit && tickedNodes.value.includes(t.id));
+      shownUnits.has(tag.unit) && series.value.some((t) => t.unit === tag.unit && tickedNodes.value?.includes(t.id));
 
     return {
       show: showAxis,
-      alwaysShow: alwaysShow, // Update this line to reflect the new logic
+      alwaysShow: alwaysShow,
       seriesName: nameMap.get(tag.unit),
       tickAmount: 1,
       axisBorder: {
