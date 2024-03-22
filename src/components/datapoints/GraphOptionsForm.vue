@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit="emit('onSubmit')">
+  <q-form class="chart-form" @submit="emit('onSubmit')">
     <q-input v-model.number="refreshInterval" type="number" :label="t('global.automatic_refresh_interval')" />
     <q-input v-model.number="cadence" type="number" :label="t('chart.maximum_values')" />
     <q-select
@@ -81,5 +81,15 @@ const selectedGraphOption = defineModel<string>('selectedGraphOption', {
   type: String,
   required: true,
 });
+
 const emit = defineEmits(['onSubmit']);
 </script>
+
+<style scoped>
+.chart-form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>

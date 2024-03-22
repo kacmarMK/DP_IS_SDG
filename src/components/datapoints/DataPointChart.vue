@@ -64,6 +64,7 @@
           v-model:selectedStatisticalMethod="selectedStatisticalMethod"
           v-model:selectedCurve="selectedCurve"
           v-model:selectedGraphOption="selectedGraphOption"
+          v-model:logarithmicScale="logarithmicScale"
         />
       </template>
     </dialog-common>
@@ -100,28 +101,80 @@ const timeRangeSelect = ref();
 const series = computed(() => {
   return localDataPointTags.value.map((tag, index) => ({
     name: `${tag.name} (${tag.unit})`,
+    unit: tag.unit,
+    decimal: tag.decimal,
+    id: tag.uid,
     data: tag.storedData.map((data) => ({
       x: data.measureAt ?? 1,
       y: Number(data.value) ?? 0,
-      unit: tag.unit,
     })),
     color: graphColors[index],
   }));
 });
 
+const yaxisOptions = computed(() => {
+  const nameMap = new Map();
+  const shownUnits = new Set();
+
+  const options = series.value.map((tag) => {
+    if (!nameMap.has(tag.unit)) {
+      nameMap.set(tag.unit, tag.name);
+    }
+
+    // Check if the series is visible
+    const isVisible = tickedNodes.value.includes(tag.id);
+
+    let showAxis = !shownUnits.has(tag.unit) && isVisible; // Modify showAxis to depend on visibility
+    if (showAxis) {
+      shownUnits.add(tag.unit);
+    }
+
+    // alwaysShow should be true only if at least one series with this unit is shown
+    const alwaysShow =
+      shownUnits.has(tag.unit) && series.value.some((t) => t.unit === tag.unit && tickedNodes.value.includes(t.id));
+
+    return {
+      show: showAxis,
+      alwaysShow: alwaysShow, // Update this line to reflect the new logic
+      seriesName: nameMap.get(tag.unit),
+      tickAmount: 1,
+      axisBorder: {
+        show: showAxis,
+      },
+      axisTicks: {
+        show: showAxis,
+      },
+      labels: {
+        formatter: function (val: number) {
+          return `${val?.toFixed(tag.decimal) ?? 'NaN'} ${tag.unit}`;
+        },
+        style: {
+          colors: tag.color,
+        },
+      },
+    };
+  });
+
+  return options;
+});
+
 const chart = ref<ApexCharts | null>(null);
 async function updateTimeRange(timeRange: TimeRange) {
+  lastZoom.value = null;
   selectedTimeRange.value = timeRange;
+  const newMin = new Date(timeRange.from).getTime();
+  const newMax = new Date(timeRange.to).getTime();
+
   if (chart.value) {
     chart.value.updateOptions({
       xaxis: {
-        min: new Date(timeRange.from).getTime(),
-        max: new Date(timeRange.to).getTime(),
+        min: newMin,
+        max: newMax,
       },
     });
   } else {
-    chartOptions.value.xaxis.min = new Date(timeRange.from).getTime();
-    chartOptions.value.xaxis.max = new Date(timeRange.to).getTime();
+    chartOptions.value.xaxis.min = newMin;
+    chartOptions.value.xaxis.max = newMax;
   }
   await refreshStoredData();
 }
@@ -143,9 +196,6 @@ async function refreshStoredData() {
 
   const zoomTo = lastZoom.value?.[1] ?? Date.now();
   const selectedTimeRangeTo = new Date(selectedTimeRange.value?.to ?? Date.now());
-
-  console.log('zoomTo', zoomTo);
-  console.log('selectedTimeRangeTo', selectedTimeRangeTo.getTime());
 
   const to = new Date(zoomTo > selectedTimeRangeTo.getTime() ? zoomTo : selectedTimeRangeTo.getTime());
 
@@ -256,6 +306,7 @@ const cadence = useStorage('graphOptions.cadence', 1000);
 const selectedStatisticalMethod = useStorage('graphOptions.selectedStatisticalMethod', 1);
 const selectedCurve = useStorage('graphOptions.selectedCurve', 'straight');
 const selectedGraphOption = useStorage('graphOptions.selectedGraphOption', 'lines');
+const logarithmicScale = useStorage('graphOptions.logarithmicScale', false);
 
 const markerSize = computed(() => {
   if (selectedGraphOption.value === 'markers' || selectedGraphOption.value === 'linesmarkers') {
@@ -323,22 +374,7 @@ const chartOptions = computed(() => ({
     position: 'bottom',
     horizontalAlign: 'center',
   },
-  yaxis: localDataPointTags.value.map((tag, index) => ({
-    axisBorder: {
-      show: true,
-    },
-    axisTicks: {
-      show: true,
-    },
-    labels: {
-      formatter: function (val: number) {
-        return `${val?.toFixed(tag.decimal) ?? 'NaN'} ${tag.unit}`;
-      },
-      style: {
-        colors: graphColors[index],
-      },
-    },
-  })),
+  yaxis: yaxisOptions.value,
   xaxis: {
     type: 'datetime',
     labels: {
