@@ -108,8 +108,8 @@ const timeRanges = computed(() => [
 
 const selectedTimeRangeIndex = ref(1);
 const customTimeRangeSelected = ref<{
-  from: Date | null;
-  to: Date | null;
+  from: string | null;
+  to: string | null;
 }>({
   from: null,
   to: null,
@@ -130,6 +130,7 @@ function setPredefinedTimeRange(val: PredefinedTimeRange) {
 }
 
 const formatDate = (date: Date) => format(date, 'yyyy-MM-dd HH:mm:ss');
+
 function emitUpdate() {
   let newVal;
   if (isCustomTimeRangeSelected.value) {

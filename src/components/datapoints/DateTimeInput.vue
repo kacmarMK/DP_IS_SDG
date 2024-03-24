@@ -14,7 +14,7 @@
         />
         <q-icon :name="mdiCalendar" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date v-model="date" mask="DD/MM/YYYY HH:mm:ss">
+            <q-date v-model="date" mask="YYYY-MM-DD HH:mm:ss">
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />
               </div>
@@ -23,7 +23,7 @@
         </q-icon>
         <q-icon :name="mdiClock" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-time v-model="date" mask="DD/MM/YYYY HH:mm:ss" format24h with-seconds>
+            <q-time v-model="date" mask="YYYY-MM-DD HH:mm:ss" format24h with-seconds>
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="primary" flat />
               </div>
@@ -40,7 +40,7 @@ import { mdiCalendar, mdiClock } from '@quasar/extras/mdi-v6';
 import { format } from 'date-fns';
 import { useI18n } from 'vue-i18n';
 
-const date = defineModel({ type: String, required: true });
+const date = defineModel({ type: String, required: false });
 
 const { t } = useI18n();
 
@@ -56,6 +56,6 @@ defineProps({
 });
 
 function setCurrentDate() {
-  date.value = format(new Date(), 'dd/MM/yyyy HH:mm:ss');
+  date.value = format(new Date(), 'yyyy-mm-dd HH:mm:ss');
 }
 </script>

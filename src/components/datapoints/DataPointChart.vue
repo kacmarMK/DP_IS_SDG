@@ -64,7 +64,6 @@
           v-model:selectedStatisticalMethod="selectedStatisticalMethod"
           v-model:selectedCurve="selectedCurve"
           v-model:selectedGraphOption="selectedGraphOption"
-          v-model:logarithmicScale="logarithmicScale"
         />
       </template>
     </dialog-common>
@@ -304,7 +303,6 @@ const cadence = useStorage('graphOptions.cadence', 1000);
 const selectedStatisticalMethod = useStorage('graphOptions.selectedStatisticalMethod', 1);
 const selectedCurve = useStorage('graphOptions.selectedCurve', 'straight');
 const selectedGraphOption = useStorage('graphOptions.selectedGraphOption', 'lines');
-const logarithmicScale = useStorage('graphOptions.logarithmicScale', false);
 
 const markerSize = computed(() => {
   if (selectedGraphOption.value === 'markers' || selectedGraphOption.value === 'linesmarkers') {
