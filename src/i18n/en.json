@@ -194,7 +194,7 @@
       "geometry_mean": "Geometric mean",
       "harmonic_mean": "Harmonic mean"
     },
-    "curve_type": "Curve type",
+    "curve_type": "Interpolation",
     "curve_options": {
       "straight": "Straight",
       "smooth": "Smooth",

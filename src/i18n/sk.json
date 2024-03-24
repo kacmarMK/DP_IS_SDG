@@ -6,7 +6,7 @@
     "save": "Uložiť",
     "cancel": "Zrušiť",
     "close": "Zavrieť",
-    "next": "Ďalší",
+    "next": "Ďalej",
     "add": "Pridať",
     "create": "Vytvoriť",
     "details": "Detaily",
@@ -194,9 +194,9 @@
       "geometry_mean": "Geometrický priemer",
       "harmonic_mean": "Harmonický priemer"
     },
-    "curve_type": "Typ krivky",
+    "curve_type": "Druh interpolácie",
     "curve_options": {
-      "straight": "Rovná",
+      "straight": "Priama",
       "smooth": "Hladká",
       "monotone_cubic": "Monotónna Kubická",
       "stepline": "Schodovitá"
