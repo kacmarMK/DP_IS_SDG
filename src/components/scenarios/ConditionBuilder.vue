@@ -1044,19 +1044,38 @@ function conditionStringBuilder(
   }
   return conditionString;
 }
-const conditionParts = ref(['', '']);
 
-const updateConditionString = (index: number, part: string) => {
-  conditionParts.value[index] = part;
-};
-
-const rulesStringStart = '{"if": [';
-let conditionString = '';
-let thenString = '';
-let elseString = '';
-const rulesStringEnd = ']}';
+function pseudoConditionStringBuilder(
+  inputValue1: string,
+  inputValue2: string,
+  selectVariable1: string | undefined,
+  selectVariable2: string | undefined,
+  operand: string | undefined,
+) {
+  var conditionString = '';
+  if (inputValue1 && inputValue2) {
+    // Both condition slots are constants
+    conditionString = inputValue1 + ' ' + operand + ' ' + inputValue2;
+  } else if (inputValue1 && selectVariable2) {
+    // Condition slot 1 is a constant, Condition slot 2 is a variable
+    conditionString = inputValue1 + ' ' + operand + ' ' + selectVariable2;
+  } else if (selectVariable1 && inputValue2) {
+    // Condition slot 1 is a variable, Condition slot 2 is a constant
+    conditionString = selectVariable1 + ' ' + operand + ' ' + inputValue2;
+  } else if (selectVariable1 && selectVariable2) {
+    // Both condition slots are variables
+    conditionString = selectVariable1 + ' ' + operand + ' ' + selectVariable2;
+  }
+  return conditionString;
+}
 
 function parseRules() {
+  const rulesStringStart = '{"if": [';
+  let conditionString = '';
+  let thenString = '';
+  let elseString = '';
+  const rulesStringEnd = ']}';
+  parseRulesPseudocode();
   if (
     (inputValue1.value === '' && selectVariable1.value == null) ||
     (inputValue2.value === '' && selectVariable2.value == null) ||
@@ -1161,18 +1180,30 @@ function parseRules() {
 
   // first and second main conditions are selected
   if (secondCondition.value) {
-    conditionString = '{ "' + selectOperator11.value + '": [';
+    conditionString = '{ "' + selectOperator11.value.value + '": [';
     if (firstSecondCondition.value) {
       // first condition containing two conditions
       conditionString +=
-        '{ "' + selectOperator1.value + '": [' + firstConditionString + ', ' + firstSecondConditionString + ' ]}, ';
+        '{ "' +
+        selectOperator1.value.value +
+        '": [' +
+        firstConditionString +
+        ', ' +
+        firstSecondConditionString +
+        ' ]}, ';
     } else {
       conditionString += firstConditionString + ', ';
     }
     if (secondSecondCondition.value) {
       // second condition containing two conditions
       conditionString +=
-        '{ "' + selectOperator22.value + '": [' + secondConditionString + ', ' + secondSecondConditionString + ' ]}, ';
+        '{ "' +
+        selectOperator22.value.value +
+        '": [' +
+        secondConditionString +
+        ', ' +
+        secondSecondConditionString +
+        ' ]}, ';
     } else {
       // second condition containing one condition
       conditionString += secondConditionString + ' ';
@@ -1181,7 +1212,7 @@ function parseRules() {
   } else if (firstSecondCondition.value) {
     // main condition containing two conditions
     conditionString +=
-      '{ "' + selectOperator1.value + '": [' + firstConditionString + ', ' + firstSecondConditionString + ' ]}, ';
+      '{ "' + selectOperator1.value.value + '": [' + firstConditionString + ', ' + firstSecondConditionString + ' ]}, ';
   } else {
     conditionString = firstConditionString + ', ';
   }
@@ -1352,6 +1383,312 @@ function parseRules() {
   //scenarioStore.scenarioFrame.rules = rulesStringStart + conditionString + thenString + elseString + rulesStringEnd;
   emit('updateValue', rulesStringStart + conditionString + thenString + elseString + rulesStringEnd);
 }
+
+function parseRulesPseudocode() {
+  const pseudoRulesStringStart = 'if (';
+  let pseudoConditionString = '';
+  let pseudoThenString = '';
+  let pseudoElseString = '';
+  const pseudoRulesStringEnd = '}';
+  if (
+    (inputValue1.value === '' && selectVariable1.value == null) ||
+    (inputValue2.value === '' && selectVariable2.value == null) ||
+    selectOperand1.value == null
+  ) {
+    return;
+  }
+  if (firstSecondCondition.value) {
+    if (
+      (inputValue3.value === '' && selectVariable3.value == null) ||
+      (inputValue4.value === '' && selectVariable4.value == null) ||
+      selectOperand2.value == null ||
+      selectOperator1.value == ''
+    ) {
+      return;
+    }
+  }
+
+  if (secondCondition.value) {
+    if (
+      (inputValue5.value === '' && selectVariable5.value == null) ||
+      (inputValue6.value === '' && selectVariable6.value == null) ||
+      selectOperand3.value == null ||
+      selectOperator11.value == ''
+    ) {
+      return;
+    }
+  }
+
+  if (secondSecondCondition.value) {
+    if (
+      (inputValue7.value === '' && selectVariable7.value == null) ||
+      (inputValue8.value === '' && selectVariable8.value == null) ||
+      selectOperand4.value == null ||
+      selectOperator22.value == ''
+    ) {
+      return;
+    }
+  }
+  /*
+  if (thirdCondition.value) {
+    if (
+      (inputValue9.value === '' && selectVariable9.value == null) ||
+      (inputValue10.value === '' && selectVariable10.value == null) ||
+      selectOperand5.value == null ||
+      selectOperator2.value == ''
+    ) {
+      return;
+    }
+  }
+
+  if (thirdSecondCondition.value) {
+    if (
+      (inputValue11.value === '' && selectVariable11.value == null) ||
+      (inputValue12.value === '' && selectVariable12.value == null) ||
+      selectOperand6.value == null ||
+      selectOperator33.value == ''
+    ) {
+      return;
+    }
+  }*/
+  //////////////////////////////////////////////////////////////////////////////////
+
+  const firstConditionString = pseudoConditionStringBuilder(
+    inputValue1.value,
+    inputValue2.value,
+    selectVariable1.value?.value,
+    selectVariable2.value?.value,
+    selectOperand1.value.value,
+  );
+  var firstSecondConditionString = '';
+  var secondConditionString = '';
+  var secondSecondConditionString = '';
+
+  if (firstSecondCondition.value) {
+    firstSecondConditionString = pseudoConditionStringBuilder(
+      inputValue3.value,
+      inputValue4.value,
+      selectVariable3.value?.value,
+      selectVariable4.value?.value,
+      selectOperand2.value?.value,
+    );
+  }
+  if (secondCondition.value) {
+    secondConditionString = pseudoConditionStringBuilder(
+      inputValue5.value,
+      inputValue6.value,
+      selectVariable5.value?.value,
+      selectVariable6.value?.value,
+      selectOperand3.value?.value,
+    );
+  }
+  if (secondSecondCondition.value) {
+    secondSecondConditionString = pseudoConditionStringBuilder(
+      inputValue7.value,
+      inputValue8.value,
+      selectVariable7.value?.value,
+      selectVariable8.value?.value,
+      selectOperand4.value?.value,
+    );
+  }
+
+  // first and second main conditions are selected
+  if (secondCondition.value) {
+    if (firstSecondCondition.value) {
+      // first condition containing two conditions
+      pseudoConditionString +=
+        '[(' +
+        firstConditionString +
+        ') ' +
+        selectOperator1.value.value +
+        ' (' +
+        firstSecondConditionString +
+        ')] ' +
+        selectOperator11.value.value +
+        ' ';
+    } else {
+      pseudoConditionString += '(' + firstConditionString + ') ' + selectOperator11.value.value + ' ';
+    }
+    if (secondSecondCondition.value) {
+      // second condition containing two conditions
+      pseudoConditionString +=
+        '[(' + secondConditionString + ') ' + selectOperator22.value.value + ' (' + secondSecondConditionString + ')])';
+    } else {
+      // second condition containing one condition
+      pseudoConditionString += '(' + secondConditionString + '))';
+    }
+  } else if (firstSecondCondition.value) {
+    // main condition containing two conditions
+    pseudoConditionString +=
+      firstConditionString + ' ' + selectOperator1.value.value + ' ' + firstSecondConditionString + ')';
+  } else {
+    pseudoConditionString = firstConditionString + ')';
+  }
+  /*
+  // Condition string creation
+  if (inputValue1.value && inputValue2.value) {
+    // Both condition slots are constants
+    conditionString =
+      '{ "' + selectOperand1.value?.value + '": [ ' + inputValue1.value + ', ' + inputValue2.value + ' ]},';
+  } else if (inputValue1.value && selectVariable2.value) {
+    // Condition slot 1 is a constant, Condition slot 2 is a variable
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ ' +
+      inputValue1.value +
+      ', {"var": "' +
+      selectVariable2.value.value +
+      '"} ]},';
+  } else if (selectVariable1.value && inputValue2.value) {
+    // Condition slot 1 is a variable, Condition slot 2 is a constant
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ {"var": "' +
+      selectVariable1.value.value +
+      '"}, ' +
+      inputValue2.value +
+      ' ]},';
+  } else if (selectVariable1.value && selectVariable2.value) {
+    // Both condition slots are variables
+    conditionString =
+      '{ "' +
+      selectOperand1.value?.value +
+      '": [ {"var": "' +
+      selectVariable1.value.value +
+      '"}, ' +
+      ' {"var": "' +
+      selectVariable2.value.value +
+      '"} ]},';
+  }*/
+
+  // Then string creation
+
+  if (thenSlot.value === 'noAction') {
+    pseudoThenString = ' { "noAction"; } else';
+  } else if (thenSlot.value === 'job') {
+    if (durationOptionThen.value === 'SET') {
+      if (durationTimeThen.value === '00:00:00') {
+        pseudoThenString = ' { "job:' + jobThen.value?.value + '"; } else';
+      } else {
+        // SET forTime
+        let hourMinSec = durationTimeThen.value.split(':');
+        let forTimeString = 'forTime:set:';
+        let hours = parseInt(hourMinSec[0], 10);
+        let minutes = parseInt(hourMinSec[1], 10);
+        let seconds = parseInt(hourMinSec[2], 10);
+        if (hours > 0) {
+          forTimeString += hours + ':hour:';
+        }
+        if (minutes > 0) {
+          forTimeString += minutes + ':min:';
+        }
+        if (seconds > 0) {
+          forTimeString += seconds + ':sec:';
+        }
+        pseudoThenString = ' { "' + forTimeString + 'job:' + jobThen.value?.value + '"; } else';
+      }
+    } else {
+      // RESET
+      pseudoThenString = ' { "forTime:reset:job:' + jobThen.value?.value + '"; } else';
+    }
+  } else if (thenSlot.value === 'notification') {
+    if (durationOptionThen.value === 'SET') {
+      if (durationTimeThen.value === '00:00:00') {
+        pseudoThenString = ' { "notificationMessage:' + notificationThen.value + '"; } else';
+      } else {
+        // SET forTime
+        let hourMinSec = durationTimeThen.value.split(':');
+        let forTimeString = 'forTime:set:';
+        let hours = parseInt(hourMinSec[0], 10);
+        let minutes = parseInt(hourMinSec[1], 10);
+        let seconds = parseInt(hourMinSec[2], 10);
+        if (hours > 0) {
+          forTimeString += hours + ':hour:';
+        }
+        if (minutes > 0) {
+          forTimeString += minutes + ':min:';
+        }
+        if (seconds > 0) {
+          forTimeString += seconds + ':sec:';
+        }
+        pseudoThenString = ' { "' + forTimeString + 'notificationMessage:' + notificationThen.value + '"; } else';
+      }
+    } else {
+      // RESET
+      pseudoThenString = ' { "forTime:reset:notificationMessage:' + notificationThen.value + '"; } else';
+    }
+  } else {
+    // TODO THEN CONDITION
+  }
+
+  // Else string creation
+  if (elseSlot.value === 'noAction') {
+    pseudoElseString = ' { "noAction"; ';
+  } else if (elseSlot.value === 'job') {
+    if (durationOptionElse.value === 'SET') {
+      if (durationTimeElse.value === '00:00:00') {
+        pseudoElseString = ' { "job:' + jobElse.value?.value + '"; ';
+      } else {
+        // SET forTime
+        let hourMinSec = durationTimeThen.value.split(':');
+        let forTimeString = 'forTime:set:';
+        let hours = parseInt(hourMinSec[0], 10);
+        let minutes = parseInt(hourMinSec[1], 10);
+        let seconds = parseInt(hourMinSec[2], 10);
+        if (hours > 0) {
+          forTimeString += hours + ':hour:';
+        }
+        if (minutes > 0) {
+          forTimeString += minutes + ':min:';
+        }
+        if (seconds > 0) {
+          forTimeString += seconds + ':sec:';
+        }
+        pseudoElseString = ' { "' + forTimeString + 'job:' + jobElse.value?.value + '"; ';
+      }
+    } else {
+      // RESET
+      pseudoElseString = ' { "forTime:reset:job:' + jobElse.value?.value + '"; ';
+    }
+  } else if (elseSlot.value === 'notification') {
+    if (durationOptionElse.value === 'SET') {
+      if (durationTimeElse.value === '00:00:00') {
+        pseudoElseString = ' { "notificationMessage:' + notificationElse.value + '"; ';
+      } else {
+        // SET forTime
+        let hourMinSec = durationTimeElse.value.split(':');
+        let forTimeString = 'forTime:set:';
+        let hours = parseInt(hourMinSec[0], 10);
+        let minutes = parseInt(hourMinSec[1], 10);
+        let seconds = parseInt(hourMinSec[2], 10);
+        if (hours > 0) {
+          forTimeString += hours + ':hour:';
+        }
+        if (minutes > 0) {
+          forTimeString += minutes + ':min:';
+        }
+        if (seconds > 0) {
+          forTimeString += seconds + ':sec:';
+        }
+        pseudoElseString = ' { "' + forTimeString + 'notificationMessage:' + notificationElse.value + '"; ';
+      }
+    } else {
+      // RESET
+      pseudoElseString = ' { "forTime:reset:notificationMessage:' + notificationElse.value + '"; ';
+    }
+  } else {
+    // ELSE CONDITION
+  }
+  console.log(
+    pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd,
+  );
+  scenarioStore.scenarioPseudocode =
+    pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd;
+  //emit('updateValue', pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd);
+}
+
 const emit = defineEmits(['updateValue']);
 
 const handleUpdateValue = (value: string, identifier: string) => {
@@ -1366,6 +1703,6 @@ const handleUpdateValue = (value: string, identifier: string) => {
   scenarioStore.scenarioFrame.rules = rulesStringStart + conditionString + thenString + elseString + rulesStringEnd;
 };
 
-defineExpose({ parseRules });
+defineExpose({ parseRules, parseRulesPseudocode });
 </script>
 <style lang="scss" scoped></style>

@@ -96,7 +96,7 @@
               ></condition-builder>
               <q-input
                 v-if="showPseudocode"
-                v-model="pseudocode"
+                v-model="scenarioStore.scenarioPseudocode"
                 filled
                 label="Enter your pseudocode here..."
                 type="textarea"

@@ -35,6 +35,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isLoadingScenarios.value = false;
     }
   }
+  const scenarioPseudocode = ref('');
   const scenarioFrame = ref<ScenarioFrame>({
     rules: ' ',
     name: '',
@@ -82,5 +83,6 @@ export const useScenarioStore = defineStore('scenarios', () => {
     getActiveScenarios,
     mode,
     editScenario,
+    scenarioPseudocode,
   };
 });
