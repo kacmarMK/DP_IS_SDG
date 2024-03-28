@@ -390,5 +390,8 @@
       "scenario_active": "Scenár je deaktivovaný:",
       "scenario_triggered": "Scenár bol už spustený:"
     }
+  },
+  "notification": {
+    "label": "Notifikácia | Notifikácie"
   }
 }

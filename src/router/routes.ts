@@ -104,6 +104,10 @@ const routes: RouteRecordRaw[] = [
         path: '/scenarios/:id/edit',
         component: () => import('pages/scenarios/UpdateScenarioPage.vue'),
       },
+      {
+        path: '/notifications',
+        component: () => import('pages/notifications/NotificationsPage.vue'),
+      },
     ],
   },
   {

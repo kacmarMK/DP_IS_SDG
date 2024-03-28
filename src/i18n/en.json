@@ -389,5 +389,8 @@
       "scenario_active": "Scenario is deactivated:",
       "scenario_triggered": "Scenario has been triggered:"
     }
+  },
+  "notification": {
+    "label": "Notification | Notifications"
   }
 }
