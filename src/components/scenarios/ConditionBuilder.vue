@@ -730,7 +730,8 @@
             v-if="thenSlot === 'condition'"
             :show-programmer-mode="showProgrammerMode"
             :show-pseudocode="showPseudocode"
-            @update-value="(value) => handleUpdateValue(value, 'elseCondition')"
+            @update-json-value="(value) => handleUpdateJsonValue(value, 'thenCondition')"
+            @update-pseudocode-value="(value) => handleUpdatePseudocodeValue(value, 'thenCondition')"
           ></condition-builder>
         </div>
       </div>
@@ -806,7 +807,8 @@
             v-if="elseSlot === 'condition'"
             :show-programmer-mode="showProgrammerMode"
             :show-pseudocode="showPseudocode"
-            @update-value="(value) => handleUpdateValue(value, 'thenCondition')"
+            @update-json-value="(value) => handleUpdateJsonValue(value, 'elseCondition')"
+            @update-pseudocode-value="(value) => handleUpdatePseudocodeValue(value, 'elseCondition')"
           ></condition-builder>
           <div v-if="elseSlot === 'job' || elseSlot === 'notification'" class="q-pa-sm q-mt-lg">
             <div class="row justify-center">
@@ -1068,12 +1070,16 @@ function pseudoConditionStringBuilder(
   }
   return conditionString;
 }
-
+const rulesStringStart = '{"if": [';
+let conditionString = '';
+let thenString = '';
+let elseString = '';
+const rulesStringEnd = ']}';
 function parseRules() {
   const rulesStringStart = '{"if": [';
   let conditionString = '';
-  let thenString = '';
-  let elseString = '';
+  //let thenString = '';
+  //let elseString = '';
   const rulesStringEnd = ']}';
   parseRulesPseudocode();
   if (
@@ -1180,12 +1186,12 @@ function parseRules() {
 
   // first and second main conditions are selected
   if (secondCondition.value) {
-    conditionString = '{ "' + selectOperator11.value.value + '": [';
+    conditionString = '{ "' + selectOperator11.value.label + '": [';
     if (firstSecondCondition.value) {
       // first condition containing two conditions
       conditionString +=
         '{ "' +
-        selectOperator1.value.value +
+        selectOperator1.value.label +
         '": [' +
         firstConditionString +
         ', ' +
@@ -1198,7 +1204,7 @@ function parseRules() {
       // second condition containing two conditions
       conditionString +=
         '{ "' +
-        selectOperator22.value.value +
+        selectOperator22.value.label +
         '": [' +
         secondConditionString +
         ', ' +
@@ -1212,7 +1218,7 @@ function parseRules() {
   } else if (firstSecondCondition.value) {
     // main condition containing two conditions
     conditionString +=
-      '{ "' + selectOperator1.value.value + '": [' + firstConditionString + ', ' + firstSecondConditionString + ' ]}, ';
+      '{ "' + selectOperator1.value.label + '": [' + firstConditionString + ', ' + firstSecondConditionString + ' ]}, ';
   } else {
     conditionString = firstConditionString + ', ';
   }
@@ -1311,7 +1317,8 @@ function parseRules() {
       thenString = ' "forTime:reset:notificationMessage:' + notificationThen.value + '",';
     }
   } else {
-    // TODO THEN CONDITION
+    // THEN CONDITION
+    thenString += ',';
   }
 
   // Else string creation
@@ -1372,23 +1379,18 @@ function parseRules() {
   } else {
     // ELSE CONDITION
   }
-  console.log(
-    'Rules without update from child components:' +
-      rulesStringStart +
-      conditionString +
-      thenString +
-      elseString +
-      rulesStringEnd,
-  );
-  //scenarioStore.scenarioFrame.rules = rulesStringStart + conditionString + thenString + elseString + rulesStringEnd;
-  emit('updateValue', rulesStringStart + conditionString + thenString + elseString + rulesStringEnd);
+  emit('updateJsonValue', rulesStringStart + conditionString + thenString + elseString + rulesStringEnd);
 }
-
+const pseudoRulesStringStart = 'if (';
+let pseudoConditionString = '';
+let pseudoThenString = '';
+let pseudoElseString = '';
+const pseudoRulesStringEnd = '}';
 function parseRulesPseudocode() {
   const pseudoRulesStringStart = 'if (';
   let pseudoConditionString = '';
-  let pseudoThenString = '';
-  let pseudoElseString = '';
+  //let pseudoThenString = '';
+  //let pseudoElseString = '';
   const pseudoRulesStringEnd = '}';
   if (
     (inputValue1.value === '' && selectVariable1.value == null) ||
@@ -1566,11 +1568,11 @@ function parseRulesPseudocode() {
   // Then string creation
 
   if (thenSlot.value === 'noAction') {
-    pseudoThenString = ' { "noAction"; } else';
+    pseudoThenString = ' { "noAction"; } ';
   } else if (thenSlot.value === 'job') {
     if (durationOptionThen.value === 'SET') {
       if (durationTimeThen.value === '00:00:00') {
-        pseudoThenString = ' { "job:' + jobThen.value?.value + '"; } else';
+        pseudoThenString = ' { "job:' + jobThen.value?.value + '"; } ';
       } else {
         // SET forTime
         let hourMinSec = durationTimeThen.value.split(':');
@@ -1587,16 +1589,16 @@ function parseRulesPseudocode() {
         if (seconds > 0) {
           forTimeString += seconds + ':sec:';
         }
-        pseudoThenString = ' { "' + forTimeString + 'job:' + jobThen.value?.value + '"; } else';
+        pseudoThenString = ' { "' + forTimeString + 'job:' + jobThen.value?.value + '"; } ';
       }
     } else {
       // RESET
-      pseudoThenString = ' { "forTime:reset:job:' + jobThen.value?.value + '"; } else';
+      pseudoThenString = ' { "forTime:reset:job:' + jobThen.value?.value + '"; } ';
     }
   } else if (thenSlot.value === 'notification') {
     if (durationOptionThen.value === 'SET') {
       if (durationTimeThen.value === '00:00:00') {
-        pseudoThenString = ' { "notificationMessage:' + notificationThen.value + '"; } else';
+        pseudoThenString = ' { "notificationMessage:' + notificationThen.value + '"; } ';
       } else {
         // SET forTime
         let hourMinSec = durationTimeThen.value.split(':');
@@ -1613,14 +1615,15 @@ function parseRulesPseudocode() {
         if (seconds > 0) {
           forTimeString += seconds + ':sec:';
         }
-        pseudoThenString = ' { "' + forTimeString + 'notificationMessage:' + notificationThen.value + '"; } else';
+        pseudoThenString = ' { "' + forTimeString + 'notificationMessage:' + notificationThen.value + '"; } ';
       }
     } else {
       // RESET
-      pseudoThenString = ' { "forTime:reset:notificationMessage:' + notificationThen.value + '"; } else';
+      pseudoThenString = ' { "forTime:reset:notificationMessage:' + notificationThen.value + '"; } ';
     }
   } else {
-    // TODO THEN CONDITION
+    // THEN CONDITION
+    pseudoThenString = ' {' + pseudoThenString + '} ';
   }
 
   // Else string creation
@@ -1680,27 +1683,39 @@ function parseRulesPseudocode() {
     }
   } else {
     // ELSE CONDITION
+    pseudoElseString = ' {' + pseudoElseString + '} ';
   }
-  console.log(
-    pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd,
+  emit(
+    'updatePseudocodeValue',
+    pseudoRulesStringStart +
+      pseudoConditionString +
+      pseudoThenString +
+      'else' +
+      pseudoElseString +
+      pseudoRulesStringEnd,
   );
-  scenarioStore.scenarioPseudocode =
-    pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd;
-  //emit('updateValue', pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd);
 }
 
-const emit = defineEmits(['updateValue']);
+const emit = defineEmits(['updateJsonValue', 'updatePseudocodeValue']);
 
-const handleUpdateValue = (value: string, identifier: string) => {
+const handleUpdateJsonValue = (value: string, identifier: string) => {
   if (identifier === 'elseCondition') {
-    thenString = value;
-  } else {
     elseString = value;
+  } else {
+    thenString = value;
   }
-  console.log(
-    'New Rules after update: ' + rulesStringStart + conditionString + thenString + elseString + rulesStringEnd,
-  );
-  scenarioStore.scenarioFrame.rules = rulesStringStart + conditionString + thenString + elseString + rulesStringEnd;
+  parseRules();
+};
+
+const handleUpdatePseudocodeValue = (value: string, identifier: string) => {
+  if (identifier === 'elseCondition') {
+    pseudoElseString = value;
+  } else {
+    pseudoThenString = value;
+  }
+  parseRules();
+  //cenarioStore.scenarioPseudocode =
+  //  pseudoRulesStringStart + pseudoConditionString + pseudoThenString + pseudoElseString + pseudoRulesStringEnd;
 };
 
 defineExpose({ parseRules, parseRulesPseudocode });

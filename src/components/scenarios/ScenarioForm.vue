@@ -93,6 +93,8 @@
               <condition-builder
                 :show-programmer-mode="showProgrammerMode"
                 :show-pseudocode="showPseudocode"
+                @update-json-value="(value) => handleUpdateJsonValue(value)"
+                @update-pseudocode-value="(value) => handleUpdatePseudocodeValue(value)"
               ></condition-builder>
               <q-input
                 v-if="showPseudocode"
@@ -462,6 +464,13 @@ async function handleToggleClick() {
     showProgrammerMode.value = true;
   }
 }
+const handleUpdateJsonValue = (value: string) => {
+  scenarioStore.scenarioFrame.rules = value;
+};
+
+const handleUpdatePseudocodeValue = (value: string) => {
+  scenarioStore.scenarioPseudocode = value;
+};
 </script>
 
 <style lang="scss" scoped>
