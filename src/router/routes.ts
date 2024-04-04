@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: '/devices',
+        redirect: '/notifications',
       },
       {
         path: '/account',

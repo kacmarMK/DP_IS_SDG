@@ -353,6 +353,11 @@
     "label": "Scenár | Scenáre",
     "all": "Všetky",
     "active": "Aktívne",
+    "activity": "Aktivita",
+    "activated": "AKTIVOVANÉ",
+    "deactivated": "DEAKTIVOVANÉ",
+    "mute": "Stlmenie",
+    "mute_time": "Doba stlmenia (min)",
     "create_scenario": "Vytvoriť scenár",
     "delete_scenario": "Vymazať scenár",
     "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",
@@ -388,10 +393,13 @@
     "form": {
       "muted_until": "Stlmenie na (minúty):",
       "scenario_active": "Scenár je deaktivovaný:",
-      "scenario_triggered": "Scenár bol už spustený:"
+      "scenario_triggered": "Scenár bol už spustený:",
+      "set_muted_until": "Nastavenie doby stlmenia scenáru (minúty)"
     }
   },
   "notification": {
-    "label": "Notifikácia | Notifikácie"
+    "label": "Notifikácia | Notifikácie",
+    "number": "Počet",
+    "level": "Úroveň"
   }
 }

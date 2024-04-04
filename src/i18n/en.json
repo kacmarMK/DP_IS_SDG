@@ -352,6 +352,11 @@
     "label": "Scenario | Scenarios",
     "all": "All",
     "active": "Active",
+    "activity": "Activity",
+    "mute": "Mute",
+    "mute_time": "Mute time (min)",
+    "activated": "ACTIVATED",
+    "deactivated": "DEACTIVATED",
     "create_scenario": "Create scenario",
     "delete_scenario": "Delete scenario",
     "delete_scenario_desc": "Are you sure you want to delete this scenario?",
@@ -387,10 +392,13 @@
     "form": {
       "muted_until": "Muted  until (minutes):",
       "scenario_active": "Scenario is deactivated:",
-      "scenario_triggered": "Scenario has been triggered:"
+      "scenario_triggered": "Scenario has been triggered:",
+      "set_muted_until": "Scenario mute time setting (minutes)"
     }
   },
   "notification": {
-    "label": "Notification | Notifications"
+    "label": "Notification | Notifications",
+    "number": "Number",
+    "level": "Level"
   }
 }

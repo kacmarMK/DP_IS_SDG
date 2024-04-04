@@ -44,6 +44,30 @@
             {{ message }}
           </div>
         </template>
+        <template #body-cell-muted="mutedUntil">
+          <q-td auto-width :props="mutedUntil">
+            <div class="row justify-center items-center">
+              <div class="status-dot row items-center justify-center">{{ mutedUntil.row.mutedUntil }}</div>
+            </div>
+          </q-td>
+        </template>
+        <template #body-cell-activity="propsActivity">
+          <q-td auto-width :props="propsActivity">
+            <div class="row justify-center items-center">
+              <div class="status-dot row items-center justify-center">
+                <q-btn
+                  :icon="propsActivity.row.deactivated ? mdiSleep : mdiLightningBolt"
+                  round
+                  :color="propsActivity.row.deactivated ? 'red' : 'green'"
+                  flat
+                />
+                <q-tooltip content-style="font-size: 11px" :offset="[0, 4]">
+                  {{ propsActivity.row.deactivated ? t('scenario.deactivated') : t('scenario.activated') }}
+                </q-tooltip>
+              </div>
+            </div>
+          </q-td>
+        </template>
         <template #body-cell-actions="props">
           <q-td auto-width :props="props">
             <q-btn :icon="mdiOpenInNew" color="grey-color" flat round :to="`/scenarios/${props.row.id}`"
@@ -52,11 +76,27 @@
               </q-tooltip>
             </q-btn>
 
-            <q-btn :icon="mdiPowerSleep" color="grey-color" flat round
-              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> Mute </q-tooltip>
+            <q-btn
+              :icon="mdiPowerSleep"
+              color="grey-color"
+              flat
+              round
+              @click.stop="
+                isMuteDialogOpened = true;
+                mutedScenario = props.row;
+              "
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> {{ t('scenario.mute') }} </q-tooltip>
             </q-btn>
-            <q-btn :icon="mdiPower" color="grey-color" flat round
-              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> Deactivate </q-tooltip>
+            <q-btn
+              :icon="mdiPower"
+              color="grey-color"
+              flat
+              round
+              @click.stop="
+                isActivityDialogOpened = true;
+                activatedScenario = props.row;
+              "
+              ><q-tooltip content-style="font-size: 11px" :offset="[0, 4]"> {{ t('scenario.activity') }} </q-tooltip>
             </q-btn>
             <q-btn
               :icon="mdiTrashCanOutline"
@@ -76,6 +116,20 @@
       </q-table>
     </template>
   </PageLayout>
+  <MuteScenarioDialog
+    v-if="mutedScenario"
+    v-model="isMuteDialogOpened"
+    :scenario="mutedScenario"
+    :action-label="t('global.save')"
+    min-width="400px"
+  />
+  <ActivityScenarioDialog
+    v-if="activatedScenario"
+    v-model="isActivityDialogOpened"
+    :scenario="activatedScenario"
+    :action-label="t('global.save')"
+    min-width="300px"
+  />
   <DeleteScenarioDialog
     v-if="deletedScenario"
     v-model="isDeleteDialogOpened"
@@ -92,11 +146,14 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Scenario } from '@/models/Scenario';
 import DeleteScenarioDialog from '@/components/scenarios/DeleteScenarioDialog.vue';
+import MuteScenarioDialog from '@/components/scenarios/MuteScenarioDialog.vue';
+import ActivityScenarioDialog from '@/components/scenarios/ActivityScenarioDialog.vue';
 import {
   mdiOpenInNew,
   mdiPlus,
   mdiBookMultipleOutline,
-  mdiPencil,
+  mdiSleep,
+  mdiLightningBolt,
   mdiTrashCanOutline,
   mdiPowerSleep,
   mdiPower,
@@ -123,6 +180,12 @@ async function handleToggleClick() {
   }
 }
 
+const isMuteDialogOpened = ref(false);
+const mutedScenario = ref<Scenario>();
+
+const isActivityDialogOpened = ref(false);
+const activatedScenario = ref<Scenario>();
+
 const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'name',
@@ -130,6 +193,20 @@ const columns = computed<QTableProps['columns']>(() => [
     field: 'name',
     sortable: true,
     align: 'left',
+  },
+  {
+    name: 'mute',
+    label: t('scenario.mute_time'),
+    field: 'mute',
+    sortable: true,
+    align: 'center',
+  },
+  {
+    name: 'activity',
+    label: t('scenario.activity'),
+    field: '',
+    align: 'center',
+    sortable: false,
   },
   {
     name: 'actions',
