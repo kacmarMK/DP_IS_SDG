@@ -33,6 +33,15 @@
         </div>
       </template>
 
+      <template #body-cell-lastResponse="propsContact">
+        <q-td auto-width :props="propsContact">
+          {{ formatTimeToDistance(propsContact.row.lastResponse) }}
+          <q-tooltip v-if="propsContact.row.lastResponse" content-style="font-size: 11px" :offset="[0, 4]">
+            {{ formatToLocalTime(propsContact.row.lastResponse) }}
+          </q-tooltip>
+        </q-td>
+      </template>
+
       <template #body-cell="propsCell">
         <q-td :props="propsCell" no-hover>
           {{ propsCell.row[propsCell.col.field] }}
@@ -44,6 +53,18 @@
           <router-link :to="`/devices/${propsCellName.row.uid}`" class="text-black text-weight-regular">
             {{ propsCellName.row.name }}
           </router-link>
+        </q-td>
+      </template>
+
+      <template #body-cell-status="propsStatus">
+        <q-td auto-width :props="propsStatus">
+          <StatusDot :status="getDeviceStatus(propsStatus.row)" />
+        </q-td>
+      </template>
+
+      <template #body-cell-jobstatus="jobProps">
+        <q-td auto-width :props="jobProps">
+          <JobStatusIcon :status="getLastJobStatus(jobProps.row)" />
         </q-td>
       </template>
 
@@ -103,11 +124,14 @@ import { QTableProps } from 'quasar';
 import RemoveDeviceFromModuleDialog from './RemoveDeviceFromModuleDialog.vue';
 import AddDeviceToModuleDialog from './AddDeviceToModuleDialog.vue';
 import { PropType, computed, ref } from 'vue';
-import { Device } from '@/models/Device';
+import { Device, getDeviceStatus, getLastJobStatus } from '@/models/Device';
 import { Module } from '@/models/Module';
 import { useAuthStore } from '@/stores/auth-store';
 import { useI18n } from 'vue-i18n';
 import { mdiCellphoneLink, mdiOpenInNew, mdiPencil, mdiPlus, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import JobStatusIcon from '../jobs/JobStatusIcon.vue';
+import StatusDot from '@/components/devices/StatusDot.vue';
+import { formatTimeToDistance, formatToLocalTime } from '@/utils/date-utils';
 
 const devices = defineModel<Device[]>({ required: true });
 defineProps({
@@ -139,25 +163,29 @@ const columns = computed<QTableProps['columns']>(() => [
     align: 'left',
   },
   {
-    name: 'type',
-    label: t('device.type'),
-    field: 'type',
-    sortable: true,
+    name: 'lastResponse',
+    label: t('device.last_activity'),
+    field: 'lastResponse',
     align: 'left',
+    sortable: true,
   },
   {
-    name: 'version',
-    label: t('device.version'),
-    field: 'version',
-    sortable: true,
-    align: 'left',
+    name: 'status',
+    label: t('device.status'),
+    field(row) {
+      return getDeviceStatus(row);
+    },
+    align: 'center',
+    sortable: false,
   },
   {
-    name: 'firmware',
-    label: t('device.firmware'),
-    field: 'firmware',
-    sortable: true,
-    align: 'left',
+    name: 'jobstatus',
+    label: t('job.job_status'),
+    field(row) {
+      return getLastJobStatus(row);
+    },
+    align: 'center',
+    sortable: false,
   },
   {
     name: 'actions',
