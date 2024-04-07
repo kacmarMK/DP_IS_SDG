@@ -242,8 +242,8 @@
     "repetitions": "Počet opakovaní",
     "schedule": "Naplánovanie",
     "scheduled_time": "Naplánovaný čas",
-    "started_at": "Začalo o",
-    "finished_at": "Dokončené o",
+    "started_at": "Začiatok",
+    "finished_at": "Ukončenie",
     "status": "Stav",
     "progress": "Priebeh",
     "controls": {
