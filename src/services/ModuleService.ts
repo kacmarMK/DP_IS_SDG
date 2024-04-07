@@ -10,7 +10,20 @@ class ModuleService {
   }
 
   async getModule(uid: string): Promise<Module> {
-    return await api<Module>(`module/${uid}`);
+    const module = await api<Module>(`module/${uid}`);
+
+    if (module.devices) {
+      module.devices = module.devices.filter((device) => device !== null && device.deactivated === false);
+
+      module.devices = module.devices.map((device) => {
+        if (device.dataPointTags) {
+          device.dataPointTags = device.dataPointTags.filter((tag) => tag !== null && tag.deactivated === false);
+        }
+        return device;
+      });
+    }
+
+    return module;
   }
 
   async deleteModule(uid: string): Promise<Module> {
