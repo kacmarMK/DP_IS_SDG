@@ -45,7 +45,6 @@
 
       <template #body-cell-jobstatus="jobProps">
         <q-td auto-width :props="jobProps">
-          <!-- <JobStatusBadge :status="getLastJobStatus(jobProps.row)" /> -->
           <JobStatusIcon :status="getLastJobStatus(jobProps.row)" />
         </q-td>
       </template>

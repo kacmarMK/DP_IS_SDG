@@ -28,10 +28,10 @@ const jobStatusColors: Record<JobStatusEnum, string> = {
   [JobStatusEnum.JOB_IDLE]: 'accent',
   [JobStatusEnum.JOB_PENDING]: 'accent',
   [JobStatusEnum.JOB_PROCESSING]: 'primary',
-  [JobStatusEnum.JOB_DONE]: 'green',
-  [JobStatusEnum.JOB_ERR]: 'red',
+  [JobStatusEnum.JOB_DONE]: 'green-14',
+  [JobStatusEnum.JOB_ERR]: 'red-14',
   [JobStatusEnum.JOB_PAUSED]: 'accent',
-  [JobStatusEnum.JOB_CANCELED]: 'red',
+  [JobStatusEnum.JOB_CANCELED]: 'red-14',
   [JobStatusEnum.JOB_STATUS_MAX]: 'primary',
 };
 

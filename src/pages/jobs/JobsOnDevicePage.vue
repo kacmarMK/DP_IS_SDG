@@ -1,6 +1,6 @@
 <template>
   <PageLayout :title="t('job.job_history')">
-    <JobStable :jobs="jobs.data" :loading="jobs.isLoading" />
+    <JobTable :jobs="jobs.data" :loading="jobs.isLoading" />
   </PageLayout>
 </template>
 
@@ -11,7 +11,7 @@ import { useI18n } from 'vue-i18n';
 import PageLayout from '@/layouts/PageLayout.vue';
 import { useAsyncData } from '@/composables/useAsyncData';
 import { reactive } from 'vue';
-import JobStable from '@/components/jobs/JobTable.vue';
+import JobTable from '@/components/jobs/JobTable.vue';
 
 const { t } = useI18n();
 
