@@ -32,6 +32,13 @@ class CollectionService {
       collection.modules = collection.modules.map((module) => {
         if (module.devices) {
           module.devices = module.devices.filter((device) => device !== null && device.deactivated === false);
+
+          module.devices = module.devices.map((device) => {
+            if (device.dataPointTags) {
+              device.dataPointTags = device.dataPointTags.filter((tag) => tag !== null && tag.deactivated === false);
+            }
+            return device;
+          });
         }
         return module;
       });
