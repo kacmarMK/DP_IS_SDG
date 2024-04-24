@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS build-stage
+FROM node:lts-alpine3.19 AS build-stage
 ARG API_URL=${API_URL}
 ENV API_URL=${API_URL}
 WORKDIR /app
