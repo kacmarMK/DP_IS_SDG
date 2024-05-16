@@ -399,6 +399,11 @@
   "notification": {
     "label": "Notification | Notifications",
     "number": "Number",
-    "level": "Level"
+    "level": "Level",
+    "toasts": {
+      "load_failed": "Notifications loading failed!",
+      "processing_successful": "The processing of the notification was successful.",
+      "proccessing_failed": "Processing of the notification was unsuccessful."
+    }
   }
 }

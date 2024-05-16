@@ -29,7 +29,7 @@ import ScenarioService from '@/services/ScenarioService';
 import { ref } from 'vue';
 import { Scenario } from '@/models/Scenario';
 import ScenarioForm from '@/components/scenarios/ScenarioForm.vue';
-import { mdiOpenInNew, mdiPlus, mdiBookMultipleOutline, mdiPencil, mdiTrashCanOutline } from '@quasar/extras/mdi-v6';
+import { mdiPencil } from '@quasar/extras/mdi-v6';
 
 const route = useRoute();
 const { t } = useI18n();

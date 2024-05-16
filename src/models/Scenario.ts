@@ -4,7 +4,7 @@ interface Scenario {
   name: string;
   devices?: Array<string>;
   deactivated: boolean;
-  isAlreadyTriggered: boolean;
+  alreadyTriggered: boolean;
   mutedUntil: number;
   createdAt: number;
   forTimeCountingActivatedAt: Map<string, number>;
@@ -21,7 +21,7 @@ interface ScenarioFrame {
   name: string;
   devices?: Array<string>;
   deactivated?: boolean;
-  isAlreadyTriggered?: boolean;
+  alreadyTriggered?: boolean;
   mutedUntil?: number;
   activeAtDay?: Array<number>;
   activeAtHour?: Array<number>;

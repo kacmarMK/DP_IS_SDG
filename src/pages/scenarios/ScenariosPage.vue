@@ -197,7 +197,7 @@ const columns = computed<QTableProps['columns']>(() => [
   {
     name: 'mute',
     label: t('scenario.mute_time'),
-    field: 'mute',
+    field: 'mutedUntil',
     sortable: true,
     align: 'center',
   },

@@ -4,58 +4,69 @@
     <q-form @submit.prevent="onSubmit" @reset="onReset">
       <div class="row justify-center items-center" style="display: flex; flex-direction: column">
         <q-card class="q-pa-lg col" style="min-width: 500px">
-          <div class="column full-width">
-            <q-input
-              v-model="scenarioStore.scenarioFrame.name"
-              filled
-              :readonly="isReadonly"
-              :label="t('global.name')"
-              lazy-rules
-              :rules="[(val: string | any[]) => (val && val.length > 0) || t('global.rules.required')]"
-            />
-
-            <div>
-              <q-select
-                v-model="devicesFromOptions"
+          <div class="row">
+            <div class="column full-width">
+              <q-input
+                v-model="scenarioStore.scenarioFrame.name"
                 filled
-                multiple
                 :readonly="isReadonly"
-                :options="deviceOptions"
-                :label="t('device.label', 2)"
-                class="q-mb-lg"
+                :label="t('global.name')"
+                lazy-rules
+                :rules="[(val: string | any[]) => (val && val.length > 0) || t('global.rules.required')]"
               />
-            </div>
-            <div></div>
-            <q-select
-              v-model="scenarioStore.scenarioFrame.activeAtHour"
-              :options="hourOptions"
-              multiple
-              use-chips
-              behavior="menu"
-              outlined
-              label="Scenario Activation Hours"
-              option-value="value"
-              option-label="label"
-              style="max-width: 500px"
-              class="custom-select"
-              @remove="removeHour"
-            ></q-select>
-            <q-btn label="Select All Hours" size="12px" @click="selectAllHours"></q-btn>
-            <div class="row justify-center">
-              <q-card class="q-pa-lg q-mt-lg">
-                <label style="font-weight: bold">Scenario Activation Days</label>
-                <q-option-group
-                  v-model="scenarioStore.scenarioFrame.activeAtDay"
-                  :options="dayOptions"
-                  type="checkbox"
+
+              <div>
+                <q-select
+                  v-model="scenarioStore.scenarioFrame.devices"
+                  filled
+                  multiple
+                  :readonly="isReadonly"
+                  :options="deviceOptions"
+                  :label="t('device.label', 2)"
+                  class="q-mb-lg"
                 />
-                <q-btn label="Select All Days" class="q-mt-md" @click="selectAllDays"></q-btn>
-              </q-card>
-              <div class="self-end q-ml-lg">
+              </div>
+              <div></div>
+              <q-select
+                v-model="scenarioStore.scenarioFrame.activeAtHour"
+                :options="hourOptions"
+                multiple
+                use-chips
+                behavior="menu"
+                outlined
+                label="Aktivačné hodiny scenáru"
+                option-value="value"
+                option-label="label"
+                class="custom-select"
+                @remove="removeHour"
+              ></q-select>
+              <q-btn label="Vybrať všetky časové rozmedzia" size="12px" @click="selectAllHours"></q-btn>
+              <div class="row justify-center">
+                <q-card class="q-pa-lg q-mt-lg">
+                  <label style="font-weight: bold">Aktívne dni scenáru</label>
+                  <q-option-group
+                    v-model="scenarioStore.scenarioFrame.activeAtDay"
+                    :options="dayOptions"
+                    type="checkbox"
+                  />
+                  <q-btn label="Vybrať všetky dni" class="q-mt-md" @click="selectAllDays"></q-btn>
+                </q-card>
+
+                <q-input
+                  v-if="true"
+                  filled
+                  type="textarea"
+                  :readonly="isReadonly"
+                  label="Podmienky (formát JSON)"
+                  class="self-end q-ml-md"
+                  style="resize: none; width: 520px; font-size: 18px"
+                  rows="20"
+                />
+              </div>
+              <div class="row justify-center">
                 <!-- This button will only show when 'showConditions' is false -->
                 <q-btn
-                  v-if="!showConditions && showAddConditionsButton"
-                  label="Add conditions"
+                  label="Zmeniť podmienky"
                   padding="xl"
                   color="green"
                   size="14px"
@@ -100,9 +111,9 @@
                 v-if="showPseudocode"
                 v-model="scenarioStore.scenarioPseudocode"
                 filled
-                label="Enter your pseudocode here..."
+                label="Tu vložte pseudokód..."
                 type="textarea"
-                hint="Don't forget to check correct syntax!"
+                hint="Nezabudnite skontrolovať správnu syntax!"
                 rows="20"
                 style="font-family: monospace; font-size: 20px"
               />
@@ -110,9 +121,9 @@
                 v-if="showProgrammerMode"
                 v-model="scenarioStore.scenarioFrame.rules"
                 filled
-                label="Enter your JSON code here..."
+                label="Tu vložte podmienky v tvare JSON..."
                 type="textarea"
-                hint="Don't forget to check correct syntax!"
+                hint="Nezabudnite skontrolovať správnu syntax!"
                 rows="20"
                 style="font-family: monospace; font-size: 20px"
               />
@@ -131,7 +142,7 @@
               @click="parseConditionBuilder"
             ></q-btn>-->
             <q-btn
-              label="Remove conditions"
+              label="Vymazať podmienky"
               padding="xl"
               color="red"
               size="16px"
@@ -205,7 +216,7 @@ const props = defineProps({
       name: '',
       devices: [],
       deactivated: false,
-      isAlreadyTriggered: false,
+      alreadyTriggered: false,
       mutedUntil: 0,
       activeAtDay: [],
       activeAtHour: [],
@@ -229,7 +240,7 @@ const fillScenarioFrame = (data: Scenario) => {
   scenarioStore.scenarioFrame.name = data.name || '';
   scenarioStore.scenarioFrame.devices = data.devices || [];
   scenarioStore.scenarioFrame.deactivated = data.deactivated || false;
-  scenarioStore.scenarioFrame.isAlreadyTriggered = data.isAlreadyTriggered || false;
+  scenarioStore.scenarioFrame.alreadyTriggered = data.alreadyTriggered || false;
   scenarioStore.scenarioFrame.mutedUntil = data.mutedUntil || 0;
   scenarioStore.scenarioFrame.activeAtDay = data.activeAtDay || [];
   scenarioStore.scenarioFrame.activeAtHour = data.activeAtHour || [];
@@ -319,7 +330,30 @@ const removeHour = (val: number) => {
 // Methods to select all options
 const selectAllHours = () => {
   scenarioStore.scenarioFrame.activeAtHour = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+    { label: '0:00-0:59', value: 0 },
+    { label: '1:00-1:59', value: 1 },
+    { label: '2:00-2:59', value: 2 },
+    { label: '3:00-3:59', value: 3 },
+    { label: '4:00-4:59', value: 4 },
+    { label: '5:00-5:59', value: 5 },
+    { label: '6:00-6:59', value: 6 },
+    { label: '7:00-7:59', value: 7 },
+    { label: '8:00-8:59', value: 8 },
+    { label: '9:00-9:59', value: 9 },
+    { label: '10:00-10:59', value: 10 },
+    { label: '11:00-11:59', value: 11 },
+    { label: '12:00-12:59', value: 12 },
+    { label: '13:00-13:59', value: 13 },
+    { label: '14:00-14:59', value: 14 },
+    { label: '15:00-15:59', value: 15 },
+    { label: '16:00-16:59', value: 16 },
+    { label: '17:00-17:59', value: 17 },
+    { label: '18:00-18:59', value: 18 },
+    { label: '19:00-19:59', value: 19 },
+    { label: '20:00-20:59', value: 20 },
+    { label: '21:00-21:59', value: 21 },
+    { label: '22:00-22:59', value: 22 },
+    { label: '23:00-23:59', value: 23 },
   ];
 };
 
@@ -371,7 +405,7 @@ function onReset() {
   scenarioStore.scenarioFrame.name = '';
   devicesFromOptions = ref([]);
   scenarioStore.scenarioFrame.deactivated = false;
-  scenarioStore.scenarioFrame.isAlreadyTriggered = false;
+  scenarioStore.scenarioFrame.alreadyTriggered = false;
   scenarioStore.scenarioFrame.mutedUntil = 0;
   scenarioStore.scenarioFrame.activeAtDay = [];
   scenarioStore.scenarioFrame.activeAtHour = [];
@@ -400,7 +434,7 @@ function setEditedScenario() {
     editedScenario.value.name = scenarioStore.scenarioFrame.name || '';
     editedScenario.value.devices = scenarioStore.scenarioFrame.devices;
     editedScenario.value.deactivated = scenarioStore.scenarioFrame.deactivated || false;
-    editedScenario.value.isAlreadyTriggered = scenarioStore.scenarioFrame.isAlreadyTriggered || false;
+    editedScenario.value.alreadyTriggered = scenarioStore.scenarioFrame.alreadyTriggered || false;
     editedScenario.value.mutedUntil = scenarioStore.scenarioFrame.mutedUntil || 0;
     editedScenario.value.activeAtDay = scenarioStore.scenarioFrame.activeAtDay || [];
     editedScenario.value.activeAtHour = scenarioStore.scenarioFrame.activeAtHour || [];

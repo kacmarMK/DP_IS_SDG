@@ -400,6 +400,11 @@
   "notification": {
     "label": "Notifikácia | Notifikácie",
     "number": "Počet",
-    "level": "Úroveň"
+    "level": "Úroveň",
+    "toasts": {
+      "load_failed": "Načítanie notifikácií zlyhalo!",
+      "processing_successful": "Spracovanie notifikácie bolo úspešné.",
+      "proccessing_failed": "Spracovanie notifikácie bolo neúspešné."
+    }
   }
 }
