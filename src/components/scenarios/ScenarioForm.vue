@@ -17,13 +17,15 @@
 
               <div>
                 <q-select
-                  v-model="scenarioStore.scenarioFrame.devices"
+                  v-model="devicesFromOptions"
                   filled
                   multiple
                   :readonly="isReadonly"
                   :options="deviceOptions"
                   :label="t('device.label', 2)"
                   class="q-mb-lg"
+                  option-value="value"
+                  option-label="label"
                 />
               </div>
               <div></div>
@@ -34,39 +36,52 @@
                 use-chips
                 behavior="menu"
                 outlined
-                label="Aktivačné hodiny scenáru"
+                :readonly="isReadonly"
+                :label="t('scenario.form.activation_hours')"
                 option-value="value"
                 option-label="label"
                 class="custom-select"
                 @remove="removeHour"
               ></q-select>
-              <q-btn label="Vybrať všetky časové rozmedzia" size="12px" @click="selectAllHours"></q-btn>
+              <q-btn
+                v-if="props.mode !== 'detail'"
+                :label="t('scenario.form.choose_all_hours')"
+                size="12px"
+                @click="selectAllHours"
+              ></q-btn>
               <div class="row justify-center">
                 <q-card class="q-pa-lg q-mt-lg">
-                  <label style="font-weight: bold">Aktívne dni scenáru</label>
+                  <label style="font-weight: bold">{{ t('scenario.form.activation_days') }}</label>
                   <q-option-group
                     v-model="scenarioStore.scenarioFrame.activeAtDay"
                     :options="dayOptions"
                     type="checkbox"
+                    :disable="props.mode === 'detail'"
                   />
-                  <q-btn label="Vybrať všetky dni" class="q-mt-md" @click="selectAllDays"></q-btn>
+                  <q-btn
+                    v-if="props.mode !== 'detail'"
+                    :label="t('scenario.form.choose_all_days')"
+                    class="q-mt-md"
+                    @click="selectAllDays"
+                  ></q-btn>
                 </q-card>
-
-                <q-input
-                  v-if="true"
-                  filled
-                  type="textarea"
-                  :readonly="isReadonly"
-                  label="Podmienky (formát JSON)"
-                  class="self-end q-ml-md"
-                  style="resize: none; width: 520px; font-size: 18px"
-                  rows="20"
-                />
+                <q-card class="q-mt-lg q-ml-md">
+                  <q-input
+                    v-if="props.mode === 'detail' || props.mode === 'edit'"
+                    filled
+                    type="textarea"
+                    :readonly="isReadonly"
+                    :label="t('scenario.json_conditions')"
+                    style="resize: none; width: 520px; font-size: 18px"
+                    rows="20"
+                  />
+                </q-card>
               </div>
               <div class="row justify-center">
                 <!-- This button will only show when 'showConditions' is false -->
                 <q-btn
-                  label="Zmeniť podmienky"
+                  v-if="!showConditions && props.mode !== 'detail'"
+                  :label="t('scenario.form.add_conditions')"
                   padding="xl"
                   color="green"
                   size="14px"
@@ -84,7 +99,7 @@
       <div v-if="showConditions" class="q-mt-lg">
         <q-card class="full-width">
           <div class="text-weight-medium q-pa-lg row justify-center" style="font-weight: 600; font-size: 30px">
-            {{ t('scenario.conditions') }}
+            {{ t('scenario.conditions_label') }}
           </div>
 
           <div class="row justify-center q-mx-xl" style="min-height: 300px; overflow-y: auto">
@@ -111,9 +126,9 @@
                 v-if="showPseudocode"
                 v-model="scenarioStore.scenarioPseudocode"
                 filled
-                label="Tu vložte pseudokód..."
+                :label="t('scenario.insert_pseudocode')"
                 type="textarea"
-                hint="Nezabudnite skontrolovať správnu syntax!"
+                :hint="t('scenario.hint_pseudocode')"
                 rows="20"
                 style="font-family: monospace; font-size: 20px"
               />
@@ -121,28 +136,17 @@
                 v-if="showProgrammerMode"
                 v-model="scenarioStore.scenarioFrame.rules"
                 filled
-                label="Tu vložte podmienky v tvare JSON..."
+                :label="t('scenario.json_pseudocode')"
                 type="textarea"
-                hint="Nezabudnite skontrolovať správnu syntax!"
+                :hint="t('scenario.hint_pseudocode')"
                 rows="20"
                 style="font-family: monospace; font-size: 20px"
               />
             </q-card>
           </div>
           <div class="row justify-center q-pb-lg">
-            <!--
             <q-btn
-              label="Parse"
-              padding="xl"
-              color="green"
-              size="16px"
-              :icon="mdiTranslate"
-              :icon-right="mdiCodeJson"
-              class="q-mr-xl"
-              @click="parseConditionBuilder"
-            ></q-btn>-->
-            <q-btn
-              label="Vymazať podmienky"
+              :label="t('scenario.form.remove_conditions')"
               padding="xl"
               color="red"
               size="16px"
@@ -376,6 +380,7 @@ interface DeviceOption {
 }
 
 function extractIDFromArray(arrayOfObjects: DeviceOption[]): string[] {
+  console.log(arrayOfObjects);
   return arrayOfObjects.map((item) => item.value.uid);
 }
 const editedScenario = ref<Scenario>();
@@ -385,7 +390,6 @@ if (scenarioStore.mode == 'edit') getScenario();
 async function onSubmit() {
   if (showConditions.value) {
     //scenarioStore.scenarioFrame.rules = parseRules();
-    console.log(scenarioStore.scenarioFrame.rules);
   }
   if (scenarioStore.mode == 'create') {
     scenarioStore.scenarioFrame.devices = extractIDFromArray(devicesFromOptions.value);
@@ -545,5 +549,9 @@ const handleUpdatePseudocodeValue = (value: string) => {
 /* Style for the close icon when hovered to give feedback */
 .fa-times.close:hover {
   color: #d9534f; /* Change color on hover */
+}
+
+::v-deep .q-field__native {
+  resize: none;
 }
 </style>

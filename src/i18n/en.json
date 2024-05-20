@@ -361,7 +361,7 @@
     "delete_scenario": "Delete scenario",
     "delete_scenario_desc": "Are you sure you want to delete this scenario?",
     "edit_scenario": "Edit scenario",
-    "conditions": "Conditions",
+    "conditions_label": "Conditions",
     "toasts": {
       "load_failed": "Scenario loading failed!",
       "create_success": "Scenario created!",
@@ -393,7 +393,30 @@
       "muted_until": "Muted  until (minutes):",
       "scenario_active": "Scenario is deactivated:",
       "scenario_triggered": "Scenario has been triggered:",
-      "set_muted_until": "Scenario mute time setting (minutes)"
+      "set_muted_until": "Scenario mute time setting (minutes)",
+      "activation_hours": "Scenario activation hours",
+      "activation_days": "Active scenario days",
+      "choose_all_hours": "Select all time ranges",
+      "choose_all_days": "Select all days",
+      "add_conditions": "Add conditions",
+      "remove_conditions": "Remove conditions"
+    },
+    "insert_pseudocode": "Insert pseudocode here...",
+    "hint_pseudocode": "Don't forget to check the correct syntax!",
+    "json_pseudocode": "Insert JSON conditions here...",
+    "json_conditions": "Conditions (JSON format)",
+    "conditions": {
+      "constant": "Constant",
+      "insert_constant": "Insert constant",
+      "value": "Value",
+      "choose_value": "Choose value",
+      "operand": "Operand",
+      "operator": "Logical operator",
+      "insert_notification": "Insert notification message",
+      "job": "Job (Management role)",
+      "duration": "DURATION",
+      "no_action": "No action",
+      "condition": "Condition"
     }
   },
   "notification": {

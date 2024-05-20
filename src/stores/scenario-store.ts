@@ -19,6 +19,16 @@ export const useScenarioStore = defineStore('scenarios', () => {
     try {
       isLoadingScenarios.value = true;
       scenarios.value = await ScenarioService.getScenarios();
+      for (const tmpScenario of scenarios.value) {
+        const currentTime = Date.now();
+        const diffInMilliseconds = tmpScenario.mutedUntil - currentTime;
+        const remainingMutedMinutes = Math.ceil(diffInMilliseconds / 60000);
+        if (remainingMutedMinutes <= 0) {
+          tmpScenario.mutedUntil = 0;
+        } else {
+          tmpScenario.mutedUntil = remainingMutedMinutes;
+        }
+      }
     } catch (error) {
       console.log(error);
       toast.error(t('scenario.toasts.load_failed'));
@@ -31,6 +41,16 @@ export const useScenarioStore = defineStore('scenarios', () => {
     try {
       isLoadingScenarios.value = true;
       scenarios.value = await ScenarioService.getActiveScenarios();
+      for (const tmpScenario of scenarios.value) {
+        const currentTime = Date.now();
+        const diffInMilliseconds = tmpScenario.mutedUntil - currentTime;
+        const remainingMutedMinutes = Math.ceil(diffInMilliseconds / 60000);
+        if (remainingMutedMinutes <= 0) {
+          tmpScenario.mutedUntil = 0;
+        } else {
+          tmpScenario.mutedUntil = remainingMutedMinutes;
+        }
+      }
     } catch (error) {
       console.log(error);
       toast.error(t('scenario.toasts.load_failed'));
@@ -80,7 +100,8 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isCreatingScenario.value = true;
       scenarioFrame.value.name.trim;
       // TODO remove
-      scenarioFrame.value.activeAtHour = [];
+      const hourValues = scenarioFrame.value.activeAtHour.map((hour) => hour.value);
+      scenarioFrame.value.activeAtHour = hourValues;
       await ScenarioService.createScenario(scenarioFrame.value);
       toast.success(t('scenario.toasts.create_success'));
     } catch (error) {

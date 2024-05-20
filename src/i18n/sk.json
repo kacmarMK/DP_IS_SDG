@@ -362,7 +362,7 @@
     "delete_scenario": "Vymazať scenár",
     "delete_scenario_desc": "Ste si istí, že chcete vymazať tento scenár?",
     "edit_scenario": "Upraviť scenár",
-    "conditions": "Podmienky",
+    "conditions_label": "Podmienky",
     "toasts": {
       "load_failed": "Načítanie scenárov zlyhalo!",
       "create_success": "Scenár bol vytvorený!",
@@ -394,7 +394,30 @@
       "muted_until": "Stlmenie na (minúty):",
       "scenario_active": "Scenár je deaktivovaný:",
       "scenario_triggered": "Scenár bol už spustený:",
-      "set_muted_until": "Nastavenie doby stlmenia scenáru (minúty)"
+      "set_muted_until": "Nastavenie doby stlmenia scenáru (minúty)",
+      "activation_hours": "Aktivačné hodiny scenáru",
+      "activation_days": "Aktívne dni scenáru",
+      "choose_all_hours": "Vybrať všetky časové rozmedzia",
+      "choose_all_days": "Vybrať všetky dni",
+      "add_conditions": "Pridať podmienky",
+      "remove_conditions": "Vymazať podmienky"
+    },
+    "insert_pseudocode": "Tu vložte pseudokód...",
+    "hint_pseudocode": "Nezabudnite skontrolovať správnu syntax!",
+    "json_pseudocode": "Tu vložte podmienky v tvare JSON...",
+    "json_conditions": "Podmienky (formát JSON)",
+    "conditions": {
+      "constant": "Konštanta",
+      "insert_constant": "Vlož konštantu",
+      "value": "Hodnota",
+      "choose_value": "Vyber hodnotu",
+      "operand": "Operand",
+      "operator": "Logický operátor",
+      "insert_notification": "Vlož správu notifikácie",
+      "job": "Job (Riadiaca úloha)",
+      "duration": "TRVANIE",
+      "no_action": "Žiadna akcia",
+      "condition": "Podmienka"
     }
   },
   "notification": {

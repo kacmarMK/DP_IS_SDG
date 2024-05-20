@@ -31,7 +31,7 @@
               name="conditionSlot1"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
               @update:model-value="selectVariable1 = null"
             />
@@ -39,14 +39,14 @@
               v-model="conditionSlot1"
               name="conditionSlot1"
               val="val"
-              label="Hodnota"
+              :label="t('scenario.conditions.value')"
               @update:model-value="inputValue1 = ''"
             />
           </div>
           <q-input
             v-if="conditionSlot1 == 'const'"
             v-model="inputValue1"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -55,7 +55,7 @@
             v-if="conditionSlot1 == 'val'"
             v-model="selectVariable1"
             :options="conditonVariable1"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -65,7 +65,7 @@
           <q-select
             v-model="selectOperand1"
             :options="operands"
-            label="Operand"
+            :label="t('scenario.conditions.operand')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -78,7 +78,7 @@
               name="conditionSlot2"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
               @update:model-value="selectVariable2 = null"
             />
@@ -86,7 +86,7 @@
               v-model="conditionSlot2"
               name="conditionSlot2"
               val="val"
-              label="Hodnota"
+              :label="t('scenario.conditions.value')"
               @update:model-value="inputValue2 = ''"
             />
           </div>
@@ -94,7 +94,7 @@
           <q-input
             v-if="conditionSlot2 == 'const'"
             v-model="inputValue2"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -103,7 +103,7 @@
             v-if="conditionSlot2 == 'val'"
             v-model="selectVariable2"
             :options="conditonVariable2"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -118,7 +118,7 @@
         <q-select
           v-model="selectOperator1"
           :options="logicalOperators"
-          label="Logický operátor"
+          :label="t('scenario.conditions.operator')"
           dense
           :rules="[requiredSelectRule]"
           style="min-width: 200px"
@@ -139,7 +139,7 @@
               name="conditionSlot3"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
               @update:model-value="selectVariable3 = null"
             />
@@ -147,7 +147,7 @@
               v-model="conditionSlot3"
               name="conditionSlot3"
               val="val"
-              label="Hodnota"
+              :label="t('scenario.conditions.value')"
               @update:model-value="inputValue3 = ''"
             />
           </div>
@@ -155,7 +155,7 @@
           <q-input
             v-if="conditionSlot3 == 'const'"
             v-model="inputValue3"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -164,7 +164,7 @@
             v-if="conditionSlot3 == 'val'"
             v-model="selectVariable3"
             :options="conditonVariable3"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -174,7 +174,7 @@
           <q-select
             v-model="selectOperand2"
             :options="operands"
-            label="Operand"
+            :label="t('scenario.conditions.operand')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -187,7 +187,7 @@
               name="conditionSlot4"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
               @update:model-value="selectVariable4 = null"
             />
@@ -195,7 +195,7 @@
               v-model="conditionSlot4"
               name="conditionSlot4"
               val="val"
-              label="Hodnota"
+              :label="t('scenario.conditions.value')"
               @update:model-value="inputValue4 = ''"
             />
           </div>
@@ -203,7 +203,7 @@
           <q-input
             v-if="conditionSlot4 == 'const'"
             v-model="inputValue4"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -212,7 +212,7 @@
             v-if="conditionSlot4 == 'val'"
             v-model="selectVariable4"
             :options="conditonVariable4"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -245,7 +245,7 @@
       <q-select
         v-model="selectOperator11"
         :options="logicalOperators"
-        label="Logický operátor"
+        :label="t('scenario.conditions.operator')"
         dense
         :rules="[requiredSelectRule]"
         class="col-2"
@@ -271,15 +271,15 @@
               name="conditionSlot5"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
             />
-            <q-radio v-model="conditionSlot5" name="conditionSlot5" val="val" label="Hodnota" />
+            <q-radio v-model="conditionSlot5" name="conditionSlot5" val="val" :label="t('scenario.conditions.value')" />
           </div>
           <q-input
             v-if="conditionSlot5 == 'const'"
             v-model="inputValue5"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -288,7 +288,7 @@
             v-if="conditionSlot5 == 'val'"
             v-model="selectVariable5"
             :options="conditonVariable5"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -298,7 +298,7 @@
           <q-select
             v-model="selectOperand3"
             :options="operands"
-            label="Operand"
+            :label="t('scenario.conditions.operand')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -311,16 +311,16 @@
               name="conditionSlot6"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
             />
-            <q-radio v-model="conditionSlot6" name="conditionSlot6" val="val" label="Hodnota" />
+            <q-radio v-model="conditionSlot6" name="conditionSlot6" val="val" :label="t('scenario.conditions.value')" />
           </div>
 
           <q-input
             v-if="conditionSlot6 == 'const'"
             v-model="inputValue6"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -329,7 +329,7 @@
             v-if="conditionSlot6 == 'val'"
             v-model="selectVariable6"
             :options="conditonVariable6"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -344,7 +344,7 @@
         <q-select
           v-model="selectOperator22"
           :options="logicalOperators"
-          label="Logický operátor"
+          :label="t('scenario.conditions.operator')"
           dense
           :rules="[requiredSelectRule]"
           style="min-width: 200px"
@@ -365,16 +365,16 @@
               name="conditionSlot7"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
             />
-            <q-radio v-model="conditionSlot7" name="conditionSlot7" val="val" label="Hodnota" />
+            <q-radio v-model="conditionSlot7" name="conditionSlot7" val="val" :label="t('scenario.conditions.value')" />
           </div>
 
           <q-input
             v-if="conditionSlot7 == 'const'"
             v-model="inputValue7"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
             @update:model-value="parseRules"
@@ -383,7 +383,7 @@
             v-if="conditionSlot7 == 'val'"
             v-model="selectVariable7"
             :options="conditonVariable7"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -393,7 +393,7 @@
           <q-select
             v-model="selectOperand4"
             :options="operands"
-            label="Operand"
+            :label="t('scenario.conditions.operand')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -406,16 +406,16 @@
               name="conditionSlot8"
               val="const"
               left-label
-              label="Konštanta"
+              :label="t('scenario.conditions.constant')"
               color="secondary"
             />
-            <q-radio v-model="conditionSlot8" name="conditionSlot8" val="val" label="Hodnota" />
+            <q-radio v-model="conditionSlot8" name="conditionSlot8" val="val" :label="t('scenario.conditions.value')" />
           </div>
 
           <q-input
             v-if="conditionSlot8 == 'const'"
             v-model="inputValue8"
-            label="Vlož konštantu"
+            :label="t('scenario.conditions.insert_constant')"
             dense
             :rules="[requiredInputRule]"
           ></q-input>
@@ -423,7 +423,7 @@
             v-if="conditionSlot8 == 'val'"
             v-model="selectVariable8"
             :options="conditonVariable8"
-            label="Vyber hodnotu"
+            :label="t('scenario.conditions.choose_value')"
             dense
             :rules="[requiredSelectRule]"
             @update:model-value="parseRules"
@@ -703,17 +703,45 @@
     <br />
     <div class="q-pa-md" style="border-radius: 8px; border: 1px solid #858585">
       <div class="row justify-center">
-        <q-radio v-model="thenSlot" class="q-mr-lg" keep-color val="noAction" label="Žiadna akcia" color="red" />
-        <q-radio v-model="thenSlot" class="q-mr-lg" keep-color val="job" label="Job (Riadiaca úloha)" color="teal" />
-        <q-radio v-model="thenSlot" class="q-mr-lg" keep-color val="notification" label="Notifikácia" color="orange" />
-        <q-radio v-model="thenSlot" class="q-mr-lg" keep-color val="condition" label="Podmienka" color="blue" />
+        <q-radio
+          v-model="thenSlot"
+          class="q-mr-lg"
+          keep-color
+          val="noAction"
+          :label="t('scenario.conditions.no_action')"
+          color="red"
+        />
+        <q-radio
+          v-model="thenSlot"
+          class="q-mr-lg"
+          keep-color
+          val="job"
+          :label="t('scenario.conditions.job')"
+          color="teal"
+        />
+        <q-radio
+          v-model="thenSlot"
+          class="q-mr-lg"
+          keep-color
+          val="notification"
+          :label="t('notification.label')"
+          color="orange"
+        />
+        <q-radio
+          v-model="thenSlot"
+          class="q-mr-lg"
+          keep-color
+          val="condition"
+          :label="t('scenario.conditions.condition')"
+          color="blue"
+        />
       </div>
       <div class="row justify-center">
         <div class="col">
           <q-input
             v-if="thenSlot === 'notification'"
             v-model="notificationThen"
-            label="Vlož správu notifikácie"
+            :label="t('scenario.conditions.insert_notification')"
             dense
             @update:model-value="parseRules"
           ></q-input>
@@ -721,7 +749,7 @@
             v-if="thenSlot === 'job'"
             v-model="jobThen"
             :options="jobOptions"
-            label="Job (Riadiaca úloha)"
+            :label="t('scenario.conditions.job')"
             dense
             class="col"
             @update:model-value="parseRules"
@@ -737,7 +765,13 @@
       </div>
       <div v-if="thenSlot === 'job' || thenSlot === 'notification'" class="q-pa-sm q-mt-lg">
         <div class="row justify-center">
-          <q-btn color="white" text-color="black" label="TRVANIE" style="width: 145px; height: 54px" size="16px" />
+          <q-btn
+            color="white"
+            text-color="black"
+            :label="t('scenario.conditions.duration')"
+            style="width: 145px; height: 54px"
+            size="16px"
+          />
           <q-select
             v-model="durationOptionThen"
             filled
@@ -760,7 +794,7 @@
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-time v-model="durationTimeThen" with-seconds format24h>
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Zavrieť" color="primary" flat />
+                      <q-btn v-close-popup :label="t('global.close')" color="primary" flat />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -780,17 +814,45 @@
     <br />
     <div class="q-pa-md q-mt-sm" style="border-radius: 8px; border: 1px solid #858585">
       <div class="row justify-center">
-        <q-radio v-model="elseSlot" class="q-mr-lg" keep-color val="noAction" label="Žiadna akcia" color="red" />
-        <q-radio v-model="elseSlot" class="q-mr-lg" keep-color val="job" label="Job (Riadiaca úloha)" color="teal" />
-        <q-radio v-model="elseSlot" class="q-mr-lg" keep-color val="notification" label="Notifikácia" color="orange" />
-        <q-radio v-model="elseSlot" class="q-mr-lg" keep-color val="condition" label="Podmienka" color="blue" />
+        <q-radio
+          v-model="elseSlot"
+          class="q-mr-lg"
+          keep-color
+          val="noAction"
+          :label="t('scenario.conditions.no_action')"
+          color="red"
+        />
+        <q-radio
+          v-model="elseSlot"
+          class="q-mr-lg"
+          keep-color
+          val="job"
+          :label="t('scenario.conditions.job')"
+          color="teal"
+        />
+        <q-radio
+          v-model="elseSlot"
+          class="q-mr-lg"
+          keep-color
+          val="notification"
+          :label="t('notification.label')"
+          color="orange"
+        />
+        <q-radio
+          v-model="elseSlot"
+          class="q-mr-lg"
+          keep-color
+          val="condition"
+          :label="t('scenario.conditions.condition')"
+          color="blue"
+        />
       </div>
       <div class="row justify-center">
         <div class="col">
           <q-input
             v-if="elseSlot === 'notification'"
             v-model="notificationElse"
-            label="Vlož správu notifikácie"
+            :label="t('scenario.conditions.insert_notification')"
             dense
             @update:model-value="parseRules"
           ></q-input>
@@ -798,7 +860,7 @@
             v-if="elseSlot === 'job'"
             v-model="jobElse"
             :options="jobOptions"
-            label="Job (Riadiaca úloha)"
+            :label="t('scenario.conditions.job')"
             dense
             class="col"
             @update:model-value="parseRules"
@@ -812,7 +874,13 @@
           ></condition-builder>
           <div v-if="elseSlot === 'job' || elseSlot === 'notification'" class="q-pa-sm q-mt-lg">
             <div class="row justify-center">
-              <q-btn color="white" text-color="black" label="TRVANIE" style="width: 145px; height: 54px" size="16px" />
+              <q-btn
+                color="white"
+                text-color="black"
+                :label="t('scenario.conditions.duration')"
+                style="width: 145px; height: 54px"
+                size="16px"
+              />
               <q-select
                 v-model="durationOptionElse"
                 filled
@@ -835,7 +903,7 @@
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-time v-model="durationTimeElse" with-seconds format24h>
                         <div class="row items-center justify-end">
-                          <q-btn v-close-popup label="Zavrieť" color="primary" flat />
+                          <q-btn v-close-popup :label="t('global.close')" color="primary" flat />
                         </div>
                       </q-time>
                     </q-popup-proxy>

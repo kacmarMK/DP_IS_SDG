@@ -362,7 +362,7 @@
     "delete_scenario": "Supprimer le scénario",
     "delete_scenario_desc": "Êtes-vous sûr de vouloir supprimer ce scénario ?",
     "edit_scenario": "Modifier le scénario",
-    "conditions": "Conditions",
+    "conditions_label": "Conditions",
     "toasts": {
       "load_failed": "Échec du chargement des scénarios !",
       "create_success": "Scénario créé avec succès !",
@@ -394,7 +394,30 @@
       "muted_until": "Muet jusqu'à (minutes) :",
       "scenario_active": "Le scénario est désactivé :",
       "scenario_triggered": "Le scénario a déjà été déclenché :",
-      "set_muted_until": "Régler la durée du mode muet du scénario (minutes)"
+      "set_muted_until": "Régler la durée du mode muet du scénario (minutes)",
+      "activation_hours": "Heures d'activation du scénario",
+      "activation_days": "Jours de scénario actif",
+      "choose_all_hours": "Sélectionner toutes les plages horaires",
+      "choose_all_days": "Sélectionner tous les jours",
+      "add_conditions": "Ajouter des conditions",
+      "remove_conditions": "Supprimer les conditions"
+    },
+    "insert_pseudocode": "Insérer un pseudo-code ici...",
+    "hint_pseudocode": "N'oubliez pas de vérifier la syntaxe correcte !",
+    "json_pseudocode": "Insérer ici les conditions au format JSON...",
+    "json_conditions": "Conditions (format JSON)",
+    "conditions": {
+      "constant": "Constant",
+      "insert_constant": "Insérer une constante",
+      "value": "Valeur",
+      "choose_value": "Sélectionner une valeur",
+      "operand": "Opérande",
+      "operator": "Opérateur logique",
+      "insert_notification": "Insérer un message de notification",
+      "job": "Emploi (fonction d'encadrement)",
+      "duration": "DURÉE",
+      "no_action": "Pas d'action",
+      "condition": "Condition"
     }
   },
   "notification": {

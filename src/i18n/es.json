@@ -361,7 +361,7 @@
     "delete_scenario": "Eliminar escenario",
     "delete_scenario_desc": "¿Estás seguro de que quieres eliminar este escenario?",
     "edit_scenario": "Editar escenario",
-    "conditions": "Condiciones",
+    "conditions_label": "Condiciones",
     "toasts": {
       "load_failed": "¡Fallo al cargar los escenarios!",
       "create_success": "¡Escenario creado con éxito!",
@@ -393,7 +393,30 @@
       "muted_until": "Silencio hasta (minutos):",
       "scenario_active": "Escenario está desactivado:",
       "scenario_triggered": "El escenario ya fue activado:",
-      "set_muted_until": "Establecer tiempo de silencio del escenario (minutos)"
+      "set_muted_until": "Establecer tiempo de silencio del escenario (minutos)",
+      "activation_hours": "Horas de activación del escenario",
+      "activation_days": "Días de escenario activo",
+      "choose_all_hours": "Seleccionar todos los intervalos de tiempo",
+      "choose_all_days": "Seleccionar todos los días",
+      "add_conditions": "Añadir condiciones",
+      "remove_conditions": "Eliminar condiciones"
+    },
+    "insert_pseudocode": "Insertar pseudocódigo aquí...",
+    "hint_pseudocode": "No olvides comprobar que la sintaxis es correcta.",
+    "json_pseudocode": "Inserte aquí las condiciones en formato JSON...",
+    "json_conditions": "Condiciones (formato JSON)",
+    "conditions": {
+      "constant": "Constante",
+      "insert_constant": "Insertar constante",
+      "value": "Valor",
+      "choose_value": "Seleccione un valor",
+      "operand": "Operando",
+      "operator": "Operador lógico",
+      "insert_notification": "Insertar mensaje de notificación",
+      "job": "Empleo (función directiva)",
+      "duration": "DURACIÓN",
+      "no_action": "Ninguna acción",
+      "condition": "Condición"
     }
   },
   "notification": {
