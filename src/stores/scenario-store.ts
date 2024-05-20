@@ -6,6 +6,7 @@ import { Scenario, ScenarioFrame } from '@/models/Scenario';
 import { StoredResolvedScenario } from '@/models/StoredResolvedScenario';
 import ScenarioService from '@/services/ScenarioService';
 import StoredResolvedScenarioService from '@/services/StoredResolvedScenarioService';
+import DeviceService from '@/services/DeviceService';
 
 export const useScenarioStore = defineStore('scenarios', () => {
   const { t } = useI18n();
@@ -93,6 +94,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
     mutedUntil: 0,
     activeAtDay: [],
     activeAtHour: [],
+    deviceAndTag: null,
   });
   const isCreatingScenario = ref(false);
   async function createScenario() {
@@ -102,6 +104,25 @@ export const useScenarioStore = defineStore('scenarios', () => {
       // TODO remove
       const hourValues = scenarioFrame.value.activeAtHour.map((hour) => hour.value);
       scenarioFrame.value.activeAtHour = hourValues;
+
+      const deviceTagMap: { [key: string]: string[] } = {};
+      // Iterate over each device UID
+      for (const deviceUID of scenarioFrame.value.devices) {
+        try {
+          // Fetch the device details
+          const deviceWithTags = await DeviceService.getDevice(deviceUID);
+          // Ensure dataPointTags is an array before mapping
+          if (deviceWithTags && Array.isArray(deviceWithTags.dataPointTags)) {
+            deviceTagMap[deviceWithTags.uid] = deviceWithTags.dataPointTags.map((tag) => tag.tag);
+          } else {
+            deviceTagMap[deviceWithTags.uid] = [];
+          }
+        } catch (error) {
+          console.error(`Failed to fetch device ${deviceUID}:`, error);
+        }
+      }
+      scenarioFrame.value.deviceAndTag = deviceTagMap;
+
       await ScenarioService.createScenario(scenarioFrame.value);
       toast.success(t('scenario.toasts.create_success'));
     } catch (error) {

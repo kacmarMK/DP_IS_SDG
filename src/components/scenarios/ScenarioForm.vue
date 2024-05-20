@@ -68,6 +68,7 @@
                 <q-card class="q-mt-lg q-ml-md">
                   <q-input
                     v-if="props.mode === 'detail' || props.mode === 'edit'"
+                    v-model="scenarioStore.scenarioFrame.rules"
                     filled
                     type="textarea"
                     :readonly="isReadonly"
@@ -380,7 +381,6 @@ interface DeviceOption {
 }
 
 function extractIDFromArray(arrayOfObjects: DeviceOption[]): string[] {
-  console.log(arrayOfObjects);
   return arrayOfObjects.map((item) => item.value.uid);
 }
 const editedScenario = ref<Scenario>();

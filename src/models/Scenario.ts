@@ -25,6 +25,7 @@ interface ScenarioFrame {
   mutedUntil?: number;
   activeAtDay?: Array<number>;
   activeAtHour?: Array<number>;
+  deviceAndTag: Map<string, Array<string>>;
 }
 
 export type { Scenario, ScenarioFrame };
