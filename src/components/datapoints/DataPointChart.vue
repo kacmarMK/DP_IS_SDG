@@ -20,6 +20,19 @@
           </div>
         </template>
       </q-btn>
+
+      <q-btn
+        padding="0.5rem 1rem"
+        outline
+        no-caps
+        color="grey-7"
+        text-color="grey-5"
+        class="options-btn"
+        @click="download(csvConfig)(generateCSVData())"
+      >
+        <div class="text-grey-9">{{ t('chart.export_csv') }}</div>
+      </q-btn>
+
       <q-btn
         padding="0.5rem 1rem"
         outline
@@ -83,6 +96,8 @@ import DialogCommon from '../core/DialogCommon.vue';
 import { mdiRefresh } from '@quasar/extras/mdi-v6';
 import GraphOptionsForm from './GraphOptionsForm.vue';
 import { useInterval } from '@/composables/useInterval';
+import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { format } from 'date-fns';
 
 const props = defineProps({
   dataPointTags: {
@@ -393,6 +408,45 @@ const chartOptions = computed(() => ({
     },
   },
 }));
+
+//CSV export
+const csvConfig = mkConfig({ useKeysAsHeaders: true, fieldSeparator: ';' });
+
+const generateCSVData = () => {
+  let allData: {
+    name: string;
+    unit: string;
+    measureAdd: number;
+    value: number;
+  }[] = [];
+
+  // Combine all data points from each tag
+  props.dataPointTags.forEach((tag) => {
+    tag.storedData.forEach((data) => {
+      allData.push({
+        name: tag.name,
+        unit: tag.unit,
+        measureAdd: data.measureAt,
+        value: data.value,
+      });
+    });
+  });
+
+  // Sort the data by measureAdd (timestamp)
+  allData.sort((a, b) => new Date(a.measureAdd).getTime() - new Date(b.measureAdd).getTime());
+
+  // Format the data for CSV export
+  let csvData = allData.map((data) => ({
+    name: data.name,
+    unix: new Date(data.measureAdd).getTime(),
+    date: format(new Date(data.measureAdd), 'dd/MM/yyyy'),
+    time: format(new Date(data.measureAdd), 'HH:mm:ss'),
+    value: data.value,
+    unit: data.unit,
+  }));
+
+  return generateCsv(csvConfig)(csvData);
+};
 </script>
 
 <style lang="scss">
