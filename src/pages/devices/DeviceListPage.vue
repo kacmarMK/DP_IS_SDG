@@ -41,8 +41,8 @@ import { useStorage } from '@vueuse/core';
 import AutoRefreshButton from '@/components/core/AutoRefreshButton.vue';
 import { PaginatedResponse, Pagination } from '@/models/Pagination';
 import { Device } from '@/models/Device';
-import { toast } from 'vue3-toastify';
 import DeviceService from '@/services/DeviceService';
+import { handleError } from '@/utils/error-handler';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -77,7 +77,7 @@ async function getDevices(paginationPar: Pagination) {
     pagination.value.descending = descending;
     pagination.value.rowsNumber = devicesPaginated.value.totalElements;
   } catch (error) {
-    toast.error(t('device.toasts.loading_failed', 2));
+    handleError(error, t('device.toasts.loading_failed'));
   } finally {
     loadingDevices.value = false;
   }

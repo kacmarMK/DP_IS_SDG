@@ -77,6 +77,7 @@ import LanguageSelect from '@/components/core/LanguageSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { mdiAccount, mdiEye, mdiEyeOff, mdiLock } from '@quasar/extras/mdi-v6';
 import GoogleLoginBtn from '@/components/account/GoogleLoginBtn.vue';
+import { handleError } from '@/utils/error-handler';
 
 const { t } = useI18n();
 
@@ -109,7 +110,7 @@ async function login() {
     toast.success(t('auth.login.toasts.login_success'));
     router.push('/');
   } catch (error) {
-    toast.error(t('auth.login.toasts.login_failed'));
+    handleError(error, t('auth.login.toasts.login_failed'));
   } finally {
     isSubmitting.value = false;
   }

@@ -7,6 +7,7 @@ import { StoredResolvedScenario } from '@/models/StoredResolvedScenario';
 import ScenarioService from '@/services/ScenarioService';
 import StoredResolvedScenarioService from '@/services/StoredResolvedScenarioService';
 import DeviceService from '@/services/DeviceService';
+import { handleError } from '@/utils/error-handler';
 
 export const useScenarioStore = defineStore('scenarios', () => {
   const { t } = useI18n();
@@ -32,7 +33,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(t('scenario.toasts.load_failed'));
+      handleError(error, t('scenario.toasts.load_failed'));
     } finally {
       isLoadingScenarios.value = false;
     }
@@ -53,8 +54,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
         }
       }
     } catch (error) {
-      console.log(error);
-      toast.error(t('scenario.toasts.load_failed'));
+      handleError(error, t('scenario.toasts.load_failed'));
     } finally {
       isLoadingScenarios.value = false;
     }
@@ -65,8 +65,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isLoadingScenarios.value = true;
       scenarios.value = await ScenarioService.getScenariosWithMessage();
     } catch (error) {
-      console.log(error);
-      toast.error(t('notification.toasts.load_failed'));
+      handleError(error, t('notification.toasts.load_failed'));
     } finally {
       isLoadingScenarios.value = false;
     }
@@ -77,8 +76,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       isLoadingScenarios.value = true;
       resolvedScenarios.value = await StoredResolvedScenarioService.getStoredResolvedScenarioDataByMessageAction();
     } catch (error) {
-      console.log(error);
-      toast.error(t('notification.toasts.load_failed'));
+      handleError(error, t('notification.toasts.load_failed'));
     } finally {
       isLoadingScenarios.value = false;
     }
@@ -126,8 +124,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       await ScenarioService.createScenario(scenarioFrame.value);
       toast.success(t('scenario.toasts.create_success'));
     } catch (error) {
-      console.log(error);
-      toast.error(t('scenario.toasts.create_failed'));
+      handleError(error, t('scenario.toasts.create_failed'));
     } finally {
       isCreatingScenario.value = false;
     }
@@ -139,8 +136,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       await ScenarioService.editScenario(editedScenario);
       toast.success(t('scenario.toasts.update_success'));
     } catch (error) {
-      console.log(error);
-      toast.error(t('scenario.toasts.update_failed'));
+      handleError(error, t('scenario.toasts.update_failed'));
     } finally {
       isCreatingScenario.value = false;
     }
@@ -151,8 +147,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       await ScenarioService.muteScenario(scenarioID, minutes);
       toast.success(t('scenario.toasts.update_success'));
     } catch (error) {
-      console.log(error);
-      toast.error(t('scenario.toasts.update_failed'));
+      handleError(error, t('scenario.toasts.update_failed'));
     } finally {
     }
   }
@@ -163,8 +158,7 @@ export const useScenarioStore = defineStore('scenarios', () => {
       await ScenarioService.resolveScenario(scenarioId, scenarioLevelEnum);
       toast.success(t('notification.toasts.processing_successful'));
     } catch (error) {
-      console.log(error);
-      toast.error(t('notification.toasts.proccessing_failed'));
+      handleError(error, t('notification.toasts.proccessing_failed'));
     } finally {
       isLoadingScenarios.value = false;
     }

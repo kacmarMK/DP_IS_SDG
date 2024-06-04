@@ -22,6 +22,9 @@ function handleError(error: unknown, defaultErrorMessage: string): unknown {
         message = '';
       }
     }
+
+    console.error(authStore.isTokenExpired());
+
     if (!errorData && error.response?.status === 403 && authStore.isTokenExpired()) {
       message = '';
       return error;

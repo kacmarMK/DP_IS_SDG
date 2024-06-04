@@ -78,6 +78,7 @@ import { useStorage } from '@vueuse/core';
 import AutoRefreshButton from '@/components/core/AutoRefreshButton.vue';
 import { toast } from 'vue3-toastify';
 import { Device } from '@/models/Device';
+import { handleError } from '@/utils/error-handler';
 
 const { t } = useI18n();
 
@@ -105,7 +106,7 @@ async function getDevice() {
     }
     device.value = deviceRes;
   } catch (error) {
-    toast.error(t('device.toasts.loading_failed'));
+    handleError(error, t('device.toasts.loading_failed'));
   } finally {
     deviceIsLoading.value = false;
   }
